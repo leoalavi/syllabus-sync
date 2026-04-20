@@ -154,10 +154,6 @@ Security is a structural constraint, with defence-in-depth across every layer.
 
 <br/>
 
-<img src="https://capsule-render.vercel.app/api?type=rect&color=0:0f172a,30:6366f1,60:22c55e,100:0f172a&height=2" width="100%"/>
-
-<br/>
-
 ## 🎯 Project Governance
 
 ### License
@@ -172,8 +168,8 @@ Released under the **MIT License** — an OSI-approved, permissive open-source l
 ### Maintainers
 | Name | Role |
 | --- | --- |
-| Mohammad Pouya Alavi Naeini | Lead maintainer — architecture, infrastructure |
-| Mohammad Raouf Abedini |  Co-maintainer — security, AI workflows, backend |
+| Pouya Alavi Naeini | Lead maintainer — architecture, infrastructure |
+| Raouf Abedini |  Co-maintainer — security, AI workflows, backend |
 
 <br/>
 
