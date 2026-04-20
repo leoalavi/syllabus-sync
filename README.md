@@ -154,22 +154,6 @@ Security is a structural constraint, with defence-in-depth across every layer.
 
 <br/>
 
-## 🤖 AI-Native Engineering Workflow
-
-Developed using the **Raouf Change Protocol**, orchestrating agents for production-grade software engineering.
-
-### OpenAI Codex — Implementation & Test Generation
-- **Unit test generation** covering happy paths, auth failures, and edge cases.
-- **Regression test scaffolding** following every bug fix.
-- **Migration authoring** drafting Supabase migration SQL from schema descriptions.
-
-### Syllabus-as-Code Documentation Suite
-- `docs/api/API_REFERENCE.md` — Auto-validated request/response schemas.
-- `docs/architecture/ARCHITECTURE.md` — Constraint document used during code reviews.
-- `CHANGELOG.md` — Immutable ledger of every architectural decision and fix.
-
-<br/>
-
 <img src="https://capsule-render.vercel.app/api?type=rect&color=0:0f172a,30:6366f1,60:22c55e,100:0f172a&height=2" width="100%"/>
 
 <br/>
