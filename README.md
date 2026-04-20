@@ -282,7 +282,6 @@ npm run check
 
 Built with the support of the open-source community. This project benefits from:
 
-- [Anthropic Claude](https://www.anthropic.com/claude) — AI-assisted architecture and security auditing.
 - [Supabase](https://supabase.com/) — Open-source backend with RLS.
 - [Vercel](https://vercel.com/) — Edge deployment infrastructure.
 
