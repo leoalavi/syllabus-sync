@@ -75,7 +75,8 @@ export default function ReminderModal({
   unitSchedule,
 }: ReminderModalProps) {
   const { t } = useTypedTranslation();
-  const { addReminder, updateReminder, removeReminder, getReminderForItem } = useRemindersStore();
+  const { addReminder, updateReminder, removeReminder, findAnyReminderForItem } =
+    useRemindersStore();
 
   const [enabled, setEnabled] = useState(false);
   const [timing, setTiming] = useState<ReminderTiming>('1day');
@@ -95,9 +96,12 @@ export default function ReminderModal({
   useEffect(() => {
     if (open) {
       startTransition(() => {
-        const existing = getReminderForItem(itemId, itemType);
+        const existing = findAnyReminderForItem(itemId, itemType);
         if (existing) {
-          setEnabled(existing.enabled);
+          // If the reminder already fired (notifiedAt set), surface it as
+          // disabled so the user can opt in again rather than seeing a stale
+          // "on" toggle for a consumed reminder.
+          setEnabled(existing.enabled && !existing.notifiedAt);
           setTiming(existing.timing);
           setCustomDate(existing.customDate || '');
           setCustomTime(existing.customTime || '09:00');
@@ -112,7 +116,7 @@ export default function ReminderModal({
         }
       });
     }
-  }, [open, itemId, itemType, getReminderForItem]);
+  }, [open, itemId, itemType, findAnyReminderForItem]);
 
   // Set default custom date and time based on item date when switching to custom timing
   useEffect(() => {

@@ -42,7 +42,10 @@ interface RemindersState {
   removeReminder: (id: string) => void;
 
   // Getters
+  /** Returns only the *active* reminder (enabled, unfired, trigger still in the future). Used by UI bell state. */
   getReminderForItem: (itemId: string, itemType: ReminderItemType) => Reminder | undefined;
+  /** Returns any existing reminder for the item/type pair, including fired ones. Used by the reminder modal so users can re-activate a fired reminder in place. */
+  findAnyReminderForItem: (itemId: string, itemType: ReminderItemType) => Reminder | undefined;
   getRemindersForItem: (itemId: string) => Reminder[];
   getPendingReminders: () => Reminder[];
 
@@ -103,6 +106,32 @@ export function calculateReminderDate(
       break;
   }
   return date;
+}
+
+/**
+ * Compute the actual wall-clock trigger time for a reminder.
+ * Returns `null` when the reminder lacks the data needed (e.g. custom with no date,
+ * or preset with no itemDate) — callers should treat `null` as "not yet schedulable".
+ */
+export function getReminderTriggerDate(reminder: {
+  timing: ReminderTiming;
+  itemDate?: string;
+  customDate?: string;
+  customTime?: string;
+}): Date | null {
+  if (reminder.timing === 'custom') {
+    if (!reminder.customDate) return null;
+    const [year, month, day] = reminder.customDate.split('-').map(Number);
+    if (reminder.customTime) {
+      const [hours, minutes] = reminder.customTime.split(':').map(Number);
+      return new Date(year, month - 1, day, hours, minutes);
+    }
+    return new Date(year, month - 1, day, 9, 0);
+  }
+  if (!reminder.itemDate) return null;
+  const itemDate = new Date(reminder.itemDate);
+  if (isNaN(itemDate.getTime())) return null;
+  return calculateReminderDate(itemDate, reminder.timing);
 }
 
 // Get timing label for display
@@ -175,8 +204,29 @@ export const useRemindersStore = create<RemindersState>()(
       },
 
       getReminderForItem: (itemId, itemType) => {
-        return get().reminders.find(
-          (r) => r.itemId === itemId && r.itemType === itemType && r.enabled,
+        const now = Date.now();
+        return get().reminders.find((r) => {
+          if (r.itemId !== itemId || r.itemType !== itemType) return false;
+          if (!r.enabled) return false;
+          // Already fired → no longer "active" in the UI, even if flag cleanup is pending
+          if (r.notifiedAt) return false;
+          // Trigger time has already elapsed → treat as inactive so the bell decolors
+          // immediately on render, without waiting for useReminderChecker to tick
+          const trigger = getReminderTriggerDate(r);
+          if (trigger && trigger.getTime() <= now) return false;
+          return true;
+        });
+      },
+
+      findAnyReminderForItem: (itemId, itemType) => {
+        // Most-recently-created first, so the modal edits the latest row
+        // even if historical fired rows exist for the same item.
+        const matches = get().reminders.filter(
+          (r) => r.itemId === itemId && r.itemType === itemType,
+        );
+        if (matches.length === 0) return undefined;
+        return matches.reduce((latest, r) =>
+          new Date(r.createdAt).getTime() > new Date(latest.createdAt).getTime() ? r : latest,
         );
       },
 
@@ -189,6 +239,11 @@ export const useRemindersStore = create<RemindersState>()(
       },
 
       markAsNotified: (id) => {
+        // notifiedAt acts as the "consumed" flag — getReminderForItem filters
+        // by it so the bell uncolors immediately. We intentionally keep `enabled`
+        // true so the modal's prefill lookup (findAnyReminderForItem) still
+        // recognises it for re-activation; shouldRearmReminder() clears
+        // notifiedAt when the user saves the modal again.
         set((state) => ({
           reminders: state.reminders.map((r) =>
             r.id === id ? { ...r, notifiedAt: new Date() } : r,
