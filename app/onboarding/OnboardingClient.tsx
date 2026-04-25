@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -46,7 +46,6 @@ export default function OnboardingClient() {
   const {
     control,
     handleSubmit,
-    watch,
     setValue,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
@@ -54,8 +53,8 @@ export default function OnboardingClient() {
     defaultValues: { faculty: '', course: '', year: '' },
   });
 
-  const selectedFaculty = watch('faculty');
-  const selectedCourse = watch('course');
+  const selectedFaculty = useWatch({ control, name: 'faculty' });
+  const selectedCourse = useWatch({ control, name: 'course' });
 
   // Reset course and year when faculty changes
   useEffect(() => {

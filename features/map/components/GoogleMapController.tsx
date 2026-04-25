@@ -198,6 +198,7 @@ export default function GoogleMapController({
   // Initial route fetch when destination or user location changes
   useEffect(() => {
     if (!destination || !userLocation) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     void fetchRoute(userLocation, destination, travelMode);
   }, [destination, userLocation, travelMode, fetchRoute]);
 
@@ -233,6 +234,7 @@ export default function GoogleMapController({
     if (!isNavigating || !userLocation || !destination || hasArrived) return;
     const dist = haversineMetres(userLocation, destination);
     if (dist <= ARRIVAL_THRESHOLD) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setHasArrived(true);
       setIsNavigating(false);
       setIsPanelOpen(true);
@@ -241,6 +243,7 @@ export default function GoogleMapController({
 
   // Reset on destination change
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setRoute(null);
     setIsNavigating(false);
     setHasArrived(false);

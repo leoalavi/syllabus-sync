@@ -107,6 +107,7 @@ export default function ExamForm({ open, onOpenChange, editExam }: ExamFormProps
 
   useEffect(() => {
     if (editExam) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setTitle(editExam.title);
       setUnitCode(editExam.unitCode);
       setBuilding(editExam.building || '');

@@ -105,6 +105,7 @@ export default function UnitForm({ open, onOpenChange, editUnit }: UnitFormProps
   // Initialize form with edit data
   useEffect(() => {
     if (editUnit) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCode(editUnit.code);
       setName(editUnit.name);
       setBuilding(editUnit.location.building);

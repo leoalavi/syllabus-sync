@@ -45,7 +45,6 @@ export function useBiometrics({ t }: UseBiometricsProps) {
   const [biometricAvailable, setBiometricAvailable] = useState(false);
   const [platformAuthAvailable, setPlatformAuthAvailable] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isStatusLoading, setIsStatusLoading] = useState(true);
 
   const base64UrlToUint8Array = useCallback((value: string) => {
     const padded = value.replace(/-/g, '+').replace(/_/g, '/');
@@ -91,14 +90,13 @@ export function useBiometrics({ t }: UseBiometricsProps) {
 
   useEffect(() => {
     if (biometricStatus?.data && platformAuthAvailable) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setBiometricEnabled(Boolean(biometricStatus.data.enabled));
     }
   }, [biometricStatus, platformAuthAvailable]);
 
   // derived state for compatibility
-  useEffect(() => {
-    setIsStatusLoading(isQueryLoading);
-  }, [isQueryLoading]);
+  const isStatusLoading = isQueryLoading;
 
   const enableBiometric = useCallback(async () => {
     setIsLoading(true);

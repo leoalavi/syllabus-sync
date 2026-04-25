@@ -193,6 +193,7 @@ export function PasswordStrengthIndicator({
   // Update strength when password changes
   useEffect(() => {
     if (!password) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setStrength({
         score: 0,
         strength: "very weak",

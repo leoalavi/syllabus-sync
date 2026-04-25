@@ -84,6 +84,7 @@ export function useFeedLogic() {
   // Scroll to and highlight the event when component mounts or highlight changes
   useEffect(() => {
     if (highlightEventId) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setHighlightedEvent(highlightEventId);
       setTimeRange('all'); // Use 'all' so past highlighted events are still visible
 

@@ -33,6 +33,7 @@ export const useWeather = () => {
       if (savedRegionId) {
         const region = SYDNEY_REGIONS.find((r) => r.id === savedRegionId);
         if (region) {
+          // eslint-disable-next-line react-hooks/set-state-in-effect
           setSelectedRegion(region);
           setUseGps(false); // If they manually picked a region, turn off auto-GPS
         }

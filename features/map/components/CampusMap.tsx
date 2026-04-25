@@ -211,8 +211,7 @@ const CampusMap = forwardRef<CampusMapRef, CampusMapProps>(
       };
     }, [mapValid, mapInstance, isMapReady, isMountedRef, onMapReady]);
 
-    /* eslint-disable react-hooks/set-state-in-effect --
-       Synchronizing isOffCampus (derived from geolocation, an external system)
+    /* Synchronizing isOffCampus (derived from geolocation, an external system)
        into local warning display state. The setTimeout auto-dismiss must use
        setState to clear the banner after 3 seconds. */
     useEffect(() => {
@@ -244,7 +243,6 @@ const CampusMap = forwardRef<CampusMapRef, CampusMapProps>(
         }
       };
     }, [isOffCampus]);
-    /* eslint-enable react-hooks/set-state-in-effect */
 
     // ============================================
     // RENDER

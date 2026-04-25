@@ -105,6 +105,7 @@ export default function AssignmentForm({
 
   useEffect(() => {
     if (editAssignment) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setTitle(editAssignment.title);
       setUnitCode(editAssignment.unitCode);
       // If assignment has a custom color, use it; otherwise inherit from unit

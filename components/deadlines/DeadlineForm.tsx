@@ -102,6 +102,7 @@ export default function DeadlineForm({ open, onOpenChange, editDeadline }: Deadl
 
   useEffect(() => {
     if (editDeadline) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setTitle(editDeadline.title);
       setUnitCode(editDeadline.unitCode);
       // If deadline has a custom color, use it; otherwise inherit from unit

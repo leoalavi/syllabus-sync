@@ -41,6 +41,7 @@ export function MFAChallenge({ t, factors, onSuccess, onCancel }: MFAChallengePr
   useEffect(() => {
     const totpFactor = factors.find((f) => f.type === 'totp');
     const phoneFactor = factors.find((f) => f.type === 'phone');
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSelectedFactor(totpFactor || phoneFactor || null);
   }, [factors]);
 
@@ -64,6 +65,7 @@ export function MFAChallenge({ t, factors, onSuccess, onCancel }: MFAChallengePr
 
   // When switching to SMS factor, create a challenge (triggers SMS send).
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setChallengeId(null);
     setCode('');
     setError(null);

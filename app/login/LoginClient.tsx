@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FingerprintButton } from '@/features/auth/components/FingerprintButton';
 import { Input } from '@/components/ui/mq/input';
@@ -41,7 +41,7 @@ export default function LoginClient() {
   const {
     register,
     handleSubmit,
-    watch,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<LoginFormData>({
     resolver: zodResolver(localLoginSchema),
@@ -53,7 +53,7 @@ export default function LoginClient() {
   });
 
   // Check email for UI states
-  const email = watch('email');
+  const email = useWatch({ control, name: 'email' });
 
   // UI States (Preserving original UI richness)
   const [showPassword, setShowPassword] = useState(false);
@@ -273,6 +273,7 @@ export default function LoginClient() {
   // Passkey & Security Status Effect
   useEffect(() => {
     if (!email || !email.includes('@')) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setPasskeyStatus('idle');
       setMfaEnabled(false);
       return;

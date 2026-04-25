@@ -49,7 +49,6 @@ export function RouteAnnouncer({
 
   /* This effect intentionally uses setState to throttle announcements to screen readers.
      The throttling prevents overwhelming users with too many updates. */
-  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     const now = Date.now();
     const timeSinceLastAnnouncement = now - lastAnnouncementTime.current;
@@ -97,7 +96,6 @@ export function RouteAnnouncer({
       lastAnnouncementTime.current = now;
     }
   }, [navState, locationStatus, selectedBuildingName, t]);
-  /* eslint-enable react-hooks/set-state-in-effect */
 
   return (
     <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">

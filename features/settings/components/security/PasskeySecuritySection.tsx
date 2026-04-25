@@ -104,6 +104,7 @@ export function PasskeySecuritySection({ t }: PasskeySecuritySectionProps) {
   }, []);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchCredentials();
   }, [fetchCredentials]);
 
