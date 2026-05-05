@@ -169,7 +169,7 @@ Released under the **MIT License** — an OSI-approved, permissive open-source l
 | Name | Role |
 | --- | --- |
 | Pouya Alavi Naeini | Lead maintainer — architecture, infrastructure |
-| Raouf Abedini |  Co-maintainer — security, AI workflows, backend |
+| Raouf Abedini |  Co-maintainer — security, backend |
 
 <br/>
 
