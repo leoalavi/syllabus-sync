@@ -1,7 +1,7 @@
 <div align="center">
 
 <!-- Typing animation -->
-[![Typing SVG](https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=700&size=20&duration=2800&pause=700&color=6366F1&center=true&vCenter=true&width=860&lines=Campus+OS+for+Australian+Universities;Syllabus+PDFs+%E2%86%92+Structured+Data+%E2%86%92+Student+Productivity;Next.js+16+%C2%B7+React+19+%C2%B7+TypeScript+%C2%B7+Supabase;Enterprise+Security+%C2%B7+19+Languages+%C2%B7+WCAG+2.1+AA)](https://readme-typing-svg.demolab.com)
+[![Typing SVG](https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=700&size=20&duration=2800&pause=700&color=6366F1&center=true&vCenter=true&width=860&lines=Student+Experience+Platform+for+Macquarie+University;Academic+Planning+%C2%B7+Deadlines+%C2%B7+Navigation+%C2%B7+Engagement;Next.js+16+%C2%B7+React+19+%C2%B7+TypeScript+%C2%B7+Supabase;Security-Focused+%C2%B7+19+Languages+%C2%B7+WCAG+2.1+AA)](https://readme-typing-svg.demolab.com)
 
 <!-- Badges -->
 ![License: MIT](https://img.shields.io/badge/License-MIT-f59e0b?style=for-the-badge)
@@ -10,7 +10,7 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
 ![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
-![Tests](https://img.shields.io/badge/503_Tests-Vitest-6E9F18?style=for-the-badge)
+![Tests](https://img.shields.io/badge/Vitest-Tests-6E9F18?style=for-the-badge)
 ![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub_Actions-2088FF?style=for-the-badge&logo=githubactions&logoColor=white)
 
 </div>
@@ -19,13 +19,13 @@
 
 <br/>
 
-# Syllabus Sync — Enterprise-Grade Campus OS Blueprint
+# Syllabus Sync — Student Experience Platform
 
-> **A production-ready, AI-native platform that transforms static university infrastructure into a secure, high-performance, and cohesive student experience.**
+> **A full-stack, security-focused student experience platform that brings academic planning, deadlines, campus support, and engagement tools into one cohesive interface.**
 
-Syllabus Sync is a production-grade, security-hardened web platform that unifies academic scheduling, deadline intelligence, campus navigation, and student engagement into a single, cohesive experience. Built on Next.js 16, React 19, and Supabase with strict TypeScript throughout, it delivers the integrated campus infrastructure that universities promise but rarely ship.
+Syllabus Sync is an independent full-stack student experience platform built for Macquarie University students. It brings academic planning, assessment deadlines, campus support, navigation-related information, and student engagement features into one cohesive interface. Built on Next.js 16, React 19, and Supabase with strict TypeScript throughout, it demonstrates applied full-stack engineering, security implementation, and modern CI/CD practices.
 
-Built initially for **Macquarie University**, it is designed to be adaptable to other institutions by swapping academic datasets and configuring environment variables. This project is a comprehensive portfolio piece that shows advanced full-stack engineering, rigorous cybersecurity implementations, and AI-native development workflows.
+Built initially for **Macquarie University**, it is designed to be adaptable to other institutions by swapping academic datasets and configuring environment variables. This project is a comprehensive portfolio piece showcasing advanced full-stack engineering, security-focused architecture, accessibility, and internationalisation.
 
 **[🔗 Live Demo](https://syllabus-sync-mq.vercel.app)** &nbsp;·&nbsp; **[📖 Docs](./docs/README.md)** &nbsp;·&nbsp; **[🔐 Security](./SECURITY.md)** &nbsp;·&nbsp; **[🤝 Contributing](./CONTRIBUTING.md)**
 
@@ -35,14 +35,14 @@ Built initially for **Macquarie University**, it is designed to be adaptable to 
 
 <br/>
 
-## 🎯 High-Level Impact & Value Proposition
+## 🎯 Problem & Value Proposition
 
-Traditional university systems are fragmented, leading to missed deadlines, poor campus discoverability, and sub-optimal student experiences. Syllabus Sync solves this by providing:
+University tools are often fragmented — timetables, deadlines, campus maps, and support resources scattered across multiple portals. Syllabus Sync addresses this by providing:
 
-- **Unified Academic Management:** Seamless integration of enrolled units, class times, and assessment deadlines with stress-aware predictive tracking.
-- **Advanced Campus Navigation:** Real-time, fused-heading campus navigation combining OpenStreetMap (Leaflet) and Google Maps Embed APIs, tailored for high-accuracy pedestrian routing.
-- **Enterprise-Grade Security:** A defence-in-depth architecture featuring WebAuthn (Passkeys), hardware-backed MFA, Zero-Trust middleware, and strict Row-Level Security (RLS).
-- **Gamified Engagement:** Secure, anti-abuse XP and streak mechanics to incentivise academic consistency.
+- **Unified Academic Management:** Enrolled units, class times, and assessment deadlines with workload tracking in one place.
+- **Campus Navigation:** Dual-engine campus navigation combining OpenStreetMap (Leaflet) and Google Maps Embed APIs, tailored for pedestrian routing.
+- **Security-Focused Architecture:** A defence-in-depth approach featuring WebAuthn (Passkeys), TOTP-based MFA, Zero-Trust middleware, rate limiting, and strict Row-Level Security (RLS).
+- **Gamified Engagement:** Anti-abuse XP and streak mechanics to encourage academic consistency.
 
 <br/>
 
@@ -52,11 +52,11 @@ Traditional university systems are fragmented, leading to missed deadlines, poor
 
 ## Why This Project Matters
 
-University platforms are often decades-old monoliths with bolted-on features and poor mobile experiences. Students deserve better. Syllabus Sync was built to prove three things:
+Student tools often lag behind modern web standards — outdated UIs, poor mobile experiences, and no single place to manage academic life. Syllabus Sync was built to demonstrate three things:
 
-1. **A unified campus experience is technically achievable.** Timetables, assessment deadlines, campus wayfinding, weather-aware planning, and gamified engagement belong in one application -- not scattered across five different portals.
-2. **Security and usability are not trade-offs.** This platform implements WebAuthn passkeys, hardware-backed MFA, and Zero-Trust middleware while maintaining sub-second page loads and a frictionless UX.
-3. **AI-augmented engineering produces auditable, production-quality software.** Every architectural decision and security hardening is traced through an immutable changelog.
+1. **A unified campus experience is technically achievable.** Timetables, assessment deadlines, campus wayfinding, weather-aware planning, and gamified engagement belong in one application — not scattered across five different portals.
+2. **Security and usability are not trade-offs.** This project implements WebAuthn passkeys, TOTP-based MFA, Zero-Trust middleware, and row-level security while maintaining a fast and accessible UX.
+3. **Portfolio-quality software is built with process.** Every architectural decision is documented, every change is tracked through a structured changelog, and every CI run validates secrets, formatting, types, linting, tests, and a production build.
 
 <br/>
 
@@ -95,7 +95,7 @@ University platforms are often decades-old monoliths with bolted-on features and
 ║  🌍  19 languages · Full RTL · WCAG 2.1 AA · 360px–2560px            ║
 ║  🎮  Gamification: XP, leaderboards, streaks, achievement system     ║
 ║  🔔  Context-aware notifications with multi-channel delivery         ║
-║  ⚡  CI/CD via GitHub Actions · 503 tests · Vercel Edge deployment    ║
+║  ⚡  CI/CD via GitHub Actions · Comprehensive Vitest test suite · Vercel Edge deployment    ║
 ╚══════════════════════════════════════════════════════════════════════╝
 ```
 
@@ -137,14 +137,14 @@ Syllabus Sync is built on a modern, edge-ready tech stack designed for scalabili
 
 <br/>
 
-## 🔒 Security Posture & Hardening
+## 🔒 Security-Focused Architecture
 
 Security is a structural constraint, with defence-in-depth across every layer.
 
-- **Authentication:** FIDO2 WebAuthn (Passkeys restricted to platform authenticators), hardware-backed MFA (TOTP), and audited session termination.
-- **Authorisation:** Absolute tenant isolation via PostgreSQL Row-Level Security (RLS) at the query execution layer.
-- **Data Protection:** Encryption at rest (AES-256), in transit (TLS 1.3), and strict Content Security Policy (CSP).
-- **Compliance:** Tamper-evident audit logging for all sensitive system and user operations.
+- **Authentication:** FIDO2 WebAuthn (Passkeys restricted to platform authenticators), TOTP-based MFA, and audited session termination.
+- **Authorisation:** Tenant isolation via PostgreSQL Row-Level Security (RLS) at the query execution layer.
+- **Transport & Policy:** HTTPS-enforced deployment, strict Content Security Policy (CSP), and CSRF protection.
+- **Audit Logging:** Structured, audit-oriented logging for sensitive system and user operations.
 
 > **For Security Reviewers:** [Security Posture Report](./docs/security/SECURITY_POSTURE.md) | [Security Evidence Index](./docs/security/SECURITY_EVIDENCE_INDEX.md)
 
@@ -191,7 +191,7 @@ lib/                Stores, hooks, services, security, utilities, Supabase clien
 locales/            35 locale dictionaries
 public/             Static assets, icons, map tiles, overlays, service worker
 supabase/           Canonical migration history and configuration
-tests/              Vitest suites (93 files, 503 tests)
+tests/              Vitest test suites (93 test files)
 tools/              Repo utilities (i18n, security, exports, load testing)
 ```
 
@@ -231,7 +231,7 @@ npm run dev
 ### Quality Assurance
 ```bash
 npm run check
-# Runs: secrets scan → format → typecheck → lint → 503 tests → build
+# Runs: secrets scan → format → typecheck → lint → tests → build
 ```
 
 <br/>
