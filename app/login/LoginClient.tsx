@@ -739,10 +739,10 @@ export default function LoginClient() {
               <p className="uppercase tracking-[0.16em] sm:tracking-[0.2em] text-xs text-mq-primary font-semibold">
                 {t('campusNavigation')}
               </p>
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight text-mq-content">
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight text-gray-900">
                 {t('loginHeroTitle')}
               </h2>
-              <p className="text-sm sm:text-base max-w-xl text-mq-content-secondary">
+              <p className="text-sm sm:text-base max-w-xl text-gray-700">
                 {t('loginHeroDescription')}
               </p>
             </div>
