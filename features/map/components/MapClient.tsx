@@ -16,6 +16,10 @@ import {
   BadgeCheck,
   Download,
   Link as LinkIcon,
+  Info,
+  Github,
+  ExternalLink,
+  MapPin,
 } from 'lucide-react';
 import { TranslatedMapErrorBoundary } from './MapErrorBoundary';
 import { MapLoadingSkeleton } from './MapSkeleton';
@@ -487,13 +491,20 @@ export default function MapClient() {
         {/* Header */}
         <header className="mb-6">
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-            <h1 className="text-mq-2xl font-bold text-mq-content sm:text-mq-3xl">
-              {t('navigation')}
-            </h1>
+            <h1 className="text-mq-2xl font-bold text-mq-content sm:text-mq-3xl">{t('campus')}</h1>
           </div>
           <p className="text-mq-content-secondary">
-            {t('navigateCampus').replace('Macquarie University', UNIVERSITY_CONFIG.name)}
+            {t('campusSupportSubtitle', { uniName: UNIVERSITY_CONFIG.name })}
           </p>
+
+          {/* Positioning note: advanced wayfinding lives in the separate MQ Navigation app */}
+          <div
+            className="mt-3 flex items-start gap-2.5 rounded-mq-lg border border-mq-border bg-mq-background-secondary px-3 py-2.5 text-mq-xs text-mq-content-secondary"
+            role="note"
+          >
+            <Info className="mt-0.5 h-4 w-4 flex-shrink-0 text-mq-info" aria-hidden="true" />
+            <p>{t('campusSupportNotice')}</p>
+          </div>
         </header>
 
         {mapView === 'campus' && (
@@ -803,6 +814,46 @@ export default function MapClient() {
               />
             )}
           </div>
+        </div>
+
+        {/* MQ Navigation companion app card — positions advanced wayfinding as a
+            separate mobile-first companion, keeping Syllabus Sync's scope honest. */}
+        <div className="mb-2">
+          <MagicCard isLiquidEnhanced>
+            <div className="mq-magic-card-content flex flex-col gap-4 border border-mq-border bg-mq-card-background p-5 sm:flex-row sm:items-start sm:justify-between">
+              <div className="flex min-w-0 items-start gap-3">
+                <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-mq-lg bg-mq-primary/10 text-mq-primary">
+                  <MapPin className="h-5 w-5" aria-hidden="true" />
+                </span>
+                <div className="min-w-0">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <p className="text-mq-base font-semibold text-mq-content">
+                      {t('mqNavCompanionTitle')}
+                    </p>
+                    <Badge variant="secondary" className="text-xs">
+                      {t('mqNavCompanionStatus')}
+                    </Badge>
+                  </div>
+                  <p className="mt-1.5 max-w-2xl text-mq-sm text-mq-content-secondary">
+                    {t('mqNavCompanionDesc')}
+                  </p>
+                </div>
+              </div>
+              <div className="flex-shrink-0">
+                <a
+                  href="https://github.com/mrpouyaalavi/MQ_Navigation"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={t('mqNavCompanionCtaAria')}
+                  className="inline-flex items-center gap-2 rounded-mq-lg border border-mq-border bg-mq-background px-4 py-2 text-mq-sm font-medium text-mq-content transition-colors hover:bg-mq-hover-background"
+                >
+                  <Github className="h-4 w-4" aria-hidden="true" />
+                  {t('mqNavCompanionCta')}
+                  <ExternalLink className="h-3.5 w-3.5 text-mq-content-tertiary" aria-hidden="true" />
+                </a>
+              </div>
+            </div>
+          </MagicCard>
         </div>
       </section>
     </LazyMotion>
