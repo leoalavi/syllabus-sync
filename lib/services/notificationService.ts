@@ -303,7 +303,7 @@ class NotificationService {
           if (registration?.showNotification) {
             await registration.showNotification(options.title, {
               body: options.body,
-              icon: options.icon || '/syllabus-sync-logo.png',
+              icon: options.icon || '/icons/icon-192.png',
               badge: '/icons/icon-192.png',
               tag: options.tag,
               data: notificationData,
@@ -328,7 +328,7 @@ class NotificationService {
 
       const notification = new Notification(options.title, {
         body: options.body,
-        icon: options.icon || '/syllabus-sync-logo.png',
+        icon: options.icon || '/icons/icon-192.png',
         tag: options.tag,
         data: notificationData,
       });
