@@ -784,7 +784,7 @@
   "searchBuildings": "按名称、代码或标签搜索建筑...",
   "clearSearch": "清除搜索",
   "buildingResults": "建筑搜索结果",
-  "mqLogoAlt": "麦考瑞大学标志",
+  "mqLogoAlt": "{{appName}}标志",
   "openProfileMenu": "打开账户菜单",
   "user": "用户",
   "guest": "访客",

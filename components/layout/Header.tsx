@@ -285,7 +285,7 @@ const Header = memo(() => {
         <Link href="/" className="flex items-center gap-1.5 sm:gap-2 min-w-0 shrink-0">
           <Image
             src="/syllabus-sync-logo.png"
-            alt={t('mqLogoAlt')}
+            alt={t('mqLogoAlt', { appName: APP_CONFIG.name })}
             width={80}
             height={80}
             priority

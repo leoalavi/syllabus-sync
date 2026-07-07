@@ -302,7 +302,7 @@ export default function SignupClient() {
                 ) : (
                   <Image
                     src="/syllabus-sync-logo.png"
-                    alt={t('mqLogoAlt')}
+                    alt={t('mqLogoAlt', { appName: APP_CONFIG.name })}
                     width={240}
                     height={240}
                     className="object-contain"

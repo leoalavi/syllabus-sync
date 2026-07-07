@@ -784,7 +784,7 @@
   "searchBuildings": "Αναζήτηση κτιρίων με όνομα, κωδικό ή ετικέτες...",
   "clearSearch": "Εκκαθάριση αναζήτησης",
   "buildingResults": "Αποτελέσματα δόμησης",
-  "mqLogoAlt": "Λογότυπο Macquarie University",
+  "mqLogoAlt": "Λογότυπο {{appName}}",
   "openProfileMenu": "Ανοίξτε το μενού προφίλ",
   "user": "Μεταχειριζόμενος",
   "guest": "Επισκέπτης",

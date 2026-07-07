@@ -784,7 +784,7 @@
   "searchBuildings": "නම, කේතය, හෝ ටැග් අනුව ගොඩනැගිලි සොයන්න...",
   "clearSearch": "සෙවීම පැහැදිලි කරන්න",
   "buildingResults": "ගොඩනැගීමේ ප්රතිඵල",
-  "mqLogoAlt": "Macquarie University ලාංඡනය",
+  "mqLogoAlt": "{{appName}} ලාංඡනය",
   "openProfileMenu": "පැතිකඩ මෙනුව විවෘත කරන්න",
   "user": "පරිශීලක",
   "guest": "අමුත්තා",

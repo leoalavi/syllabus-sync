@@ -784,7 +784,7 @@
   "searchBuildings": "חפש בניינים...",
   "clearSearch": "נקה חיפוש",
   "buildingResults": "בניית תוצאות",
-  "mqLogoAlt": "לוגו Macquarie University",
+  "mqLogoAlt": "לוגו {{appName}}",
   "openProfileMenu": "פתח את תפריט הפרופיל",
   "user": "משתמש",
   "guest": "אורח",

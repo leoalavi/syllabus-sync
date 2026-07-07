@@ -13,6 +13,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/mq/button';
 import { Alert, AlertDescription } from '@/components/ui/mq/alert';
 import { API_ROUTES, SECURITY_CONFIG } from '@/lib/constants/config';
+import { APP_CONFIG } from '@/lib/config';
 import { useTypedTranslation } from '@/lib/hooks/useTypedTranslation';
 import { toastUtils } from '@/lib/utils/toast';
 import { createBrowserClient } from '@/lib/supabase/client';
@@ -301,7 +302,7 @@ export default function ResetPasswordClient() {
             <div className="flex justify-center">
               <Image
                 src="/syllabus-sync-logo.png"
-                alt={t('mqLogoAlt')}
+                alt={t('mqLogoAlt', { appName: APP_CONFIG.name })}
                 width={216}
                 height={216}
                 className="object-contain"
@@ -353,7 +354,7 @@ export default function ResetPasswordClient() {
             <div className="flex justify-center">
               <Image
                 src="/syllabus-sync-logo.png"
-                alt={t('mqLogoAlt')}
+                alt={t('mqLogoAlt', { appName: APP_CONFIG.name })}
                 width={216}
                 height={216}
                 className="object-contain"

@@ -784,7 +784,7 @@
   "searchBuildings": "নাম, কোড বা ট্যাগ দিয়ে বিল্ডিং খুঁজুন...",
   "clearSearch": "সার্চ পরিষ্কার করুন",
   "buildingResults": "বিল্ডিং ফলাফল",
-  "mqLogoAlt": "ম্যাকোয়ারি বিশ্ববিদ্যালয় লোগো",
+  "mqLogoAlt": "{{appName}} লোগো",
   "openProfileMenu": "প্রোফাইল মেনু খুলুন",
   "user": "ইউজার",
   "guest": "গেস্ট",

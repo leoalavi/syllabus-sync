@@ -784,7 +784,7 @@
   "searchBuildings": "Binaları ada, koda veya etiketlere göre arayın...",
   "clearSearch": "Aramayı temizle",
   "buildingResults": "Bina sonuçları",
-  "mqLogoAlt": "Logo",
+  "mqLogoAlt": "{{appName}} Logo",
   "openProfileMenu": "Profil menüsünü aç",
   "user": "Kullanıcı",
   "guest": "Misafir",

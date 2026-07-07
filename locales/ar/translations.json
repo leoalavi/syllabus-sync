@@ -784,7 +784,7 @@
   "searchBuildings": "ابحث عن المباني بالاسم أو الرمز أو العلامات...",
   "clearSearch": "مسح البحث",
   "buildingResults": "نتائج المباني",
-  "mqLogoAlt": "شعار جامعة ماكواري",
+  "mqLogoAlt": "شعار {{appName}}",
   "openProfileMenu": "فتح قائمة الملف الشخصي",
   "user": "المستخدم",
   "guest": "ضيف",

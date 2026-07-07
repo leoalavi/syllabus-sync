@@ -784,7 +784,7 @@
   "searchBuildings": "Szukaj budynków według nazwy, kodu lub tagów...",
   "clearSearch": "Wyczyść wyszukiwanie",
   "buildingResults": "Wyniki budowania",
-  "mqLogoAlt": "Logo Macquarie University",
+  "mqLogoAlt": "Logo {{appName}}",
   "openProfileMenu": "Otwórz menu profilu",
   "user": "Użytkownik",
   "guest": "Gość",

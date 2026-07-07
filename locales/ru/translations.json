@@ -784,7 +784,7 @@
   "searchBuildings": "Поиск зданий по имени, коду или тегу...",
   "clearSearch": "Очистить поиск",
   "buildingResults": "Результаты поиска зданий",
-  "mqLogoAlt": "Логотип Университета Маккуори",
+  "mqLogoAlt": "Логотип {{appName}}",
   "openProfileMenu": "Открыть меню профиля",
   "user": "Пользователь",
   "guest": "Гость",

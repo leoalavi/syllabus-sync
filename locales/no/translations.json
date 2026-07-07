@@ -784,7 +784,7 @@
   "searchBuildings": "Søk i bygninger etter navn, kode eller tagger...",
   "clearSearch": "Tøm søk",
   "buildingResults": "Bygge resultater",
-  "mqLogoAlt": "Macquarie University-logo",
+  "mqLogoAlt": "{{appName}}-logo",
   "openProfileMenu": "Åpne profilmenyen",
   "user": "Bruker",
   "guest": "Gjest",

@@ -784,7 +784,7 @@
   "searchBuildings": "نام، کوڈ، یا ٹیگز سے عمارتیں تلاش کریں...",
   "clearSearch": "تلاش صاف کریں",
   "buildingResults": "عمارت کے نتائج",
-  "mqLogoAlt": "میکوری یونیورسٹی لوگو",
+  "mqLogoAlt": "{{appName}} لوگو",
   "openProfileMenu": "پروفائل مینو کھولیں",
   "user": "یوزر",
   "guest": "مہمان",

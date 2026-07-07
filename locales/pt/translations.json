@@ -784,7 +784,7 @@
   "searchBuildings": "Pesquise edifícios por nome, código ou tags...",
   "clearSearch": "Limpar pesquisa",
   "buildingResults": "Construindo resultados",
-  "mqLogoAlt": "Logo",
+  "mqLogoAlt": "Logo {{appName}}",
   "openProfileMenu": "Abra o menu do perfil",
   "user": "Usuário",
   "guest": "Convidado",

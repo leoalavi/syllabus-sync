@@ -784,7 +784,7 @@
   "searchBuildings": "ساختمان‌ها را بر اساس نام، کد یا برچسب جستجو کنید...",
   "clearSearch": "پاک کردن جستجو",
   "buildingResults": "نتایج ساختمان",
-  "mqLogoAlt": "لوگوی دانشگاه Macquarie",
+  "mqLogoAlt": "لوگوی {{appName}}",
   "openProfileMenu": "باز کردن منوی پروفایل",
   "user": "کاربر",
   "guest": "مهمان",

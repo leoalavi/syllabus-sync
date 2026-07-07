@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     images: [
       {
         url: `${UNIVERSITY_CONFIG.website}/syllabus-sync-logo.png`,
-        alt: translate('mqLogoAlt'),
+        alt: translate('mqLogoAlt', { appName: APP_CONFIG.name }),
       },
     ],
   },

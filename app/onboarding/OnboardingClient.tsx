@@ -19,6 +19,7 @@ import {
 import { Button } from '@/components/ui/mq/button';
 import { Label } from '@/components/ui/label';
 import { isValidRedirect } from '@/lib/utils/security';
+import { APP_CONFIG } from '@/lib/config';
 import { ArrowRight, Loader2 } from 'lucide-react';
 import { useTypedTranslation } from '@/lib/hooks/useTypedTranslation';
 import { TranslationKey } from '@/lib/i18n/translations';
@@ -119,7 +120,7 @@ export default function OnboardingClient() {
               <div className="flex items-center justify-center mb-4">
                 <Image
                   src="/syllabus-sync-logo.png"
-                  alt={t('mqLogoAlt')}
+                  alt={t('mqLogoAlt', { appName: APP_CONFIG.name })}
                   width={216}
                   height={216}
                   className="object-contain"

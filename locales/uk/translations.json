@@ -760,7 +760,7 @@
   "searchBuildings": "Пошук будівель за назвою, кодом або тегами...",
   "clearSearch": "Очистити пошук",
   "buildingResults": "Нарощування результатів",
-  "mqLogoAlt": "Логотип Macquarie University",
+  "mqLogoAlt": "Логотип {{appName}}",
   "openProfileMenu": "Відкрити меню профілю",
   "user": "Користувач",
   "guest": "Гість",

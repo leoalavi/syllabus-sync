@@ -784,7 +784,7 @@
   "searchBuildings": "Épületek keresése név, kód vagy címkék alapján...",
   "clearSearch": "Keresés törlése",
   "buildingResults": "Építési eredmények",
-  "mqLogoAlt": "Macquarie University logó",
+  "mqLogoAlt": "{{appName}} logó",
   "openProfileMenu": "Nyissa meg a profil menüt",
   "user": "Felhasználó",
   "guest": "Vendég",

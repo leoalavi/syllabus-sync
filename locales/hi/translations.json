@@ -784,7 +784,7 @@
   "searchBuildings": "नाम, कोड, या टैग से बिल्डिंग खोजें...",
   "clearSearch": "खोज साफ़ करें",
   "buildingResults": "बिल्डिंग परिणाम",
-  "mqLogoAlt": "मैक्वेरी विश्वविद्यालय लोगो",
+  "mqLogoAlt": "{{appName}} लोगो",
   "openProfileMenu": "प्रोफ़ाइल मेनू खोलें",
   "user": "उपयोगकर्ता",
   "guest": "अतिथि",

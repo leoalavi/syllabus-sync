@@ -784,7 +784,7 @@
   "searchBuildings": "이름, 코드 또는 태그로 건물 검색...",
   "clearSearch": "검색 지우기",
   "buildingResults": "건물 결과",
-  "mqLogoAlt": "맥쿼리 대학교 로고",
+  "mqLogoAlt": "{{appName}} 로고",
   "openProfileMenu": "프로필 메뉴 열기",
   "user": "사용자",
   "guest": "손님",

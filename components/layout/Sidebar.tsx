@@ -25,6 +25,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useTypedTranslation } from '@/lib/hooks/useTypedTranslation';
+import { APP_CONFIG } from '@/lib/config';
 import { Home, MapPin, Calendar, MessageSquare, Menu, X, Sparkles, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import SocialButtons from './SocialButtons';
@@ -268,7 +269,7 @@ const Sidebar = memo(() => {
           >
             <Image
               src="/syllabus-sync-logo.png"
-              alt={t('mqLogoAlt')}
+              alt={t('mqLogoAlt', { appName: APP_CONFIG.name })}
               width={80}
               height={80}
               priority
@@ -404,7 +405,7 @@ const Sidebar = memo(() => {
             <Link href="/" className="flex items-center gap-2">
               <Image
                 src="/syllabus-sync-logo.png"
-                alt={t('mqLogoAlt')}
+                alt={t('mqLogoAlt', { appName: APP_CONFIG.name })}
                 width={128}
                 height={128}
                 priority

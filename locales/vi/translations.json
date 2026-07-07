@@ -784,7 +784,7 @@
   "searchBuildings": "Tìm tòa nhà theo tên, mã hoặc thẻ...",
   "clearSearch": "Xóa tìm kiếm",
   "buildingResults": "Kết quả tòa nhà",
-  "mqLogoAlt": "Logo Đại học Macquarie",
+  "mqLogoAlt": "Logo {{appName}}",
   "openProfileMenu": "Mở menu hồ sơ",
   "user": "Người dùng",
   "guest": "Khách",

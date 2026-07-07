@@ -784,7 +784,7 @@
   "searchBuildings": "Vyhledávejte budovy podle názvu, kódu nebo štítků...",
   "clearSearch": "Vymazat vyhledávání",
   "buildingResults": "Budování výsledků",
-  "mqLogoAlt": "Logo Macquarie University",
+  "mqLogoAlt": "Logo {{appName}}",
   "openProfileMenu": "Otevřete nabídku profilu",
   "user": "Uživatel",
   "guest": "Host",

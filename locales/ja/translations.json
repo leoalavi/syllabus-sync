@@ -784,7 +784,7 @@
   "searchBuildings": "名前、コード、またはタグで建物を検索...",
   "clearSearch": "検索をクリア",
   "buildingResults": "建物の結果",
-  "mqLogoAlt": "マッコーリー大学ロゴ",
+  "mqLogoAlt": "{{appName}}ロゴ",
   "openProfileMenu": "プロフィールメニューを開く",
   "user": "ユーザー",
   "guest": "ゲスト",

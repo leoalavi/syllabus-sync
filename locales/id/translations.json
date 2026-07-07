@@ -784,7 +784,7 @@
   "searchBuildings": "Cari gedung berdasarkan nama, kode, atau tag...",
   "clearSearch": "Hapus pencarian",
   "buildingResults": "Hasil pencarian gedung",
-  "mqLogoAlt": "Logo Universitas Macquarie",
+  "mqLogoAlt": "Logo {{appName}}",
   "openProfileMenu": "Buka menu profil",
   "user": "Pengguna",
   "guest": "Tamu",
