@@ -300,7 +300,7 @@ export default function ResetPasswordClient() {
           <div className="bg-mq-card-background/85 backdrop-blur-xl border border-mq-border/30 rounded-2xl shadow-[0_18px_70px_rgba(0,0,0,0.3)] p-8 text-center space-y-6">
             <div className="flex justify-center">
               <Image
-                src="/MQ_Logo_Final.png"
+                src="/syllabus-sync-logo.png"
                 alt={t('mqLogoAlt')}
                 width={216}
                 height={216}
@@ -352,7 +352,7 @@ export default function ResetPasswordClient() {
           <div className="bg-mq-card-background/85 backdrop-blur-xl border border-mq-border/30 rounded-2xl shadow-[0_18px_70px_rgba(0,0,0,0.3)] p-6 sm:p-8 space-y-6">
             <div className="flex justify-center">
               <Image
-                src="/MQ_Logo_Final.png"
+                src="/syllabus-sync-logo.png"
                 alt={t('mqLogoAlt')}
                 width={216}
                 height={216}

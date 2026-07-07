@@ -16,14 +16,14 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: `${UNIVERSITY_CONFIG.website}/MQ_Logo_Final.png`,
+        url: `${UNIVERSITY_CONFIG.website}/syllabus-sync-logo.png`,
         alt: `${APP_CONFIG.name} logo`,
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    images: [`${UNIVERSITY_CONFIG.website}/MQ_Logo_Final.png`],
+    images: [`${UNIVERSITY_CONFIG.website}/syllabus-sync-logo.png`],
   },
 };
 

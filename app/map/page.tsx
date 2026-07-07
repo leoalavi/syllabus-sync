@@ -32,14 +32,14 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: `${UNIVERSITY_CONFIG.website}/MQ_Logo_Final.png`,
+        url: `${UNIVERSITY_CONFIG.website}/syllabus-sync-logo.png`,
         alt: translate('mqLogoAlt'),
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    images: [`${UNIVERSITY_CONFIG.website}/MQ_Logo_Final.png`],
+    images: [`${UNIVERSITY_CONFIG.website}/syllabus-sync-logo.png`],
   },
 };
 

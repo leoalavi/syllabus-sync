@@ -267,7 +267,7 @@ const Sidebar = memo(() => {
             onClick={() => setMobileMenuOpen(false)}
           >
             <Image
-              src="/MQ_Logo_Final.png"
+              src="/syllabus-sync-logo.png"
               alt={t('mqLogoAlt')}
               width={80}
               height={80}
@@ -403,7 +403,7 @@ const Sidebar = memo(() => {
           <div className="mb-4 sidebar-logo">
             <Link href="/" className="flex items-center gap-2">
               <Image
-                src="/MQ_Logo_Final.png"
+                src="/syllabus-sync-logo.png"
                 alt={t('mqLogoAlt')}
                 width={128}
                 height={128}

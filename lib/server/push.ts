@@ -100,7 +100,7 @@ export async function sendPushNotificationToUser(
   const serializedPayload = JSON.stringify({
     title: payload.title,
     body: payload.body,
-    icon: payload.icon ?? '/MQ_Logo_Final.png',
+    icon: payload.icon ?? '/syllabus-sync-logo.png',
     badge: payload.badge ?? '/icons/icon-192.png',
     tag: payload.tag,
     data: {

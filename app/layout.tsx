@@ -29,14 +29,14 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: '/MQ_Logo_Final.png',
+        url: '/syllabus-sync-logo.png',
         alt: `${APP_CONFIG.name} logo`,
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    images: ['/MQ_Logo_Final.png'],
+    images: ['/syllabus-sync-logo.png'],
   },
   icons: {
     icon: '/favicon.ico',
@@ -59,7 +59,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     '@type': 'Organization',
     name: APP_CONFIG.name,
     url: UNIVERSITY_CONFIG.website,
-    logo: new URL('/MQ_Logo_Final.png', UNIVERSITY_CONFIG.website).toString(),
+    logo: new URL('/syllabus-sync-logo.png', UNIVERSITY_CONFIG.website).toString(),
   };
 
   return (

@@ -301,7 +301,7 @@ export default function SignupClient() {
                   </div>
                 ) : (
                   <Image
-                    src="/MQ_Logo_Final.png"
+                    src="/syllabus-sync-logo.png"
                     alt={t('mqLogoAlt')}
                     width={240}
                     height={240}

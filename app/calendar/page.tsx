@@ -78,7 +78,7 @@ export const metadata: Metadata = {
     url: '/calendar',
     images: [
       {
-        url: `${siteUrl}/MQ_Logo_Final.png`,
+        url: `${siteUrl}/syllabus-sync-logo.png`,
         alt: translate('mqLogoAlt'),
       },
     ],
@@ -87,7 +87,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: metaOpenGraphTitle,
     description: metaDescription,
-    images: [`${siteUrl}/MQ_Logo_Final.png`],
+    images: [`${siteUrl}/syllabus-sync-logo.png`],
   },
 };
 

@@ -5,9 +5,9 @@
 // SECURITY: This service worker implements a strict caching policy to prevent
 // sensitive data from being cached and exposed after logout or on shared devices.
 
-const CACHE_NAME = "syllabus-sync-v6"; // Bump version for cache invalidation
-const STATIC_CACHE = "syllabus-sync-static-v6";
-const DYNAMIC_CACHE = "syllabus-sync-dynamic-v6";
+const CACHE_NAME = "syllabus-sync-v7"; // Bump version for cache invalidation
+const STATIC_CACHE = "syllabus-sync-static-v7";
+const DYNAMIC_CACHE = "syllabus-sync-dynamic-v7";
 const MAP_CACHE = "syllabus-sync-map-v1"; // Dedicated cache for map assets
 
 // SECURITY: Only cache truly static assets - NO HTML pages that may contain user data
@@ -15,7 +15,7 @@ const MAP_CACHE = "syllabus-sync-map-v1"; // Dedicated cache for map assets
 const STATIC_ASSETS = [
   "/manifest.webmanifest",
   "/favicon.ico",
-  "/MQ_Logo_Final.png",
+  "/syllabus-sync-logo.png",
   "/icons/icon-192.png",
   "/icons/icon-512.png",
   "/offline", // Offline fallback page - safe to precache (no user data)
@@ -125,7 +125,7 @@ self.addEventListener("push", (event) => {
   const fallbackPayload = {
     title: "Syllabus Sync",
     body: "You have a new reminder.",
-    icon: "/MQ_Logo_Final.png",
+    icon: "/syllabus-sync-logo.png",
     badge: "/icons/icon-192.png",
     data: {
       url: "/",
@@ -148,7 +148,7 @@ self.addEventListener("push", (event) => {
   event.waitUntil(
     self.registration.showNotification(payload.title, {
       body: payload.body,
-      icon: payload.icon || "/MQ_Logo_Final.png",
+      icon: payload.icon || "/syllabus-sync-logo.png",
       badge: payload.badge || "/icons/icon-192.png",
       tag: payload.tag,
       data: payload.data || { url: "/" },

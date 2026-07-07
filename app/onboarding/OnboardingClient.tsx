@@ -118,7 +118,7 @@ export default function OnboardingClient() {
             <div className="px-6 pt-8 pb-6 text-center">
               <div className="flex items-center justify-center mb-4">
                 <Image
-                  src="/MQ_Logo_Final.png"
+                  src="/syllabus-sync-logo.png"
                   alt={t('mqLogoAlt')}
                   width={216}
                   height={216}

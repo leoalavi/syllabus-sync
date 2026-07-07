@@ -381,7 +381,7 @@ export default function LoginClient() {
           <div className="flex items-center justify-center mb-6 sm:mb-8">
             <div className="relative w-28 h-28 sm:w-32 sm:h-32 lg:w-40 lg:h-40 flex items-center justify-center">
               <Image
-                src="/MQ_Logo_Final.png"
+                src="/syllabus-sync-logo.png"
                 alt={t('mqLogoAlt')}
                 width={160}
                 height={160}
