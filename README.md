@@ -27,7 +27,7 @@ Syllabus Sync is an independent full-stack student experience platform built for
 
 Built initially for **Macquarie University**, it is designed to be adaptable to other institutions by swapping academic datasets and configuring environment variables. This project is a comprehensive portfolio piece showcasing advanced full-stack engineering, security-focused architecture, accessibility, and internationalisation.
 
-**[🔗 Live Demo](https://syllabus-sync-mq.vercel.app)** &nbsp;·&nbsp; **[📖 Docs](./docs/README.md)** &nbsp;·&nbsp; **[🔐 Security](./SECURITY.md)** &nbsp;·&nbsp; **[🤝 Contributing](./CONTRIBUTING.md)**
+**[🔗 Live Demo](https://www.syllabus-sync.app)** &nbsp;·&nbsp; **[📖 Docs](./docs/README.md)** &nbsp;·&nbsp; **[🔐 Security](./SECURITY.md)** &nbsp;·&nbsp; **[🤝 Contributing](./CONTRIBUTING.md)**
 
 <br/>
 
