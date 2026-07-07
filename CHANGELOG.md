@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+### Raouf: App-Icon Logo Rebrand — 2026-07-07
+
+**Scope:** Replaced the Macquarie University crest logo with the new Syllabus Sync app-icon image across the entire app.
+
+**Summary:** Cropped the supplied app-icon artwork (rounded-square, red/white building + book motif) into an edge-to-edge square master and regenerated the full PWA/favicon icon set (`favicon.ico`, `apple-touch-icon.png`, `icon-192/384/512.png`, `maskable-512.png`) from it. Repointed all ~25 code references — login, signup, header, sidebar, onboarding, reset-password, OG/Twitter meta images, the JSON-LD organization schema, and the push-notification icon fallback in both `lib/server/push.ts` and `lib/services/notificationService.ts` — from `/MQ_Logo_Final.png` to the new `/syllabus-sync-logo.png`, then deleted the old crest file. Updated `public/sw.js`'s precache list and push-notification fallback to the new path and bumped its cache versions (`syllabus-sync-v6` → `v7`, `-static-v6` → `-static-v7`, `-dynamic-v6` → `-dynamic-v7`) so installed service workers fetch the new assets instead of serving the stale crest from cache. Rewrote the `mqLogoAlt` translation value in all 35 locale files from a hardcoded "Macquarie University logo" translation to a `{{appName}}`-interpolated string (matching the existing `welcomeTo` pattern), and updated all 10 call sites to pass `{ appName: APP_CONFIG.name }`, so alt text now reads "Syllabus Sync Logo" (localized) instead of the old university-crest wording.
+
+**Files Changed:** `public/syllabus-sync-logo.png` (new), `public/icons/icon-192.png`, `public/icons/icon-384.png`, `public/icons/icon-512.png`, `public/icons/maskable-512.png`, `public/apple-touch-icon.png`, `public/icons/apple-touch-icon.png`, `app/favicon.ico`, `public/MQ_Logo_Final.png` (deleted), `app/layout.tsx`, `app/home/page.tsx`, `app/calendar/page.tsx`, `app/map/page.tsx`, `app/feed/page.tsx`, `app/manage-profiles/layout.tsx`, `app/login/LoginClient.tsx`, `app/signup/SignupClient.tsx`, `app/onboarding/OnboardingClient.tsx`, `app/reset-password/reset-password-client.tsx`, `components/layout/Header.tsx`, `components/layout/Sidebar.tsx`, `lib/server/push.ts`, `lib/services/notificationService.ts`, `public/sw.js`, `locales/*/translations.json` (35 files).
+
+**Verification:** `npm run check` passed (secrets, format, typecheck, lint, test, build) ✅; `npm run check:i18n` passed ✅; manually confirmed the new icon renders on `/login` and as the browser favicon ✅.
+
+**Follow-ups:** None.
+
+---
+
 ### Raouf: CI/CD Test Suite Remediation — 2026-04-07
 
 **Scope:** Resolved authentication pipeline test failures causing CI blockages.
