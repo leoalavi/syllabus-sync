@@ -109,5 +109,7 @@ if (problems.length) {
 
 console.log(`[cf:check-env] ok — NEXT_PUBLIC_APP_URL=${appUrl}`);
 if (absentRecommended.length) {
-  console.warn(`[cf:check-env] not set (feature will be disabled): ${absentRecommended.join(', ')}`);
+  console.warn(
+    `[cf:check-env] not set (feature will be disabled): ${absentRecommended.join(', ')}`,
+  );
 }

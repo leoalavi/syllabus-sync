@@ -11,8 +11,9 @@
  * - Automated scanning
  */
 
-import { NextRequest, NextResponse } from "next/server";
-import { logger } from "@/lib/logger";
+import { NextRequest, NextResponse } from 'next/server';
+import { logger } from '@/lib/logger';
+import { validateHeaderScanTarget } from '@/lib/security/scan-target';
 
 // ============================================================================
 // TYPES
@@ -52,7 +53,7 @@ export interface SecurityScanResult {
   /** Overall security score (0-100) */
   score: number;
   /** Security grade (A-F) */
-  grade: "A" | "B" | "C" | "D" | "F";
+  grade: 'A' | 'B' | 'C' | 'D' | 'F';
   /** Header check results */
   headers: HeaderCheckResult[];
   /** Critical issues found */
@@ -67,98 +68,95 @@ export interface SecurityScanResult {
 
 const SECURITY_HEADERS: SecurityHeaderConfig[] = [
   {
-    name: "Content-Security-Policy",
+    name: 'Content-Security-Policy',
     expected: /^default-src/,
     critical: true,
-    description: "Controls which resources the user agent is allowed to load",
-    recommendation:
-      "Implement a strict Content Security Policy to prevent XSS attacks",
+    description: 'Controls which resources the user agent is allowed to load',
+    recommendation: 'Implement a strict Content Security Policy to prevent XSS attacks',
   },
   {
-    name: "X-Content-Type-Options",
-    expected: "nosniff",
+    name: 'X-Content-Type-Options',
+    expected: 'nosniff',
     critical: true,
-    description: "Prevents MIME type sniffing",
-    recommendation: "Set X-Content-Type-Options to nosniff",
+    description: 'Prevents MIME type sniffing',
+    recommendation: 'Set X-Content-Type-Options to nosniff',
   },
   {
-    name: "X-Frame-Options",
+    name: 'X-Frame-Options',
     expected: /^(DENY|SAMEORIGIN)$/,
     critical: true,
-    description: "Prevents clickjacking attacks",
-    recommendation: "Set X-Frame-Options to DENY or SAMEORIGIN",
+    description: 'Prevents clickjacking attacks',
+    recommendation: 'Set X-Frame-Options to DENY or SAMEORIGIN',
   },
   {
-    name: "X-XSS-Protection",
+    name: 'X-XSS-Protection',
     expected: /^1; mode=block$/,
     critical: false,
-    description: "Enables XSS filtering in browsers",
-    recommendation: "Set X-XSS-Protection to 1; mode=block",
+    description: 'Enables XSS filtering in browsers',
+    recommendation: 'Set X-XSS-Protection to 1; mode=block',
   },
   {
-    name: "Strict-Transport-Security",
+    name: 'Strict-Transport-Security',
     expected: /^max-age=\d+/,
     critical: true,
-    description: "Enforces HTTPS connections",
-    recommendation:
-      "Set Strict-Transport-Security with max-age of at least 31536000 (1 year)",
+    description: 'Enforces HTTPS connections',
+    recommendation: 'Set Strict-Transport-Security with max-age of at least 31536000 (1 year)',
   },
   {
-    name: "Referrer-Policy",
+    name: 'Referrer-Policy',
     expected: /^strict-origin-when-cross-origin$/,
     critical: false,
-    description: "Controls how much referrer information is sent",
-    recommendation: "Set Referrer-Policy to strict-origin-when-cross-origin",
+    description: 'Controls how much referrer information is sent',
+    recommendation: 'Set Referrer-Policy to strict-origin-when-cross-origin',
   },
   {
-    name: "Permissions-Policy",
+    name: 'Permissions-Policy',
     expected: /^.+/,
     critical: false,
-    description: "Controls which browser features can be used",
-    recommendation: "Set Permissions-Policy to restrict sensitive features",
+    description: 'Controls which browser features can be used',
+    recommendation: 'Set Permissions-Policy to restrict sensitive features',
   },
   {
-    name: "Cross-Origin-Opener-Policy",
+    name: 'Cross-Origin-Opener-Policy',
     expected: /^same-origin$/,
     critical: false,
-    description: "Controls cross-origin opener behavior",
-    recommendation: "Set Cross-Origin-Opener-Policy to same-origin",
+    description: 'Controls cross-origin opener behavior',
+    recommendation: 'Set Cross-Origin-Opener-Policy to same-origin',
   },
   {
-    name: "Cross-Origin-Resource-Policy",
+    name: 'Cross-Origin-Resource-Policy',
     expected: /^same-origin$/,
     critical: false,
-    description: "Controls cross-origin resource loading",
-    recommendation: "Set Cross-Origin-Resource-Policy to same-origin",
+    description: 'Controls cross-origin resource loading',
+    recommendation: 'Set Cross-Origin-Resource-Policy to same-origin',
   },
   {
-    name: "Cache-Control",
+    name: 'Cache-Control',
     expected: /^.+/,
     critical: false,
-    description: "Controls caching behavior",
-    recommendation:
-      "Set appropriate Cache-Control headers for sensitive resources",
+    description: 'Controls caching behavior',
+    recommendation: 'Set appropriate Cache-Control headers for sensitive resources',
   },
   {
-    name: "X-DNS-Prefetch-Control",
+    name: 'X-DNS-Prefetch-Control',
     expected: /^off$/,
     critical: false,
-    description: "Controls DNS prefetching",
-    recommendation: "Set X-DNS-Prefetch-Control to off for privacy",
+    description: 'Controls DNS prefetching',
+    recommendation: 'Set X-DNS-Prefetch-Control to off for privacy',
   },
   {
-    name: "X-Download-Options",
+    name: 'X-Download-Options',
     expected: /^noopen$/,
     critical: false,
-    description: "Prevents automatic file opening in IE",
-    recommendation: "Set X-Download-Options to noopen",
+    description: 'Prevents automatic file opening in IE',
+    recommendation: 'Set X-Download-Options to noopen',
   },
   {
-    name: "X-Permitted-Cross-Domain-Policies",
+    name: 'X-Permitted-Cross-Domain-Policies',
     expected: /^none$/,
     critical: false,
-    description: "Restricts cross-domain policy files",
-    recommendation: "Set X-Permitted-Cross-Domain-Policies to none",
+    description: 'Restricts cross-domain policy files',
+    recommendation: 'Set X-Permitted-Cross-Domain-Policies to none',
   },
 ];
 
@@ -173,10 +171,7 @@ const SECURITY_HEADERS: SecurityHeaderConfig[] = [
  * @param headers - The headers object
  * @returns Header check result
  */
-export function checkSecurityHeader(
-  headerName: string,
-  headers: Headers,
-): HeaderCheckResult {
+export function checkSecurityHeader(headerName: string, headers: Headers): HeaderCheckResult {
   const config = SECURITY_HEADERS.find((h) => h.name === headerName);
 
   if (!config) {
@@ -248,9 +243,7 @@ export function checkAllSecurityHeaders(headers: Headers): HeaderCheckResult[] {
  * @param results - Array of header check results
  * @returns Security scan result
  */
-export function calculateSecurityScore(
-  results: HeaderCheckResult[],
-): SecurityScanResult {
+export function calculateSecurityScore(results: HeaderCheckResult[]): SecurityScanResult {
   let score = 0;
   const criticalIssues: string[] = [];
   const recommendations: string[] = [];
@@ -276,10 +269,7 @@ export function calculateSecurityScore(
   }
 
   // Normalize score to 0-100
-  const maxScore = SECURITY_HEADERS.reduce(
-    (sum, h) => sum + (h.critical ? 10 : 5),
-    0,
-  );
+  const maxScore = SECURITY_HEADERS.reduce((sum, h) => sum + (h.critical ? 10 : 5), 0);
   const normalizedScore = Math.round((score / maxScore) * 100);
 
   // Determine grade
@@ -297,12 +287,12 @@ export function calculateSecurityScore(
 /**
  * Get security grade from score
  */
-function getSecurityGrade(score: number): "A" | "B" | "C" | "D" | "F" {
-  if (score >= 90) return "A";
-  if (score >= 75) return "B";
-  if (score >= 60) return "C";
-  if (score >= 40) return "D";
-  return "F";
+function getSecurityGrade(score: number): 'A' | 'B' | 'C' | 'D' | 'F' {
+  if (score >= 90) return 'A';
+  if (score >= 75) return 'B';
+  if (score >= 60) return 'C';
+  if (score >= 40) return 'D';
+  return 'F';
 }
 
 // ============================================================================
@@ -315,9 +305,7 @@ function getSecurityGrade(score: number): "A" | "B" | "C" | "D" | "F" {
  * @param response - The Next.js response to scan
  * @returns Security scan result
  */
-export function scanResponseHeaders(
-  response: NextResponse,
-): SecurityScanResult {
+export function scanResponseHeaders(response: NextResponse): SecurityScanResult {
   const results = checkAllSecurityHeaders(response.headers);
   return calculateSecurityScore(results);
 }
@@ -344,26 +332,36 @@ export function scanRequestHeaders(request: NextRequest): SecurityScanResult {
  * @returns Promise resolving to security scan result
  */
 export async function scanURLHeaders(url: string): Promise<SecurityScanResult> {
+  const target = validateHeaderScanTarget(url);
+  if (!target.valid) {
+    return {
+      score: 0,
+      grade: 'F',
+      headers: [],
+      criticalIssues: [target.message],
+      recommendations: ['Use an approved Syllabus Sync site origin'],
+    };
+  }
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 8000);
 
   try {
-    const response = await fetch(url, {
-      method: "HEAD",
-      redirect: "manual",
+    const response = await fetch(target.url, {
+      method: 'HEAD',
+      redirect: 'manual',
       signal: controller.signal,
     });
 
     const results = checkAllSecurityHeaders(response.headers);
     return calculateSecurityScore(results);
   } catch (error) {
-    logger.error("URL scan error:", error);
+    logger.error('URL scan error:', error);
     return {
       score: 0,
-      grade: "F",
+      grade: 'F',
       headers: [],
-      criticalIssues: ["Failed to scan URL"],
-      recommendations: ["Check if URL is accessible"],
+      criticalIssues: ['Failed to scan URL'],
+      recommendations: ['Check if URL is accessible'],
     };
   } finally {
     clearTimeout(timeout);
@@ -400,34 +398,31 @@ export async function scanMultipleURLs(
  * @param url - Optional URL that was scanned
  * @returns Formatted security report
  */
-export function generateSecurityReport(
-  result: SecurityScanResult,
-  url?: string,
-): string {
+export function generateSecurityReport(result: SecurityScanResult, url?: string): string {
   const lines: string[] = [];
 
-  lines.push("=".repeat(60));
-  lines.push("SECURITY HEADERS SCAN REPORT");
-  lines.push("=".repeat(60));
-  lines.push("");
+  lines.push('='.repeat(60));
+  lines.push('SECURITY HEADERS SCAN REPORT');
+  lines.push('='.repeat(60));
+  lines.push('');
 
   if (url) {
     lines.push(`URL: ${url}`);
-    lines.push("");
+    lines.push('');
   }
 
   lines.push(`Overall Score: ${result.score}/100`);
   lines.push(`Security Grade: ${result.grade}`);
-  lines.push("");
+  lines.push('');
 
-  lines.push("-".repeat(60));
-  lines.push("HEADER CHECKS");
-  lines.push("-".repeat(60));
-  lines.push("");
+  lines.push('-'.repeat(60));
+  lines.push('HEADER CHECKS');
+  lines.push('-'.repeat(60));
+  lines.push('');
 
   for (const header of result.headers) {
-    const status = header.valid ? "✓" : "✗";
-    const critical = header.critical ? " [CRITICAL]" : "";
+    const status = header.valid ? '✓' : '✗';
+    const critical = header.critical ? ' [CRITICAL]' : '';
     lines.push(`${status} ${header.name}${critical}`);
 
     if (header.value) {
@@ -440,38 +435,38 @@ export function generateSecurityReport(
       lines.push(`  Recommendation: ${header.recommendation}`);
     }
 
-    lines.push("");
+    lines.push('');
   }
 
   if (result.criticalIssues.length > 0) {
-    lines.push("-".repeat(60));
-    lines.push("CRITICAL ISSUES");
-    lines.push("-".repeat(60));
-    lines.push("");
+    lines.push('-'.repeat(60));
+    lines.push('CRITICAL ISSUES');
+    lines.push('-'.repeat(60));
+    lines.push('');
 
     for (const issue of result.criticalIssues) {
       lines.push(`✗ ${issue}`);
     }
 
-    lines.push("");
+    lines.push('');
   }
 
   if (result.recommendations.length > 0) {
-    lines.push("-".repeat(60));
-    lines.push("RECOMMENDATIONS");
-    lines.push("-".repeat(60));
-    lines.push("");
+    lines.push('-'.repeat(60));
+    lines.push('RECOMMENDATIONS');
+    lines.push('-'.repeat(60));
+    lines.push('');
 
     for (const rec of result.recommendations) {
       lines.push(`• ${rec}`);
     }
 
-    lines.push("");
+    lines.push('');
   }
 
-  lines.push("=".repeat(60));
+  lines.push('='.repeat(60));
 
-  return lines.join("\n");
+  return lines.join('\n');
 }
 
 // ============================================================================
@@ -489,7 +484,7 @@ export async function handleHeaderScan(request: Request): Promise<Response> {
 
     if (!url) {
       return Response.json(
-        { error: { code: "MISSING_URL", message: "URL is required" } },
+        { error: { code: 'MISSING_URL', message: 'URL is required' } },
         { status: 400 },
       );
     }
@@ -499,7 +494,7 @@ export async function handleHeaderScan(request: Request): Promise<Response> {
       new URL(url);
     } catch {
       return Response.json(
-        { error: { code: "INVALID_URL", message: "Invalid URL format" } },
+        { error: { code: 'INVALID_URL', message: 'Invalid URL format' } },
         { status: 400 },
       );
     }
@@ -512,9 +507,9 @@ export async function handleHeaderScan(request: Request): Promise<Response> {
       report: generateSecurityReport(result, url),
     });
   } catch (error) {
-    logger.error("Header scan error:", error);
+    logger.error('Header scan error:', error);
     return Response.json(
-      { error: { code: "INTERNAL_ERROR", message: "Failed to scan headers" } },
+      { error: { code: 'INTERNAL_ERROR', message: 'Failed to scan headers' } },
       { status: 500 },
     );
   }
@@ -538,12 +533,12 @@ export async function handleSelfScan(request: Request): Promise<Response> {
       report: generateSecurityReport(result, baseUrl),
     });
   } catch (error) {
-    logger.error("Self scan error:", error);
+    logger.error('Self scan error:', error);
     return Response.json(
       {
         error: {
-          code: "INTERNAL_ERROR",
-          message: "Failed to scan application",
+          code: 'INTERNAL_ERROR',
+          message: 'Failed to scan application',
         },
       },
       { status: 500 },

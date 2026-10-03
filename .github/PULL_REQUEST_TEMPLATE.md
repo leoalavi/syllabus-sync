@@ -39,7 +39,8 @@ Fixes #
 
 ## Checklist
 
-- [ ] `npm run check` passes locally (lint, typecheck, tests, build)
+- [ ] `npm run check` passes locally (secrets, format, typecheck, lint, tests, build)
+- [ ] Cloudflare/OpenNext build and output verification pass when deployment code changes
 - [ ] New or updated tests cover the changes
 - [ ] No console errors or warnings in the browser
 - [ ] Self-review completed -- no debugging code or leftover TODOs
@@ -49,6 +50,6 @@ Fixes #
 
 <!-- Note any special deployment considerations. Remove this section if not applicable. -->
 
-- [ ] Requires database migration (`npx supabase db push`)
+- [ ] Requires a reviewed database migration (do not apply migrations from a pull request)
 - [ ] Requires new or updated environment variables
 - [ ] Contains breaking changes (describe rollback plan below)

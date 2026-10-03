@@ -57,9 +57,7 @@ University tools are often fragmented — timetables, deadlines, campus maps, an
 
 <div align="center">
 
-|                              Dashboard                               |                              Calendar                              |
-| :------------------------------------------------------------------: | :----------------------------------------------------------------: |
-| <img width="400" alt="Dashboard" src="./docs/images/Dashboard.png"/> | <img width="400" alt="Calendar" src="./docs/images/Calendar.png"/> |
+<img width="600" alt="Syllabus Sync calendar" src="./docs/images/Calendar.png"/>
 
 |                          Campus Map (Leaflet)                          |                        Campus Map (Google Maps)                        |
 | :--------------------------------------------------------------------: | :--------------------------------------------------------------------: |
@@ -67,7 +65,7 @@ University tools are often fragmented — timetables, deadlines, campus maps, an
 
 </div>
 
-> TODO: add current screenshots for Settings, Auth/Security flows, and a mobile viewport — not yet captured.
+These screenshots show selected interfaces; the product is still being developed and validated.
 
 <br/>
 
@@ -150,6 +148,12 @@ Accessibility is treated as a linting concern, not a certified standard: the cod
 ### License
 
 Released under the **MIT License**.
+
+### Open-source participation
+
+The repository is public and accepts focused contributions. Start with the [contributing guide](./CONTRIBUTING.md), which covers local setup, tests, security boundaries and review expectations. Useful areas include accessibility, reliable tests, documentation, and carefully validated campus or academic data improvements. Report vulnerabilities privately through [SECURITY.md](./SECURITY.md); do not include exploit details in public issues.
+
+The current app is Macquarie-focused. Institution-specific adapters and broader university support are design goals, not shipped integrations. Contributions toward that direction should begin with a small design discussion and avoid assuming another institution's data or endorsement.
 
 ### Roadmap (not yet built)
 
@@ -275,7 +279,7 @@ See [`.env.example`](./.env.example) for the full list. Key groups:
 | `NEXT_PUBLIC_AUTH_COOKIE_DOMAIN`                             | Prod only                  | Shares the Supabase session across `*.syllabus-sync.app` subdomains (applied only when `NODE_ENV=production`) |
 | `NEXT_PUBLIC_TRUSTED_ORIGINS` / `NEXT_PUBLIC_SYLLA_URL`      | Optional                   | Sylla companion app: explicit CSRF + redirect allowlist, and the sidebar entry point                          |
 
-Full setup notes: [Environment Setup](./docs/operations/ENVIRONMENT_SETUP.md).
+Full setup notes: [Environment Setup](./docs/setup/ENVIRONMENT_SETUP.md).
 
 > **Ecosystem note:** Syllabus Sync can share its Supabase login with the sibling
 > [Sylla](https://sylla.syllabus-sync.app) study-assistant app via a parent-domain
@@ -296,7 +300,7 @@ Full setup notes: [Environment Setup](./docs/operations/ENVIRONMENT_SETUP.md).
 | Architecture          | [docs/architecture/ARCHITECTURE.md](./docs/architecture/ARCHITECTURE.md)             |
 | Technical Explanation | [TECHNICAL_EXPLANATION.md](./TECHNICAL_EXPLANATION.md)                               |
 | API Reference         | [docs/api/API_REFERENCE.md](./docs/api/API_REFERENCE.md)                             |
-| Environment Setup     | [docs/operations/ENVIRONMENT_SETUP.md](./docs/operations/ENVIRONMENT_SETUP.md)       |
+| Environment Setup     | [docs/setup/ENVIRONMENT_SETUP.md](./docs/setup/ENVIRONMENT_SETUP.md)                 |
 | Deployment Checklist  | [docs/operations/deployment-checklist.md](./docs/operations/deployment-checklist.md) |
 | Docs Index            | [docs/README.md](./docs/README.md)                                                   |
 | Security Policy       | [SECURITY.md](./SECURITY.md)                                                         |

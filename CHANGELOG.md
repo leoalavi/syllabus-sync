@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+### Raouf: Open-Source Readiness Follow-Through — 2026-10-03
+
+**Scope:** Finished a local open-source readiness pass without publishing changes.
+
+**Summary:** Included colocated app tests in Vitest, corrected an outdated profile assertion, handled malformed development map-pin requests, added format and Cloudflare/OpenNext checks to CI, updated contributor and API guidance, removed a screenshot with an outdated personal name, refreshed dependencies to clear production audit findings, and documented the unresolved header-scanner runtime issue.
+
+**Verification:** Secrets, formatting, typecheck, lint, 920 tests, Next.js build, Cloudflare/OpenNext build, output verification, Wrangler dry run, production dependency audit, and `git diff --check` passed.
+
+**Follow-ups:** Review 14 development-tool dependency advisories and non-English translation gaps. Decide on the header-scanner egress design and proxy-specific client-IP header trust before changing security behavior.
+
+---
+
 ### Raouf: Public Positioning and Cloudflare Readiness — 2026-10-03
 
 **Scope:** Corrected the production Worker configuration and public project guidance without deploying.

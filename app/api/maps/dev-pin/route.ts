@@ -23,6 +23,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
   }
 
+  if (!body || typeof body !== 'object') {
+    return NextResponse.json({ error: 'Invalid payload' }, { status: 400 });
+  }
+
   const { buildingId, position } = body;
 
   if (
@@ -30,7 +34,9 @@ export async function POST(req: NextRequest) {
     !Array.isArray(position) ||
     position.length !== 2 ||
     typeof position[0] !== 'number' ||
-    typeof position[1] !== 'number'
+    typeof position[1] !== 'number' ||
+    !Number.isFinite(position[0]) ||
+    !Number.isFinite(position[1])
   ) {
     return NextResponse.json({ error: 'Invalid payload' }, { status: 400 });
   }

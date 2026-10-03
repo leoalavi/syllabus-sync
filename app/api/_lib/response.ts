@@ -311,21 +311,37 @@ export async function parseJsonBody<T = unknown>(
   }
 
   try {
-    // For streams without Content-Length, we need to read and check size
-    const text = await request.text();
-
-    if (text.length > maxBytes) {
-      return {
-        data: null,
-        error: jsonError(
-          `Request body too large. Maximum size is ${Math.round(maxBytes / 1024)}KB`,
-          413,
-          ERROR_CODES.BAD_REQUEST,
-          { maxBytes, receivedBytes: text.length },
-        ),
-      };
+    // Count bytes while reading; request.text() would buffer an unbounded body first.
+    const reader = request.body?.getReader();
+    if (!reader) throw new Error('Empty JSON body');
+    const chunks: Uint8Array[] = [];
+    let receivedBytes = 0;
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      receivedBytes += value.byteLength;
+      if (receivedBytes > maxBytes) {
+        await reader.cancel();
+        return {
+          data: null,
+          error: jsonError(
+            `Request body too large. Maximum size is ${Math.round(maxBytes / 1024)}KB`,
+            413,
+            ERROR_CODES.BAD_REQUEST,
+            { maxBytes, receivedBytes },
+          ),
+        };
+      }
+      chunks.push(value);
     }
 
+    const bytes = new Uint8Array(receivedBytes);
+    let offset = 0;
+    for (const chunk of chunks) {
+      bytes.set(chunk, offset);
+      offset += chunk.byteLength;
+    }
+    const text = new TextDecoder('utf-8', { fatal: true }).decode(bytes);
     const data = JSON.parse(text) as T;
     return { data, error: null };
   } catch {

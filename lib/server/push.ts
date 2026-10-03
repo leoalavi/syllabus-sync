@@ -1,6 +1,7 @@
 import webpush from 'web-push';
 import { logger } from '@/lib/logger';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { isAllowedPushEndpoint } from '@/lib/security/push-endpoint';
 
 export type PushNotificationPayload = {
   title: string;
@@ -115,6 +116,11 @@ export async function sendPushNotificationToUser(
   await Promise.all(
     activeSubscriptions.map(async (subscription) => {
       try {
+        // Older records may predate the API validation. Never send to an untrusted host.
+        if (!isAllowedPushEndpoint(subscription.endpoint)) {
+          logger.warn('Skipping unsupported push subscription endpoint');
+          return;
+        }
         await webpush.sendNotification(
           {
             endpoint: subscription.endpoint,

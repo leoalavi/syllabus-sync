@@ -21,10 +21,12 @@
 ### Task 1: Generate the new logo asset and icon set
 
 **Files:**
+
 - Create: `public/syllabus-sync-logo.png`
 - Modify (overwrite in place, binary): `app/favicon.ico`, `public/apple-touch-icon.png`, `public/icons/apple-touch-icon.png`, `public/icons/icon-192.png`, `public/icons/icon-384.png`, `public/icons/icon-512.png`, `public/icons/maskable-512.png`
 
 **Interfaces:**
+
 - Produces: `public/syllabus-sync-logo.png`, the filename Task 2 repoints all code references to.
 
 - [ ] **Step 1: Crop the source image to a clean edge-to-edge square master**
@@ -86,10 +88,12 @@ git commit -m "Add new Syllabus Sync app-icon logo and regenerate PWA/favicon ic
 ### Task 2: Point all code and the service worker at the new logo, remove the old asset
 
 **Files:**
+
 - Modify: `app/layout.tsx`, `app/home/page.tsx`, `app/calendar/page.tsx`, `app/map/page.tsx`, `app/feed/page.tsx`, `app/manage-profiles/layout.tsx`, `app/login/LoginClient.tsx`, `app/signup/SignupClient.tsx`, `app/onboarding/OnboardingClient.tsx`, `app/reset-password/reset-password-client.tsx`, `components/layout/Header.tsx`, `components/layout/Sidebar.tsx`, `lib/server/push.ts`, `lib/services/notificationService.ts`, `public/sw.js`
 - Delete: `public/MQ_Logo_Final.png`
 
 **Interfaces:**
+
 - Consumes: `public/syllabus-sync-logo.png` (from Task 1).
 
 - [ ] **Step 1: Replace the asset path in every TypeScript/TSX reference**
@@ -147,10 +151,12 @@ git commit -m "Point logo references at syllabus-sync-logo.png and bump SW cache
 ### Task 3: Update the `mqLogoAlt` alt text to reference the app name, not the university
 
 **Files:**
+
 - Modify: `locales/en/translations.json` and the other 34 locale files under `locales/*/translations.json`
 - Modify: `app/calendar/page.tsx`, `app/map/page.tsx`, `app/signup/SignupClient.tsx`, `app/reset-password/reset-password-client.tsx`, `app/onboarding/OnboardingClient.tsx`, `app/login/LoginClient.tsx`, `components/layout/Header.tsx`, `components/layout/Sidebar.tsx`
 
 **Interfaces:**
+
 - Consumes: the existing `{{placeholder}}` interpolation support in the project's translation function (already used for `welcomeTo`: `t('welcomeTo', { appName: APP_CONFIG.name })`), and `APP_CONFIG.name` from `@/lib/config` (`APP_CONFIG.name === 'Syllabus Sync'`).
 
 The logo is no longer the Macquarie University crest, so every locale's `mqLogoAlt` string is rewritten from "\<University name\>" to "{{appName}}" (kept in each locale's existing word order/grammar for the word "logo"), and every call site is updated to pass `{ appName: APP_CONFIG.name }` so the alt text now reads "Syllabus Sync Logo" (or the localized equivalent) instead of "Macquarie University Logo".
@@ -351,9 +357,11 @@ git commit -m "Update logo alt text to reference the app name in all 35 locales"
 ### Task 4: Full verification and change-log postflight
 
 **Files:**
+
 - Modify: `AGENT.md`, `CHANGELOG.md`
 
 **Interfaces:**
+
 - Consumes: the completed changes from Tasks 1–3.
 
 - [ ] **Step 1: Run the full project check suite**
@@ -400,6 +408,7 @@ Add a new entry at the top of the `## Change Log (Raouf Template)` section in `A
 ### 2026-07-07 (Australia/Sydney) — App-Icon Logo Rebrand
 
 **Raouf:**
+
 - **Scope:** Replaced the Macquarie University crest logo with the new Syllabus Sync app-icon image across the entire app, including the PWA/favicon icon set and all 35 locale alt-text strings.
 - **Summary:** New master asset `public/syllabus-sync-logo.png` cropped from the supplied app-icon artwork and used to regenerate `favicon.ico`, `apple-touch-icon.png`, and `icon-192/384/512.png`/`maskable-512.png`. All ~25 code references (login, signup, header, sidebar, onboarding, reset-password, OG/Twitter meta, JSON-LD schema, push-notification fallbacks, service worker) repointed from `/MQ_Logo_Final.png` to `/syllabus-sync-logo.png`; old crest file deleted. Service worker cache versions bumped (`v6` → `v7`) to force-refresh cached assets. `mqLogoAlt` translation value switched to a `{{appName}}`-interpolated string in all 35 locales, replacing hardcoded "Macquarie University" wording.
 - **Files Changed:** `public/syllabus-sync-logo.png`, `public/icons/*.png`, `public/apple-touch-icon.png`, `app/favicon.ico`, `public/MQ_Logo_Final.png` (deleted), `app/layout.tsx`, `app/home/page.tsx`, `app/calendar/page.tsx`, `app/map/page.tsx`, `app/feed/page.tsx`, `app/manage-profiles/layout.tsx`, `app/login/LoginClient.tsx`, `app/signup/SignupClient.tsx`, `app/onboarding/OnboardingClient.tsx`, `app/reset-password/reset-password-client.tsx`, `components/layout/Header.tsx`, `components/layout/Sidebar.tsx`, `lib/server/push.ts`, `lib/services/notificationService.ts`, `public/sw.js`, `locales/*/translations.json` (35 files).

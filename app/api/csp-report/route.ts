@@ -12,7 +12,8 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { jsonError, ERROR_CODES } from '@/app/api/_lib/response';
+import { z } from 'zod';
+import { jsonError, ERROR_CODES, parseJsonBody } from '@/app/api/_lib/response';
 import { getClientIP } from '@/lib/security/ip';
 import { logger } from '@/lib/logger';
 
@@ -21,11 +22,11 @@ import { logger } from '@/lib/logger';
 // ============================================================================
 
 interface CSPReport {
-  'document-uri': string;
-  referrer: string;
+  'document-uri'?: string;
+  referrer?: string;
   'blocked-uri': string;
   'violated-directive': string;
-  'original-policy': string;
+  'original-policy'?: string;
   disposition: 'enforce' | 'report';
   'effective-directive'?: string;
   'line-number'?: number;
@@ -39,6 +40,17 @@ interface CSPReportBody {
   'csp-report': CSPReport;
 }
 
+const CspReportSchema = z.object({
+  'csp-report': z.object({
+    'blocked-uri': z.string().max(2048),
+    'violated-directive': z.string().max(2048),
+    'effective-directive': z.string().max(2048).optional(),
+    disposition: z.enum(['enforce', 'report']),
+    'line-number': z.number().int().nonnegative().optional(),
+    'column-number': z.number().int().nonnegative().optional(),
+  }),
+});
+
 // ============================================================================
 // RATE LIMITING
 // ============================================================================
@@ -50,6 +62,12 @@ const RATE_LIMIT_MAX = 10; // Max 10 reports per IP per minute
 
 function isRateLimited(ip: string): boolean {
   const now = Date.now();
+  if (reportCounts.size >= 2000) {
+    for (const [key, value] of reportCounts) {
+      if (value.resetTime < now) reportCounts.delete(key);
+    }
+    if (reportCounts.size >= 2000 && !reportCounts.has(ip)) return true;
+  }
   const entry = reportCounts.get(ip);
 
   if (!entry || entry.resetTime < now) {
@@ -114,12 +132,13 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const body: CSPReportBody = await request.json();
-    const report = body['csp-report'];
-
-    if (!report) {
+    const { data, error } = await parseJsonBody<CSPReportBody>(request, 8 * 1024);
+    if (error) return error;
+    const parsed = CspReportSchema.safeParse(data);
+    if (!parsed.success) {
       return jsonError('Invalid CSP report format', 400, ERROR_CODES.BAD_REQUEST);
     }
+    const report = parsed.data['csp-report'] as CSPReport;
 
     // Sanitize and log the report
     const sanitizedReport = sanitizeReport(report);

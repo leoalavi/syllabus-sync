@@ -38,7 +38,12 @@ export const BRAND_ASSETS: Record<BrandLogoVariant, BrandAsset> = {
   wordmark: { src: '/brand/wordmark-standard.png', width: 1244, height: 266, kind: 'wordmark' },
   wordmarkWide: { src: '/brand/wordmark-wide.png', width: 1454, height: 322, kind: 'wordmark' },
   icon: { src: '/brand/logomark-square.png', width: 772, height: 972, kind: 'logomark' },
-  iconCloseCrop: { src: '/brand/logomark-close-crop.png', width: 711, height: 936, kind: 'logomark' },
+  iconCloseCrop: {
+    src: '/brand/logomark-close-crop.png',
+    width: 711,
+    height: 936,
+    kind: 'logomark',
+  },
 };
 
 /** Opaque social card: the lockup centred on the brand backdrop. */

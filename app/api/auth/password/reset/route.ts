@@ -10,6 +10,7 @@ import {
 import { hashResetToken } from '@/lib/security/passwordReset';
 import { passwordResetTokenLimiter } from '@/lib/services/rateLimitService';
 import { logger } from '@/lib/logger';
+import { getClientIP } from '@/lib/security/ip';
 import { z } from 'zod';
 import { SECURITY_CONFIG } from '@/lib/constants/config';
 
@@ -39,7 +40,7 @@ export async function POST(request: NextRequest) {
     }
 
     // SECURITY: Rate limit token verification to prevent brute-force
-    const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
+    const ip = getClientIP(request);
     const rateLimitResult = await passwordResetTokenLimiter(`ip:${ip}:password-reset`);
     if (!rateLimitResult.allowed) {
       return jsonError(

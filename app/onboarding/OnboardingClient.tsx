@@ -85,9 +85,8 @@ export default function OnboardingClient() {
       }
       // New OAuth users reach /home for the first time via this path — mark the
       // first-login prompt flag so the permission dialogs fire after redirect.
-      const { markFirstLoginPromptsPending } = await import(
-        '@/features/home/hooks/useFirstLoginPrompts'
-      );
+      const { markFirstLoginPromptsPending } =
+        await import('@/features/home/hooks/useFirstLoginPrompts');
       markFirstLoginPromptsPending();
       router.push(next);
     } catch (err) {
@@ -133,7 +132,7 @@ export default function OnboardingClient() {
             </div>
 
             {/* Form */}
-            <form onSubmit={handleSubmit(onSubmit)} className="px-6 pb-8 space-y-5">
+            <form method="post" onSubmit={handleSubmit(onSubmit)} className="px-6 pb-8 space-y-5">
               {/* Faculty */}
               <div className="space-y-2">
                 <Label className="text-sm font-medium text-mq-content">{t('faculty')}</Label>

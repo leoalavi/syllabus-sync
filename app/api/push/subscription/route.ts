@@ -1,16 +1,23 @@
 import { z } from 'zod';
-import { createAdminClient } from '@/lib/supabase/admin';
 import { createServerClient } from '@/lib/supabase/server';
 import { requireAuthWithRateLimit } from '@/app/api/_lib/middleware';
-import { jsonSuccess, jsonError, handleDatabaseError, ERROR_CODES } from '@/app/api/_lib/response';
+import {
+  jsonSuccess,
+  jsonError,
+  handleDatabaseError,
+  parseJsonBody,
+  BODY_SIZE_LIMITS,
+  ERROR_CODES,
+} from '@/app/api/_lib/response';
 import { logger } from '@/lib/logger';
+import { isAllowedPushEndpoint } from '@/lib/security/push-endpoint';
 
 const PushSubscriptionSchema = z.object({
-  endpoint: z.string().url(),
-  expirationTime: z.number().nullable().optional(),
+  endpoint: z.string().url().refine(isAllowedPushEndpoint, 'Unsupported push endpoint'),
+  expirationTime: z.number().finite().min(0).max(8.64e15).nullable().optional(),
   keys: z.object({
-    p256dh: z.string().min(1),
-    auth: z.string().min(1),
+    p256dh: z.string().min(1).max(512),
+    auth: z.string().min(1).max(512),
   }),
   userAgent: z.string().max(512).optional(),
 });
@@ -19,16 +26,16 @@ const DeleteSubscriptionSchema = z.object({
   endpoint: z.string().url(),
 });
 
-async function getWritableClient() {
-  return createAdminClient() ?? (await createServerClient());
-}
-
 export async function POST(request: Request) {
   return requireAuthWithRateLimit(
     request,
     async (userId) => {
       try {
-        const body = await request.json();
+        const { data: body, error: bodyError } = await parseJsonBody(
+          request,
+          BODY_SIZE_LIMITS.AUTH,
+        );
+        if (bodyError) return bodyError;
         const parsed = PushSubscriptionSchema.safeParse(body);
 
         if (!parsed.success) {
@@ -37,7 +44,8 @@ export async function POST(request: Request) {
           });
         }
 
-        const client = await getWritableClient();
+        // Use the caller's session so the table's ownership RLS applies.
+        const client = await createServerClient();
         const now = new Date().toISOString();
 
         const { data, error } = await client
@@ -81,7 +89,11 @@ export async function DELETE(request: Request) {
     request,
     async (userId) => {
       try {
-        const body = await request.json();
+        const { data: body, error: bodyError } = await parseJsonBody(
+          request,
+          BODY_SIZE_LIMITS.AUTH,
+        );
+        if (bodyError) return bodyError;
         const parsed = DeleteSubscriptionSchema.safeParse(body);
 
         if (!parsed.success) {
@@ -90,7 +102,7 @@ export async function DELETE(request: Request) {
           });
         }
 
-        const client = await getWritableClient();
+        const client = await createServerClient();
         const { error } = await client
           .from('push_subscriptions')
           .delete()

@@ -39,7 +39,6 @@ function isRefreshTokenMissingError(error: { message?: string; code?: string | n
   );
 }
 
-
 /**
  * Next.js 16 Proxy — security headers, session refresh, and route protection.
  */

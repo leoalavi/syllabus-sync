@@ -21,7 +21,7 @@ The supplied artwork is opaque RGB on a flat warm off-white with generous, uneve
 padding. No logo pixel is redrawn, recoloured, stretched or cropped; the script only:
 
 1. keys the flat background to alpha using a **border-connected flood fill**, so
-   near-white areas *enclosed* by the mark (the dragon's eye, the strokes in its
+   near-white areas _enclosed_ by the mark (the dragon's eye, the strokes in its
    crest, the lion's highlight) stay opaque while the surrounding background goes
    transparent;
 2. **colour-decontaminates** anti-aliased edge pixels by un-compositing

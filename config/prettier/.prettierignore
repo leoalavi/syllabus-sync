@@ -1,4 +1,7 @@
 .next
+.open-next
+.wrangler
+syllabus-sync-info-site
 .vercel
 node_modules
 out

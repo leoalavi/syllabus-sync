@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [main, develop]
 
+permissions:
+  contents: read
+
 jobs:
   test:
     name: Test Suite
@@ -26,6 +29,9 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Check formatting
+        run: npm run format:check
 
       - name: Run type checking
         run: npm run typecheck
@@ -106,9 +112,20 @@ jobs:
         env:
           NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
           NEXT_PUBLIC_SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.placeholder
-          NEXT_PUBLIC_APP_URL: https://ci-build.example.com
+          NEXT_PUBLIC_APP_URL: https://www.syllabus-sync.app
           NEXT_PUBLIC_VAPID_PUBLIC_KEY: BPlaceholder
         run: npm run build
+
+      - name: Build Cloudflare/OpenNext bundle
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.placeholder
+          NEXT_PUBLIC_APP_URL: https://www.syllabus-sync.app
+          CF_EXPECT_PUBLIC_URL: '1'
+        run: npm run cf:build
+
+      - name: Verify Cloudflare/OpenNext output
+        run: npm run cf:verify-output
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
