@@ -258,6 +258,7 @@ function ClientLayoutComponent({ children }: { children: React.ReactNode }) {
           <main className="flex-1" role="main">
             {children}
           </main>
+          <AppFooter />
           <Toaster />
         </div>
       </ThemeProvider>

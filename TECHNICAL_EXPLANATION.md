@@ -1,5 +1,7 @@
 # Technical Architecture & Engineering Decisions
 
+> **Historical design record:** Several sections below describe an earlier Vercel deployment and proxy-level API auth gate. They are retained for decision history, not as an implementation guide. For the current Cloudflare/OpenNext runtime and route-level API authentication, use the [architecture guide](./docs/architecture/ARCHITECTURE.md) and [production checklist](./docs/operations/deployment-checklist.md).
+
 **System:** Syllabus Sync -- A Secure, Edge-First Campus Platform
 **Author:** Raouf
 **Audience:** Senior Engineers, Security Architects, Technical Reviewers

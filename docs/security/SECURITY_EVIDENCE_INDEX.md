@@ -1,5 +1,7 @@
 # Security Evidence Index
 
+> **Historical evidence index:** File paths and line references may have changed, and the earlier proxy-level API auth description is no longer current. Verify controls in code and see the [current architecture guide](../architecture/ARCHITECTURE.md).
+
 **Purpose:** This index provides auditors, penetration testers, and security reviewers with a structured map from security control categories to the specific files that implement them. Each section includes the control objective, the files that satisfy it, and notes on what to look for during review.
 
 **How to use this document:** Start with the control category relevant to your review scope. Each file path is relative to the repository root. Where specific functions or configuration values are critical, they are called out.

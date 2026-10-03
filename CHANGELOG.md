@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+### Raouf: Public Positioning and Cloudflare Readiness — 2026-10-03
+
+**Scope:** Corrected the production Worker configuration and public project guidance without deploying.
+
+**Summary:** Removed a stray info-site Worker name from the main Wrangler file after verifying the two Workers separately. Replaced the public vulnerability issue route with private email reporting, because GitHub private vulnerability reporting is disabled. Updated public links, metadata, About copy, footer, product relationships, contributor guidance, and current Cloudflare/OpenNext architecture and release documentation.
+
+**Verification:** Typecheck, lint, secrets scan, 912 tests, Next.js build, Cloudflare/OpenNext build, output verification, and Wrangler dry run passed. Translation parity reports existing campus/Sylla gaps in non-English locales. No commit, push, deployment, or PR.
+
+**Follow-ups:** Review translation quality and separately evaluate the header-scanner DNS rebinding fix before implementation.
+
+---
+
 ### Raouf: App-Icon Logo Rebrand — 2026-07-07
 
 **Scope:** Replaced the Macquarie University crest logo with the new Syllabus Sync app-icon image across the entire app.

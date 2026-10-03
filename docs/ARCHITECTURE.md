@@ -6,4 +6,4 @@ The canonical architecture document is maintained at:
 
 For engineering decisions and trade-off analysis, see:
 
-**[TECHNICAL_EXPLANATION.md](../TECHNICAL_EXPLANATION.md)** -- ADR-style deep-dive into why each architectural choice was made.
+**[TECHNICAL_EXPLANATION.md](../TECHNICAL_EXPLANATION.md)** -- historical engineering decisions; use the canonical architecture guide for the current runtime.

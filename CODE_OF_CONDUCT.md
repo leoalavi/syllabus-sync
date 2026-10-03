@@ -48,7 +48,7 @@ Maintainers have the right and responsibility to remove, edit, or reject comment
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be reported to the project maintainers at:
 
-**conduct@syllabus-sync.dev**
+**leo@leoalavi.dev**
 
 All reports will be reviewed and investigated promptly and fairly. The project team is obligated to respect the privacy and security of the reporter of any incident. You will not face retaliation for making a good-faith report.
 

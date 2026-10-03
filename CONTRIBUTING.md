@@ -1,6 +1,6 @@
 # Contributing to Syllabus Sync
 
-Thank you for your interest in contributing to Syllabus Sync. This document describes our development standards, contribution workflow, and quality expectations. We hold contributions to the same bar as production software at companies like Vercel and Supabase -- if a change ships, it must be correct, secure, and maintainable.
+Thank you for your interest in contributing to Syllabus Sync. This document describes our development standards, contribution workflow, and quality expectations. Contributions should be correct, secure, maintainable, and small enough to review.
 
 ---
 
@@ -48,7 +48,7 @@ Thank you for your interest in contributing to Syllabus Sync. This document desc
 ### Setup
 
 ```bash
-git clone https://github.com/mrpouyaalavi/syllabus-sync.git
+git clone https://github.com/leoalavi/syllabus-sync.git
 cd syllabus-sync
 npm install
 cp .env.example .env.local
@@ -57,6 +57,8 @@ npm run dev
 ```
 
 Full environment configuration guide: [`docs/operations/ENVIRONMENT_SETUP.md`](./docs/operations/ENVIRONMENT_SETUP.md).
+
+Use a dedicated test Supabase project. Review migrations before applying them; `npx supabase db push` changes the linked project's schema. Never include credentials, student data, or private security findings in a public issue or PR.
 
 ---
 
@@ -129,16 +131,18 @@ npm run check
 
 This executes the following stages in order:
 
-| Stage        | Tool                               | What It Checks                                      |
-| ------------ | ---------------------------------- | --------------------------------------------------- |
-| Secrets scan | `tools/security/check-secrets.mjs` | No API keys, tokens, or credentials in source       |
-| Format       | Prettier                           | Consistent code style across the entire codebase    |
-| Type check   | `tsc --noEmit`                     | Strict TypeScript compliance, zero errors           |
-| Lint         | ESLint                             | Code quality rules, zero errors, zero warnings      |
-| Test         | Vitest                             | All unit and integration tests pass                 |
-| Build        | `next build`                       | Production build succeeds, route integrity verified |
+| Stage        | Tool                               | What It Checks                                           |
+| ------------ | ---------------------------------- | -------------------------------------------------------- |
+| Secrets scan | `tools/security/check-secrets.mjs` | No API keys, tokens, or credentials in source            |
+| Format       | Prettier                           | Consistent code style across the entire codebase         |
+| Type check   | `tsc --noEmit`                     | Strict TypeScript compliance, zero errors                |
+| Lint         | ESLint                             | Code quality rules, zero errors, zero warnings           |
+| Test         | Vitest                             | All unit and integration tests pass                      |
+| Build        | `next build`                       | Next.js build succeeds; Cloudflare packaging is separate |
 
 **If any stage fails, your PR will not be reviewed.** Fix all issues locally before pushing.
+
+Changes to the Worker or runtime should also pass `npm run cf:build` and `npm run cf:verify-output`. Deployment is maintainer controlled; contributors should not deploy the shared production Worker.
 
 ---
 
@@ -250,9 +254,9 @@ security(middleware): add CSRF origin validation to mutation routes
 
 These constraints are non-negotiable. PRs that violate them will be rejected.
 
-### Proxy Middleware Auth Gate
+### API Authentication
 
-All API routes require Supabase authentication **unless** explicitly listed in `isPublicApiPath()` in `lib/proxy.ts`. If you add a new public API route, you must register it there. Forgetting this step will cause your route to return `401 Unauthorized` in production.
+`middleware.ts` and `lib/proxy.ts` handle page redirects and request-level controls, but deliberately do not resolve users for API requests. Every protected API route must enforce authentication in its own handler with `requireAuth`, `requireAuthWithRateLimit`, or a reviewed inline `getUser()` check. Document intentionally public routes and test both access paths.
 
 ### Database Discipline
 
@@ -273,6 +277,7 @@ All API routes require Supabase authentication **unless** explicitly listed in `
 Security is a first-class concern, not a post-launch consideration.
 
 - **Never commit secrets.** The secrets scanner will block your PR, but verify manually as well. Use `.env.local` for local development.
+- **Use private vulnerability reporting.** The public issue tracker is for ordinary bugs. Follow [`SECURITY.md`](./SECURITY.md) for security findings.
 - **Never disable security controls** (CSP, rate limiting, RLS policies) to make development easier. If a control blocks your workflow, ask for help.
 - **Report vulnerabilities privately.** If you discover a security issue, do not open a public issue. Follow the process in [`SECURITY.md`](./SECURITY.md).
 

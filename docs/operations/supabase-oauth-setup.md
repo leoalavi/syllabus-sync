@@ -1,7 +1,7 @@
 # Supabase OAuth Setup (Google)
 
 > **Audience:** Engineers configuring Google OAuth authentication via Supabase Auth.
-> **Last verified:** 2026-03-21
+> **Production URL verified:** 2026-10-03. Recheck provider settings in the dashboards before changing them.
 
 Syllabus Sync uses the Supabase Auth PKCE flow for OAuth. The auth code exchange happens in the server-side route handler at `app/auth/callback/route.ts`.
 
@@ -24,7 +24,7 @@ In the Supabase Dashboard, navigate to **Authentication > URL Configuration**.
 Set the **Site URL** to your primary production domain:
 
 ```
-https://your-production-domain.vercel.app
+https://www.syllabus-sync.app
 ```
 
 ### Redirect URLs
@@ -34,10 +34,10 @@ Add the following redirect URLs. Every domain that serves the application must b
 **Production:**
 
 ```
-https://your-production-domain.vercel.app/auth/callback
-https://your-production-domain.vercel.app/auth/callback/**
-https://your-production-domain.vercel.app/auth/confirm
-https://your-production-domain.vercel.app/reset-password
+https://www.syllabus-sync.app/auth/callback
+https://www.syllabus-sync.app/auth/callback/**
+https://www.syllabus-sync.app/auth/confirm
+https://www.syllabus-sync.app/reset-password
 ```
 
 **Local development:**
@@ -51,7 +51,7 @@ http://localhost:3000/reset-password
 
 **Preview deployments (if applicable):**
 
-If you use Vercel preview URLs, add wildcard patterns or add each preview domain as needed.
+Add only the exact preview origins that serve this application and need OAuth. Review each redirect before allowing it in Supabase.
 
 ---
 

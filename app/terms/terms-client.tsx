@@ -217,10 +217,10 @@ export default function TermsClient() {
                       >
                         {t(block.key)}{' '}
                         <a
-                          href={`mailto:${UNIVERSITY_CONFIG.supportEmail}`}
+                          href={`mailto:${APP_CONFIG.contactEmail}`}
                           className="text-mq-primary hover:underline font-medium"
                         >
-                          {UNIVERSITY_CONFIG.supportEmail}
+                          {APP_CONFIG.contactEmail}
                         </a>
                       </p>
                     );

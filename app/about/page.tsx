@@ -5,10 +5,10 @@ import AboutClient from './about-client';
 
 export const metadata: Metadata = {
   title: `About — ${APP_CONFIG.name}`,
-  description: `Learn about ${APP_CONFIG.name}, the student productivity platform built for Macquarie University students.`,
+  description: APP_CONFIG.fullDescription,
   openGraph: {
     title: `About — ${APP_CONFIG.name}`,
-    description: `Learn about ${APP_CONFIG.name}, the student productivity platform built for Macquarie University students.`,
+    description: APP_CONFIG.fullDescription,
     type: 'website',
   },
 };

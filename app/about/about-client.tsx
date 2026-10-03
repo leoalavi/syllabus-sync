@@ -13,7 +13,7 @@ import {
   ArrowLeft,
   ArrowRight,
 } from 'lucide-react';
-import { APP_CONFIG, EXTERNAL_LINKS, UNIVERSITY_CONFIG } from '@/lib/config';
+import { APP_CONFIG, EXTERNAL_LINKS } from '@/lib/config';
 import { useTypedTranslation } from '@/lib/hooks/useTypedTranslation';
 import type { TranslationKey } from '@/lib/i18n/translations';
 
@@ -40,7 +40,7 @@ const FEATURE_CARD_KEYS: {
 
 const DEVELOPERS = [
   {
-    name: 'Pouya',
+    name: 'Leo Alavi',
     roleKey: 'about_devRoleFrontend' as TranslationKey,
     photo: '/images/team/pouya.jpg',
   },
@@ -85,7 +85,7 @@ export default function AboutClient() {
               className="animate-fade-in text-[11px] font-bold uppercase tracking-[0.22em] text-mq-warning"
               style={{ animationFillMode: 'both' }}
             >
-              {UNIVERSITY_CONFIG.name}
+              {APP_CONFIG.name}
             </p>
             <h1
               className="animate-fade-in font-serif text-4xl font-bold leading-[1.15] text-white sm:text-5xl"
@@ -115,12 +115,12 @@ export default function AboutClient() {
                 />
               </Link>
               <a
-                href={EXTERNAL_LINKS.documentation}
+                href={EXTERNAL_LINKS.projectInfo}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-mq-lg border border-white/25 px-5 py-2.5 text-sm font-semibold text-white transition hover:border-white/40 hover:bg-white/10"
+                className="rounded-mq-lg border border-white/25 px-5 py-2.5 text-sm font-semibold text-white transition hover:border-white/40 hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
               >
-                {t('documentation')}
+                {t('aboutTitle')}
               </a>
             </div>
           </div>
@@ -154,7 +154,10 @@ export default function AboutClient() {
               {t('about_whatWeStandFor')}
             </p>
           </div>
-          <h2 id="values-heading" className="mt-3 font-serif text-3xl font-bold text-mq-content sm:text-4xl">
+          <h2
+            id="values-heading"
+            className="mt-3 font-serif text-3xl font-bold text-mq-content sm:text-4xl"
+          >
             {t('about_ourValues')}
           </h2>
           <p className="mt-3 max-w-3xl text-[15px] leading-relaxed text-mq-content-secondary">
@@ -183,10 +186,7 @@ export default function AboutClient() {
         </section>
 
         {/* ── Features ── */}
-        <section
-          aria-labelledby="features-heading"
-          className="border-y border-mq-border/60"
-        >
+        <section aria-labelledby="features-heading" className="border-y border-mq-border/60">
           <div className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
             <div className="flex items-center gap-3">
               <span className="block h-px w-8 bg-mq-primary" aria-hidden="true" />
@@ -194,7 +194,10 @@ export default function AboutClient() {
                 {t('about_whatWeBuild')}
               </p>
             </div>
-            <h2 id="features-heading" className="mt-3 font-serif text-3xl font-bold text-mq-content sm:text-4xl">
+            <h2
+              id="features-heading"
+              className="mt-3 font-serif text-3xl font-bold text-mq-content sm:text-4xl"
+            >
               {t('about_builtForSuccess')}
             </h2>
             <p className="mt-3 max-w-3xl text-[15px] leading-relaxed text-mq-content-secondary">
@@ -213,7 +216,9 @@ export default function AboutClient() {
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-mq-primary/10 transition-colors duration-300 group-hover:bg-mq-primary/15">
                     <item.icon className="h-5 w-5 text-mq-primary" aria-hidden="true" />
                   </div>
-                  <h3 className="mt-4 text-base font-semibold text-mq-content">{t(item.titleKey)}</h3>
+                  <h3 className="mt-4 text-base font-semibold text-mq-content">
+                    {t(item.titleKey)}
+                  </h3>
                   <p className="mt-2 text-sm leading-relaxed text-mq-content-secondary">
                     {t(item.descKey)}
                   </p>
@@ -234,7 +239,10 @@ export default function AboutClient() {
               {t('about_theTeam')}
             </p>
           </div>
-          <h2 id="team-heading" className="mt-3 font-serif text-3xl font-bold text-mq-content sm:text-4xl">
+          <h2
+            id="team-heading"
+            className="mt-3 font-serif text-3xl font-bold text-mq-content sm:text-4xl"
+          >
             {t('about_ourDevelopers')}
           </h2>
           <p className="mt-3 max-w-3xl text-[15px] leading-relaxed text-mq-content-secondary">

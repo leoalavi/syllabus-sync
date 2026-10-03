@@ -1,7 +1,7 @@
 # Environment and Setup Guide
 
 > **Audience:** New contributors setting up a local development environment.
-> **Last verified:** 2026-03-21
+> **Updated:** 2026-10-03 (Australia/Sydney)
 
 This guide walks through every step required to go from a fresh clone to a running local development server.
 
@@ -20,7 +20,7 @@ This guide walks through every step required to go from a fresh clone to a runni
 ## Step 1: Clone and Install
 
 ```bash
-git clone https://github.com/mrpouyaalavi/syllabus-sync.git
+git clone https://github.com/leoalavi/syllabus-sync.git
 cd syllabus-sync
 npm install
 ```
@@ -34,11 +34,11 @@ Syllabus Sync depends on several external services. You will need active account
 ### Supabase (Authentication and Database)
 
 1. Create a project at [supabase.com](https://supabase.com/).
-2. Link your local environment:
+2. Use a dedicated development project. Only link it after confirming its project reference:
    ```bash
    npx supabase link --project-ref <your-project-ref>
    ```
-3. Apply database migrations:
+3. Review the migrations, then apply them to that development project:
    ```bash
    npx supabase db push
    ```
@@ -60,7 +60,7 @@ Syllabus Sync depends on several external services. You will need active account
    - `UPSTASH_REDIS_REST_URL`
    - `UPSTASH_REDIS_REST_TOKEN`
 
-Rate limiting falls back to in-memory storage during local development if these are not set. For production configuration, see the [Resend and Vercel Setup](../operations/resend-vercel-setup.md) guide.
+Rate limiting falls back to in-memory storage during local development if these are not set. Production supports distributed stores; see the [architecture guide](../architecture/ARCHITECTURE.md).
 
 ### Google Maps Platform (Optional for Local)
 
@@ -148,7 +148,7 @@ Before pushing code, always run the full quality gate:
 npm run check
 ```
 
-This command runs secrets detection, Prettier formatting checks, TypeScript compilation, ESLint, the full Vitest suite (500+ tests), and a production build. All checks must pass with zero errors.
+This command runs secrets detection, Prettier formatting checks, TypeScript compilation, ESLint, the Vitest suite, and a Next.js production build. The Cloudflare/OpenNext build is a separate command.
 
 Configure your editor to respect the project's `.editorconfig` and Prettier configuration (`config/prettier/.prettierrc.json`).
 
@@ -156,17 +156,7 @@ Configure your editor to respect the project's `.editorconfig` and Prettier conf
 
 ## Deployment
 
-The primary deployment target is **Vercel**.
-
-1. Connect the GitHub repository to a Vercel project.
-2. Set the **Node.js Version** to `22.x` in Vercel project settings.
-3. Configure all production environment variables in the Vercel Dashboard.
-4. Push to `main` to trigger automatic deployments, or use the CLI:
-   ```bash
-   npx vercel --prod
-   ```
-
-For full deployment procedures, see the [Deployment Checklist](../operations/deployment-checklist.md).
+The current production target is the Cloudflare Worker `syllabus-sync-production`, built with OpenNext. Contributors can validate packaging locally with `npm run cf:build` and `npm run cf:verify-output` after configuring the required build variables. These commands do not deploy. For the reviewed production release path, see the [Deployment Checklist](../operations/deployment-checklist.md).
 
 For Docker-based deployments, see the [Docker README](../../infra/docker/README.md).
 
@@ -178,5 +168,5 @@ For Docker-based deployments, see the [Docker README](../../infra/docker/README.
 | :---------------------- | :--------------------------------------------------------------------------------------------- |
 | Google Maps Platform    | [`docs/operations/google-maps-platform-setup.md`](../operations/google-maps-platform-setup.md) |
 | Supabase OAuth (Google) | [`docs/operations/supabase-oauth-setup.md`](../operations/supabase-oauth-setup.md)             |
-| Resend and Vercel       | [`docs/operations/resend-vercel-setup.md`](../operations/resend-vercel-setup.md)               |
+| Legacy Vercel setup     | [`docs/operations/resend-vercel-setup.md`](../operations/resend-vercel-setup.md)               |
 | Deployment Checklist    | [`docs/operations/deployment-checklist.md`](../operations/deployment-checklist.md)             |

@@ -5,8 +5,8 @@ security_labels: ['security', 'urgent', 'private', 'security-team']
 
 repository:
   name: syllabus-sync
-  description: 'Enterprise-Grade Campus Management Platform'
-  homepage: 'https://github.com/mrpouyaalavi/syllabus-sync'
+  description: 'Independent student platform for academic planning and university life'
+  homepage: 'https://github.com/leoalavi/syllabus-sync'
   private: false
 
 projects:
@@ -23,9 +23,9 @@ projects:
     columns: ['Reported', 'Triaged', 'In Progress', 'Fixed', 'Disclosed']
 
 collaborators:
-  - username: mrpouyaalavi
+  - username: leoalavi
     permission: admin
-    name: 'Pouya Alavi'
+    name: 'Leo Alavi'
     role: 'Frontend Lead'
 
   - username: raouf-mq
@@ -36,7 +36,7 @@ collaborators:
 teams:
   - name: 'Core Team'
     description: 'Project maintainers and core contributors'
-    members: [mrpouyaalavi, raouf-mq]
+    members: [leoalavi, raouf-mq]
     privacy: closed
 
   - name: 'Contributors'
@@ -46,7 +46,7 @@ teams:
 
   - name: 'Security Team'
     description: 'Security vulnerability reviewers and responders'
-    members: [mrpouyaalavi, raouf-mq]
+    members: [leoalavi, raouf-mq]
     privacy: secret
 
 milestones:

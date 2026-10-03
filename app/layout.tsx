@@ -4,7 +4,7 @@ import './globals.css';
 import ClientLayout from './client-layout';
 import QueryProvider from '@/components/providers/QueryProvider';
 import { BRAND_OG_IMAGE } from '@/lib/brand';
-import { APP_CONFIG, UNIVERSITY_CONFIG } from '@/lib/config';
+import { APP_CONFIG } from '@/lib/config';
 import { THEME_SCRIPT, RTL_SCRIPT } from '@/lib/security/csp';
 
 export const metadata: Metadata = {
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     statusBarStyle: 'default',
   },
   openGraph: {
-    title: `${APP_CONFIG.name} - ${UNIVERSITY_CONFIG.name}`,
+    title: APP_CONFIG.name,
     description: APP_CONFIG.fullDescription,
     type: 'website',
     images: [

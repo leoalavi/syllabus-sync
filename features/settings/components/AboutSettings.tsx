@@ -16,11 +16,6 @@ type AboutSettingsProps = {
 
 const AboutSettings = memo(({ t }: AboutSettingsProps) => {
   const router = useRouter();
-  const handleViewDocumentation = useCallback(() => {
-    toastUtils.info(t('viewDocumentation'), t('documentationOpening'));
-    window.open(EXTERNAL_LINKS.documentation, '_blank', 'noopener,noreferrer');
-  }, [t]);
-
   const handleSendFeedback = useCallback(() => {
     toastUtils.info(t('feedback'), t('feedbackPreparing'));
     window.location.href = EXTERNAL_LINKS.feedback;
@@ -62,16 +57,16 @@ const AboutSettings = memo(({ t }: AboutSettingsProps) => {
           <div className="p-3 bg-mq-card-background rounded-mq-lg border border-mq-border hover:border-mq-primary/20 hover:shadow-[0_0_15px_rgba(166,25,46,0.1)] transition-all duration-300">
             <h3 className="font-semibold text-mq-content mb-1">{t('needHelp')}</h3>
             <p className="text-mq-sm text-mq-content-secondary mb-2">{t('helpDesc')}</p>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="w-full sm:w-auto bg-mq-button-secondary hover:bg-mq-hover-background text-mq-content"
-              onClick={handleViewDocumentation}
-              data-testid="view-documentation-button"
+            <a
+              href={EXTERNAL_LINKS.projectInfo}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex w-full sm:w-auto items-center rounded-mq-lg bg-mq-button-secondary px-3 py-2 text-mq-content hover:bg-mq-hover-background focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mq-primary"
+              data-testid="project-info-link"
             >
               <ExternalLink className="h-4 w-4 mr-2" aria-hidden="true" />
-              {t('viewDocumentation')}
-            </Button>
+              {t('aboutTitle')}
+            </a>
           </div>
 
           {/* Feedback */}

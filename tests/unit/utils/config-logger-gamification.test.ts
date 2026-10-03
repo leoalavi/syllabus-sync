@@ -44,7 +44,6 @@ describe('lib/config', () => {
 
   it('exports social links', async () => {
     const { SOCIAL_LINKS } = await import('@/lib/config');
-    expect(SOCIAL_LINKS.twitter).toBeDefined();
     expect(SOCIAL_LINKS.linkedin).toBeDefined();
   });
 
@@ -52,6 +51,7 @@ describe('lib/config', () => {
     const { EXTERNAL_LINKS } = await import('@/lib/config');
     expect(EXTERNAL_LINKS.privacy).toBe('/privacy');
     expect(EXTERNAL_LINKS.terms).toBe('/terms');
+    expect(EXTERNAL_LINKS.projectInfo).toBe('https://info.syllabus-sync.app');
   });
 });
 

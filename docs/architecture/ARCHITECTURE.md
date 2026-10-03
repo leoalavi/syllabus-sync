@@ -1,215 +1,52 @@
-# System Architecture
+# Syllabus Sync architecture
 
-**System:** Syllabus Sync -- A Secure, Edge-First Campus Platform
-**Author:** Raouf
-**Audience:** Engineers, Architects, and Technical Reviewers
+Syllabus Sync is an independent student platform for academic planning and university-life management. It is currently developed and validated around Macquarie University and is not an official Macquarie University service. Support for other institutions, institution-specific data adapters, and multi-institution architecture are future directions, not implemented rollout claims.
 
----
+## Product boundary
 
-## 1. Technology Stack
+- **Syllabus Sync:** the core web platform for units, schedules, assignments, exams, deadlines, events, and campus information.
+- **Sylla:** the connected AI-assisted study layer. It is a separate application; the Syllabus Sync sidebar can link to it when `NEXT_PUBLIC_SYLLA_URL` is configured. Shared authentication depends on deployment configuration.
+- **Campus Navigation:** a connected mobile wayfinding companion. The current web map provides campus context and route features; a complete mobile-app handoff is not claimed here.
+- **Astronomy Open Night 2026:** a separate event project by the same team, outside the Syllabus Sync product boundary.
 
-| Layer              | Technology                                          | Rationale                                                                                    |
-| :----------------- | :-------------------------------------------------- | :------------------------------------------------------------------------------------------- |
-| **Runtime**        | Next.js 16 (App Router), React 19                   | Server Components reduce client JS payload; edge middleware enables pre-application security |
-| **State**          | Zustand 5 (persistent stores)                       | Lightweight, framework-agnostic, supports optimistic UI patterns without boilerplate         |
-| **Database**       | Supabase (PostgreSQL 15, GoTrue Auth, PostgREST)    | RLS-native, integrated auth, real-time subscriptions, eliminates custom backend              |
-| **Infrastructure** | Vercel (Edge Middleware, Serverless Functions)      | Zero-config scaling, edge network for middleware, instant rollback deployments               |
-| **Rate Limiting**  | Upstash Redis (REST) / Supabase PostgreSQL fallback | Stateless REST API works in serverless; no persistent connections required                   |
-| **Mapping**        | Leaflet (OpenStreetMap) + Google Maps API (proxied) | Leaflet for custom campus rendering; Google for routing and place search                     |
-| **Styling**        | Tailwind CSS, Shadcn UI                             | Utility-first for consistency; Shadcn for accessible, composable components                  |
-| **Observability**  | Sentry (Edge + Server + Client)                     | Unified error tracking across all three Next.js runtimes                                     |
+## Runtime and code layout
 
----
+| Area               | Current implementation                                                                                                |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------- |
+| Web                | Next.js 16 App Router and React 19 in `app/`; shared UI in `components/`; feature modules in `features/`              |
+| Client state       | Zustand stores in `lib/store/`, plus TanStack Query where used                                                        |
+| API                | Next.js route handlers in `app/api/`, with shared response and auth helpers in `app/api/_lib/`                        |
+| Auth and database  | Supabase Auth and PostgreSQL; clients in `lib/supabase/`, schema history and RLS policies in `supabase/migrations/`   |
+| Production adapter | OpenNext for Cloudflare Workers; source config in `open-next.config.ts`, `wrangler.jsonc`, and `cloudflare/worker.js` |
+| Tests              | Vitest and Testing Library under `tests/`; configuration in `config/vitest/vitest.config.ts`                          |
 
-## 2. Request Lifecycle
+The current production Worker is `syllabus-sync-production` at `www.syllabus-sync.app`. The public information site has a separate Worker, `syllabus-sync-info`, at `info.syllabus-sync.app`; its checkout is ignored by this repository. Historical Vercel configuration and scripts remain in the repository, but the [production checklist](../operations/deployment-checklist.md) describes the verified Cloudflare path.
 
-Every request follows the same path through the system. There are no exceptions.
+## Request and authentication flow
 
-```
-Client Request
-      |
-      v
-+---------------------+
-| Vercel Edge Network  |
-+---------------------+
-      |
-      v
-+---------------------+    Static asset?
-| Edge Middleware      | ──────────────────> Serve from CDN (bypass all logic)
-| (lib/proxy.ts)       |
-+---------------------+
-      |
-      | 1. Inject security headers (CSP nonce, HSTS, X-Frame-Options)
-      | 2. Validate CSRF token (double-submit cookie, __Host- prefix)
-      | 3. Classify route (public / auth / protected / API)
-      | 4. Resolve session (Supabase JWT, 6s deadline)
-      | 5. Check email verification status
-      | 6. Check MFA assurance level (AAL1 vs AAL2)
-      |
-      v
-+---------------------+
-| Route Decision      |
-+---------------------+
-      |
-      |-- Public route ──────> Serve page (no auth required)
-      |-- Auth route + user ──> Redirect to /home (already logged in)
-      |-- Protected + no user -> Redirect to /login
-      |-- API + no auth ──────> 401 Unauthorized
-      |-- API + auth timeout ──> 503 Auth Unavailable (retry)
-      |-- API + MFA required ──> 403 MFA Required
-      |
-      v
-+---------------------+
-| Application Layer   |
-| (Server Components  |
-|  or API Routes)     |
-+---------------------+
-      |
-      v
-+---------------------+
-| API Middleware       |   For API routes only:
-| (app/api/_lib/       |   - Re-validate session (defense-in-depth)
-|  middleware.ts)      |   - CSRF origin check on mutations
-+---------------------+   - Rate limiting (distributed, per-endpoint)
-      |                    - Zod schema validation
-      v
-+---------------------+
-| Supabase PostgreSQL  |   - RLS enforces tenant isolation at query level
-| (Row-Level Security) |   - Triggers enforce data invariants
-+---------------------+   - RPCs enforce business logic atomicity
-```
+1. `middleware.ts` exports the `lib/proxy.ts` request handler using the middleware convention required by this project's Cloudflare/OpenNext setup. It sets response security headers and handles CSRF checks for matched requests.
+2. For protected **page** routes, the proxy asks Supabase for the user, then applies login, email-verification, and MFA redirects. If auth resolution times out, the page can continue; the rendered feature must still handle its own data and errors.
+3. API routes intentionally skip proxy-level user resolution to avoid competing refresh-token requests during parallel API calls. Each protected route must authenticate with `requireAuth`, `requireAuthWithRateLimit`, or an explicitly reviewed inline `getUser()` check. The shared helpers check MFA assurance for authenticated API requests.
+4. Handlers validate inputs, query through the user-scoped Supabase client where possible, and rely on PostgreSQL RLS as the final authorization boundary. Service-role clients bypass RLS and must remain limited to reviewed server-side operations.
 
-### Why This Matters
+This split is important for contributors: the proxy is **not** an automatic authentication gate for new API routes. See `app/api/_lib/middleware.ts` and the route's own tests before adding an endpoint.
 
-The edge middleware acts as a single enforcement point. Every request -- page navigation, API call, prefetch -- transits through `lib/proxy.ts`. This eliminates the class of vulnerabilities where a developer adds a new route and forgets to add an auth check. The `isPublicApiPath()` allowlist is a deny-by-default gate: routes must be explicitly opted out of authentication.
+## Data and integrations
 
----
+- Migration files under `supabase/migrations/` are the source-controlled schema history. They cannot prove the state of a live Supabase project; check the linked project before migration work.
+- Some routes use a service-role Supabase client for operations such as cleanup, verification, push, and passkeys. The service role key is server-only and bypasses RLS.
+- `lib/services/rateLimitService.ts` chooses a distributed rate-limit backend when configured and can use an in-memory fallback in development. Security-critical routes use fail-closed behavior when an acceptable store is unavailable in production.
+- The campus map uses Leaflet and optional Google Maps/Routes integrations. API keys and corresponding features depend on environment configuration.
+- `cloudflare/worker.js` wraps OpenNext's generated Worker so the three configured cleanup schedules reach existing API routes. Push reminders are scheduled separately through GitHub Actions.
+- Optional Resend, Sentry, Web Push, and Sylla integrations each require their own configuration. See [environment setup](../setup/ENVIRONMENT_SETUP.md).
 
-## 3. Core Components
+## Future architecture
 
-### 3.1 The Proxy Middleware Auth Gate
+Institution-specific academic and campus data adapters, broader university support, and a multi-institution or multi-tenant model are directions for future design. The current Macquarie-oriented data and UI should not be described as a completed reusable adapter layer or an Australia-wide rollout.
 
-**File:** `lib/proxy.ts`
+## Further reading
 
-This is the most security-critical file in the codebase. It implements:
-
-- **Route classification.** Routes are categorized as static, public, auth, protected, or API. The classification determines which checks are applied.
-- **Session resolution with deadline.** The Supabase JWT is validated with a 6-second timeout in production. If the upstream auth service is slow or unreachable, the proxy makes a conservative decision (redirect to login for pages, 503 for APIs) rather than hanging.
-- **Email verification gate.** Users with unverified emails are intercepted at the edge and redirected to `/verify`, preventing incomplete accounts from accessing protected features.
-- **MFA enforcement.** Users with enrolled MFA factors who have not completed the second factor are redirected to the MFA challenge page. API routes return 403 with a `MFA_REQUIRED` code.
-- **Security header injection.** CSP (with per-request nonce), HSTS (with preload), X-Frame-Options, X-Content-Type-Options, Referrer-Policy, and Permissions-Policy are set on every response.
-
-### 3.2 API Route Protection
-
-**File:** `app/api/_lib/middleware.ts`
-
-API routes use a `requireAuth` wrapper that provides a second layer of defense:
-
-- Re-validates the user session (the edge already validated it, but defense-in-depth means not trusting the previous layer).
-- Validates CSRF origin headers on mutation methods (POST, PUT, PATCH, DELETE).
-- Applies per-endpoint rate limiting via the distributed rate limiting service.
-
-This double-validation is intentional. The edge middleware operates on JWT claims that may be cached; the API middleware performs a fresh session check against Supabase.
-
-### 3.3 Distributed Rate Limiting
-
-**File:** `lib/services/rateLimitService.ts`
-
-The service uses a sliding-window counter algorithm with pluggable storage backends:
-
-| Backend              | Environment | Trade-off                                              |
-| :------------------- | :---------- | :----------------------------------------------------- |
-| Upstash Redis (REST) | Production  | Lowest latency, purpose-built for serverless           |
-| Vercel KV            | Production  | Alternative to Upstash, same REST protocol             |
-| Supabase PostgreSQL  | Production  | Higher latency, but distributed; no additional service |
-| In-memory Map        | Development | Fast, but useless across serverless isolates           |
-
-**Fail-closed enforcement.** Security-critical limiters (login, signup, password reset, passkey auth, token verification) are configured with `failClosed: true`. If the store is unreachable, these endpoints reject all requests. This prevents a Redis outage from becoming a brute-force opportunity.
-
-**Preset configurations:**
-
-| Endpoint        | Window     | Max Requests | Fail Mode |
-| :-------------- | :--------- | :----------- | :-------- |
-| Signup          | 1 hour     | 20           | Closed    |
-| Login           | 15 minutes | 50           | Closed    |
-| Password reset  | 1 hour     | 10           | Closed    |
-| Passkey auth    | 15 minutes | 50           | Closed    |
-| General API     | 1 minute   | 200          | Open      |
-| Mutations       | 1 minute   | 60           | Open      |
-| Bulk operations | 1 minute   | 10           | Open      |
-
-### 3.4 State Management (Zustand Stores)
-
-Client-side state uses Zustand with persistent stores. The key architectural pattern is **optimistic UI with additive server sync**:
-
-1. User performs an action. The store immediately updates the UI with a temporary ID.
-2. A POST request is sent to the server.
-3. A concurrency guard (`_loadInFlight`) blocks background refresh calls from overwriting the optimistic state.
-4. A protected ID map (`_protectedIds`) marks optimistic items as immune to server-sync overwrites.
-5. When the server confirms the creation, the temporary ID is replaced with the server ID, and the protection transfers.
-6. The merge function is additive: it updates existing items, adds new server items, and preserves protected local items. It never deletes items that the server has not yet acknowledged.
-
-This solves the race condition where a background focus-triggered refresh overwrites a just-created item before the POST completes.
-
-### 3.5 Database Architecture
-
-**Row-Level Security (RLS)** is enabled on every table. Policies enforce `auth.uid()` matching at the query execution level, independent of application logic.
-
-**Key database patterns:**
-
-- **Signup trigger (`on_auth_user_created`).** A PostgreSQL trigger creates a `public.profiles` row within the same transaction as the `auth.users` insert, guaranteeing atomicity. No orphaned auth records can exist.
-- **Gamification RPC (`award_xp`).** Defined as `SECURITY DEFINER` with caller validation (`auth.uid()` must match target), preventing client-side XP tampering.
-- **Audit logging (`log_audit`).** Records actor, action, old/new data, IP, and User Agent for all sensitive mutations. Data payloads are sanitized; IP addresses are stored for forensic capability.
-
----
-
-## 4. Authentication Architecture
-
-The system supports multiple authentication methods, layered for both security and usability:
-
-| Method           | Implementation                     | Use Case                                       |
-| :--------------- | :--------------------------------- | :--------------------------------------------- |
-| Email + Password | Supabase GoTrue                    | Default signup/login                           |
-| FIDO2 WebAuthn   | Passkeys (platform authenticators) | Passwordless biometric login (FaceID, TouchID) |
-| TOTP MFA         | Authenticator app (Google Auth)    | Second factor for password-based login         |
-| SMS MFA          | Phone-based OTP                    | Fallback second factor                         |
-
-**WebAuthn scope decision.** `authenticatorAttachment` is set to `'platform'` only. This restricts passkeys to the device's built-in biometric (no roaming YubiKeys). The trade-off: reduced hardware compatibility in exchange for a zero-friction login flow that students will actually adopt on mobile devices.
-
-**Session lifecycle.** Sessions are managed via Supabase JWTs stored in HttpOnly cookies. The edge middleware validates tokens on every request. Password resets trigger global session invalidation. MFA enrollment upgrades the required assurance level from AAL1 to AAL2.
-
----
-
-## 5. Campus Navigation Architecture
-
-The map system (`features/map/`) replaces standard embedded maps with a custom Leaflet implementation optimized for campus boundaries.
-
-**Client architecture:**
-
-- `GoogleMapController` -- orchestrates map state and user interactions.
-- `GoogleMapCanvas` -- renders the Leaflet map with campus-specific tile layers.
-- `GoogleRoutePanel` -- displays turn-by-turn navigation powered by Google Routes API.
-
-**Heading fusion.** The `useMapLocation` hook fuses GPS heading (high velocity), movement-derived vectors (walking speed), and DeviceOrientation compass data (stationary) to produce a stable directional indicator. Outlier rejection discards GPS samples with improbable coordinate jumps.
-
-**API proxy pattern.** Google Maps API calls are proxied through server-side routes (`/api/maps/routes`, `/api/maps/place-search`, `/api/maps/place-details`). This keeps API keys server-side, enables rate limiting, and allows origin validation. These routes are listed in `isPublicApiPath()` to serve unauthenticated campus map views.
-
----
-
-## 6. Serverless Scaling Considerations
-
-| Concern               | Solution                                                                                      |
-| :-------------------- | :-------------------------------------------------------------------------------------------- |
-| **Cold starts**       | Server Components pre-render static shells; client hydration is minimal                       |
-| **Edge timeouts**     | Fail-fast fetch wrapper (15s), auth deadline (6s), MFA deadline (2.5s)                        |
-| **State isolation**   | No in-memory state in production; rate limiting and sessions use external stores              |
-| **Connection limits** | Upstash Redis REST API (no persistent connections); Supabase connection pooling via PostgREST |
-| **Cost under abuse**  | Edge middleware rejects unauthorized traffic before serverless function invocation            |
-
----
-
-## Further Reading
-
-- [Technical Explanation](../../TECHNICAL_EXPLANATION.md) -- Deep-dive into engineering decisions, trade-offs, and the rationale behind each architectural choice.
-- [Security Posture Report](../security/SECURITY_POSTURE.md) -- Complete catalogue of implemented security controls with STRIDE threat model.
-- [Route Inventory](../inventory/ROUTE_INVENTORY.md) -- Mapping of the Next.js App Router structure.
+- [API reference](../api/API_REFERENCE.md)
+- [Environment setup](../setup/ENVIRONMENT_SETUP.md)
+- [Production checklist](../operations/deployment-checklist.md)
+- [Security policy](../../SECURITY.md)
