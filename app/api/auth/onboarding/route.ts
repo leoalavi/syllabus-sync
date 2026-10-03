@@ -1,7 +1,13 @@
 import { NextRequest } from 'next/server';
 import { createServerClient } from '@/lib/supabase/server';
 import { z } from 'zod';
-import { jsonSuccess, jsonError } from '@/app/api/_lib/response';
+import {
+  jsonSuccess,
+  jsonError,
+  parseJsonBody,
+  BODY_SIZE_LIMITS,
+  applyNoStoreHeaders,
+} from '@/app/api/_lib/response';
 
 const schema = z.object({
   faculty: z.string().min(1),
@@ -10,8 +16,8 @@ const schema = z.object({
 });
 
 export async function POST(req: NextRequest) {
-  const body = await req.json().catch(() => null);
-  if (!body) return jsonError('Invalid request body', 400);
+  const { data: body, error: bodyError } = await parseJsonBody(req, BODY_SIZE_LIMITS.AUTH);
+  if (bodyError) return bodyError;
 
   const parsed = schema.safeParse(body);
   if (!parsed.success) return jsonError('Invalid input', 400);
@@ -37,5 +43,5 @@ export async function POST(req: NextRequest) {
 
   if (error) return jsonError('Failed to update profile', 500);
 
-  return jsonSuccess({ ok: true });
+  return applyNoStoreHeaders(jsonSuccess({ ok: true }));
 }

@@ -259,7 +259,7 @@ export async function POST(request: NextRequest) {
     // SECURITY: Parse with size limit protection (small limit for coordinates)
     const bodyResult = await parseJsonBody(request, 10 * 1024); // 10KB limit for navigation requests
     if (!bodyResult.success) {
-      return jsonError(bodyResult.error, 413, ERROR_CODES.VALIDATION_ERROR);
+      return jsonError(bodyResult.error, bodyResult.status, ERROR_CODES.VALIDATION_ERROR);
     }
     const body = bodyResult.data as Record<string, unknown>;
 

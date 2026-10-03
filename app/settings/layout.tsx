@@ -122,7 +122,7 @@ function SettingsLayout({ children }: { children?: React.ReactNode }) {
         </div>
       </div>
 
-      <main className="container mx-auto max-w-7xl px-3 py-4 sm:px-4 sm:py-6 lg:py-8">
+      <div className="container mx-auto max-w-7xl px-3 py-4 sm:px-4 sm:py-6 lg:py-8">
         <div className="lg:grid lg:grid-cols-[260px_1fr] gap-6 lg:gap-10 items-start">
           {/* Desktop Sidebar Navigation */}
           <aside className="hidden lg:block sticky top-32 space-y-1">
@@ -173,7 +173,7 @@ function SettingsLayout({ children }: { children?: React.ReactNode }) {
             )}
           </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 }

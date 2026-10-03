@@ -137,10 +137,7 @@ export default function CalendarPage() {
 
   return (
     <Suspense fallback={<CalendarSkeleton />}>
-      <main
-        id="main-content"
-        className="calendar-page container mx-auto max-w-7xl px-3 py-4 sm:px-6 sm:py-6"
-      >
+      <div className="calendar-page container mx-auto max-w-7xl px-3 py-4 sm:px-6 sm:py-6">
         {/* Structured Data for Calendar (JSON-LD) */}
         <script
           type="application/ld+json"
@@ -210,7 +207,7 @@ export default function CalendarPage() {
           }}
         />
         <CalendarClient />
-      </main>
+      </div>
     </Suspense>
   );
 }

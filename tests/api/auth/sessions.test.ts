@@ -44,6 +44,7 @@ describe('auth sessions API', () => {
     const json = await response.json();
 
     expect(response.status).toBe(200);
+    expect(response.headers.get('Cache-Control')).toBe('private, no-store, max-age=0');
     expect(json.data.sessions).toHaveLength(1);
     expect(json.data.sessions[0].current).toBe(true);
   });
@@ -70,6 +71,7 @@ describe('auth sessions API', () => {
     const json = await response.json();
 
     expect(response.status).toBe(200);
+    expect(response.headers.get('Cache-Control')).toBe('private, no-store, max-age=0');
     expect(json.data.scope).toBe('global');
     expect(signOut).toHaveBeenCalledWith({ scope: 'global' });
   });

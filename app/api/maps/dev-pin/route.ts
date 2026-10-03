@@ -7,39 +7,33 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { readFileSync, writeFileSync } from 'fs';
 import { join } from 'path';
+import { z } from 'zod';
+import { parseJsonBody } from '@/app/api/_lib/response';
 
 // Force Node.js runtime so fs is available
 export const runtime = 'nodejs';
+
+const requestSchema = z.object({
+  buildingId: z.string().trim().min(1).max(64),
+  position: z.tuple([z.number().finite(), z.number().finite()]),
+});
 
 export async function POST(req: NextRequest) {
   if (process.env.NODE_ENV !== 'development') {
     return NextResponse.json({ error: 'Dev-only endpoint' }, { status: 403 });
   }
 
-  let body: { buildingId: string; position: [number, number] };
-  try {
-    body = (await req.json()) as { buildingId: string; position: [number, number] };
-  } catch {
-    return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
+  const { data: body, error: bodyError } = await parseJsonBody<unknown>(req, 10 * 1024);
+  if (bodyError) {
+    return bodyError;
   }
 
-  if (!body || typeof body !== 'object') {
+  const parsed = requestSchema.safeParse(body);
+  if (!parsed.success) {
     return NextResponse.json({ error: 'Invalid payload' }, { status: 400 });
   }
 
-  const { buildingId, position } = body;
-
-  if (
-    !buildingId ||
-    !Array.isArray(position) ||
-    position.length !== 2 ||
-    typeof position[0] !== 'number' ||
-    typeof position[1] !== 'number' ||
-    !Number.isFinite(position[0]) ||
-    !Number.isFinite(position[1])
-  ) {
-    return NextResponse.json({ error: 'Invalid payload' }, { status: 400 });
-  }
+  const { buildingId, position } = parsed.data;
 
   const x = Math.round(position[0]);
   const y = Math.round(position[1]);

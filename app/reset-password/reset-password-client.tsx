@@ -390,7 +390,11 @@ export default function ResetPasswordClient() {
             )}
 
             {mode === 'request' ? (
-              <form method="post" onSubmit={requestForm.handleSubmit(onRequest)} className="space-y-4">
+              <form
+                method="post"
+                onSubmit={requestForm.handleSubmit(onRequest)}
+                className="space-y-4"
+              >
                 <div className="space-y-2">
                   <Label htmlFor="email" className="text-mq-content font-bold">
                     {t('email')}

@@ -21,6 +21,9 @@ import path from 'path';
 import { jsonSuccess, jsonError, ERROR_CODES } from '@/app/api/_lib/response';
 import { parseJsonBody } from '@/app/api/_lib/middleware';
 import { logger } from '@/lib/logger';
+import { secureCompare } from '@/lib/security/constant-time';
+
+export const runtime = 'nodejs';
 
 // ============================================================================
 // CRITICAL SECURITY: HARD PRODUCTION BLOCK
@@ -48,7 +51,7 @@ function validateAdminToken(request: NextRequest): boolean {
   // If token is configured, it must match
   if (adminSecretToken) {
     const providedToken = request.headers.get('x-admin-token');
-    return providedToken === adminSecretToken;
+    return providedToken ? secureCompare(providedToken, adminSecretToken) : false;
   }
   return false;
 }
@@ -267,7 +270,7 @@ export async function POST(request: NextRequest) {
     // SECURITY: Parse JSON with size limit (50KB for building position updates)
     const parseResult = await parseJsonBody<RequestBody>(request, 50 * 1024);
     if (!parseResult.success) {
-      return jsonError(parseResult.error, 400, ERROR_CODES.VALIDATION_ERROR);
+      return jsonError(parseResult.error, parseResult.status, ERROR_CODES.VALIDATION_ERROR);
     }
     const body = parseResult.data;
 

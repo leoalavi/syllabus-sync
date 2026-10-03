@@ -76,18 +76,20 @@ export async function POST(request: NextRequest) {
     }
 
     // 2) Mark token as used (atomic guard)
-    const { error: updateError } = await adminClient
+    const { data: consumedToken, error: updateError } = await adminClient
       .from('password_resets')
       .update({ used: true })
       .eq('id', record.id)
-      .eq('used', false);
+      .eq('used', false)
+      .select('id')
+      .maybeSingle();
 
-    if (updateError) {
+    if (updateError || !consumedToken) {
       logger.error('Failed to mark password reset token used', {
         tokenId: record.id,
-        error: updateError.message,
+        error: updateError?.message ?? 'token already consumed',
       });
-      return jsonError('Password reset failed', 500, ERROR_CODES.INTERNAL_ERROR);
+      return jsonError('Invalid or expired reset link', 400, ERROR_CODES.BAD_REQUEST);
     }
 
     // 3) Update password

@@ -27,5 +27,5 @@ export function validateHeaderScanTarget(
     };
   }
 
-  return { valid: true, url: parsed.origin + '/' };
+  return { valid: true, url: `${parsed.origin}/` };
 }

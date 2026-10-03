@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-### Raouf: Open-Source Readiness Follow-Through — 2026-10-03
+### Leo: Open-Source Readiness Follow-Through — 2026-10-03
 
 **Scope:** Finished a local open-source readiness pass without publishing changes.
 
@@ -16,7 +16,7 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-### Raouf: Public Positioning and Cloudflare Readiness — 2026-10-03
+### Leo: Public Positioning and Cloudflare Readiness — 2026-10-03
 
 **Scope:** Corrected the production Worker configuration and public project guidance without deploying.
 
@@ -28,7 +28,7 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-### Raouf: App-Icon Logo Rebrand — 2026-07-07
+### Leo: App-Icon Logo Rebrand — 2026-07-07
 
 **Scope:** Replaced the Macquarie University crest logo with the new Syllabus Sync app-icon image across the entire app.
 
@@ -42,7 +42,7 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-### Raouf: CI/CD Test Suite Remediation — 2026-04-07
+### Leo: CI/CD Test Suite Remediation — 2026-04-07
 
 **Scope:** Resolved authentication pipeline test failures causing CI blockages.
 
@@ -62,7 +62,7 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-### Raouf: About, Contact, Terms & Privacy Pages Bug Hunt & Production Hardening — 2026-04-06
+### Leo: About, Contact, Terms & Privacy Pages Bug Hunt & Production Hardening — 2026-04-06
 
 **Scope:** Bug fixes, SEO, accessibility, design token compliance, and performance across 4 public pages.
 
@@ -76,7 +76,7 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-### Raouf: Reset Password Page Bug Hunt & Production Hardening — 2026-04-06
+### Leo: Reset Password Page Bug Hunt & Production Hardening — 2026-04-06
 
 **Scope:** Bug fixes, performance, accessibility, i18n/token compliance, and code quality across 2 reset-password page files.
 
@@ -90,7 +90,7 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-### Raouf: Sign Up Page Bug Hunt & Production Hardening — 2026-04-06
+### Leo: Sign Up Page Bug Hunt & Production Hardening — 2026-04-06
 
 **Scope:** Bug fixes, performance, accessibility, i18n/token compliance, and code quality across 4 signup page files.
 
@@ -104,7 +104,7 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-### Raouf: Login Page Bug Hunt & Production Hardening — 2026-04-06
+### Leo: Login Page Bug Hunt & Production Hardening — 2026-04-06
 
 **Scope:** Bug fixes, performance, accessibility, i18n completeness, and design token compliance across 4 login page files.
 
@@ -118,7 +118,7 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-### Raouf: Manage Profiles Page Bug Hunt & Production Hardening — 2026-04-06
+### Leo: Manage Profiles Page Bug Hunt & Production Hardening — 2026-04-06
 
 **Scope:** Bug fixes, performance, accessibility, design token compliance, and security hardening across 9 manage-profiles files.
 
@@ -132,7 +132,7 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-### Raouf: Event Settings Page Bug Hunt & Production Hardening — 2026-04-06
+### Leo: Event Settings Page Bug Hunt & Production Hardening — 2026-04-06
 
 **Scope:** Bug fixes, performance, accessibility, and MQ token compliance across 4 event-settings files
 
@@ -167,7 +167,7 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-### Raouf: Event Feed Page Bug Hunt & Production Hardening — 2026-04-06
+### Leo: Event Feed Page Bug Hunt & Production Hardening — 2026-04-06
 
 **Scope:** Bug fixes, performance, accessibility, type safety, i18n, and MQ token compliance across 12 feed files
 
@@ -210,7 +210,7 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-### Raouf: Map Page Bug Hunt & Production Hardening — 2026-04-06
+### Leo: Map Page Bug Hunt & Production Hardening — 2026-04-06
 
 **Scope:** Bug fixes, performance, accessibility, type safety, and i18n compliance across 5 map files
 
@@ -241,7 +241,7 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-### Raouf: Calendar Page Bug Hunt & Production Hardening — 2026-04-06
+### Leo: Calendar Page Bug Hunt & Production Hardening — 2026-04-06
 
 **Scope:** Bug fixes, performance, accessibility, and type safety across 6 calendar files
 
@@ -273,7 +273,7 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-### Raouf: Home Page Bug Hunt & Production Hardening — 2026-04-06
+### Leo: Home Page Bug Hunt & Production Hardening — 2026-04-06
 
 **Scope:** Bug fixes, performance, accessibility, and type safety across 7 home-page files
 
@@ -305,7 +305,7 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-### Raouf: Fix Select Dropdowns Not Opening Inside Dialogs — 2026-04-05
+### Leo: Fix Select Dropdowns Not Opening Inside Dialogs — 2026-04-05
 
 **Scope:** UI bug fix — Radix Select z-index + Dialog interaction guard
 
@@ -327,7 +327,7 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-### Raouf: Git Rebase & Documentation Sync — 2026-04-01
+### Leo: Git Rebase & Documentation Sync — 2026-04-01
 
 **Scope:** Resolved a complex 3-step interactive rebase conflict in `README.md`.
 
@@ -347,7 +347,7 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-### Raouf: Full Project Documentation Portfolio Transformation — 2026-03-21
+### Leo: Full Project Documentation Portfolio Transformation — 2026-03-21
 
 **Scope:** Rewrote and structurally elevated the entire project documentation suite to transform the repository into a high-caliber portfolio piece.
 
@@ -379,7 +379,7 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-### Raouf: Rewrite README for Claude for OSS and OpenAI Codex for OSS Grant Applications — 2026-03-17
+### Leo: Rewrite README for Claude for OSS and OpenAI Codex for OSS Grant Applications — 2026-03-17
 
 **Scope:** Replaced the internal-facing technical README with a grant-optimised public README.
 
@@ -387,7 +387,7 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-### Raouf: Internationalization Update — 2026-04-06
+### Leo: Internationalization Update — 2026-04-06
 
 **Scope:** i18n Expansion (34 Locales)
 

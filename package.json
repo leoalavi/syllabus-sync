@@ -47,7 +47,8 @@
     "cf:deploy": "npm run cf:build && npm run cf:verify-output && wrangler deploy",
     "cf:versions:list": "wrangler versions list",
     "cf:deployments:list": "wrangler deployments list",
-    "cf:verify-output": "node tools/cloudflare/verify-open-next-output.mjs"
+    "cf:verify-output": "node tools/cloudflare/verify-open-next-output.mjs",
+    "test:e2e": "playwright test --config config/playwright.config.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -94,6 +95,7 @@
     "@next/bundle-analyzer": "^16.1.6",
     "@next/eslint-plugin-next": "^16.3.8",
     "@opennextjs/cloudflare": "^1.20.0",
+    "@playwright/test": "^1.63.0",
     "@tailwindcss/postcss": "^4.1.18",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.0.1",
@@ -115,6 +117,7 @@
     "browserslist": "^4.29.3",
     "caniuse-lite": "^1.0.30001767",
     "dotenv": "^17.2.3",
+    "esbuild": "^0.27.7",
     "eslint": "^9.39.4",
     "eslint-config-next": "^16.3.8",
     "eslint-plugin-jsx-a11y": "^6.10.2",

@@ -186,8 +186,8 @@ Changes to this privacy policy will be reflected by updating the "Last Updated" 
 
 ## 13. Contact
 
-For privacy or data protection questions:
+For privacy or data protection questions about this repository and its documentation:
 
-- **Email:** leo@leoalavi.dev
-- **Security disclosure:** See [SECURITY.md](../../SECURITY.md) for the vulnerability reporting process
-- **Security policy:** See [security-policy.md](./security-policy.md) for the full disclosure program
+- **Non-sensitive repository questions:** open a GitHub issue or discussion with the minimum detail needed to describe the concern
+- **Sensitive privacy or security concerns:** use the private reporting flow in [SECURITY.md](../../SECURITY.md)
+- **Security policy:** see [security-policy.md](./security-policy.md) for the full disclosure program

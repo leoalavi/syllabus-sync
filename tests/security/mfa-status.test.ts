@@ -58,6 +58,7 @@ describe("MFA Status API", () => {
     const json = await response.json();
 
     expect(response.status).toBe(200);
+    expect(response.headers.get("Cache-Control")).toBe("private, no-store, max-age=0");
     expect(json.data.enabled).toBe(false);
     expect(json.data.totpEnabled).toBe(false);
     expect(json.data.phoneEnabled).toBe(false);
@@ -102,6 +103,7 @@ describe("MFA Status API", () => {
     const json = await response.json();
 
     expect(response.status).toBe(200);
+    expect(response.headers.get("Cache-Control")).toBe("private, no-store, max-age=0");
     expect(json.data.enabled).toBe(true);
     expect(json.data.totpEnabled).toBe(true);
     expect(json.data.factors).toHaveLength(1);

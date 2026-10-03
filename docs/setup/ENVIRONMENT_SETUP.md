@@ -22,7 +22,7 @@ This guide walks through every step required to go from a fresh clone to a runni
 ```bash
 git clone https://github.com/leoalavi/syllabus-sync.git
 cd syllabus-sync
-npm install
+npm ci
 ```
 
 ---
@@ -86,7 +86,7 @@ and are **safe to leave unset locally** — the shared-cookie logic is gated to
 | `NEXT_PUBLIC_SYLLA_URL`          | Optional  | Target for the "Sylla AI Study Assistant" sidebar link. The link is hidden when unset.       |
 
 Production setup — including Supabase redirect URLs and verification steps — is in
-the [Sylla Shared Authentication](../operations/deployment-checklist.md#8-sylla-shared-authentication-ecosystem)
+the [Sylla Shared Authentication](../operations/deployment-checklist.md#sylla-shared-authentication)
 section of the deployment checklist.
 
 ---
@@ -118,6 +118,13 @@ VERIFICATION_EMAIL_NAME=Syllabus Sync
 
 See `.env.example` for the full list of available variables and their descriptions.
 
+### Running locally without production credentials
+
+- Use a local or test Supabase project only.
+- Leave Sylla, Sentry, Maps, Upstash, and other optional integrations unset unless you are actively working on them.
+- `npm run build` and `npm run cf:build` can be validated with dummy public values for `NEXT_PUBLIC_APP_URL`, `NEXT_PUBLIC_SUPABASE_URL`, and `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
+- `npm run test:e2e` also works without production credentials; the checked-in Playwright config injects dummy public values when it boots its own local dev server.
+
 ---
 
 ## Step 4: Start the Development Server
@@ -132,13 +139,18 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Development Commands
 
-| Command         | Purpose                                                                            |
-| :-------------- | :--------------------------------------------------------------------------------- |
-| `npm run dev`   | Start the Next.js development server with hot module replacement.                  |
-| `npm run check` | Run the full quality gate: secrets scan, formatting, typecheck, lint, test, build. |
-| `npm run lint`  | Run ESLint (zero-tolerance policy -- no errors or warnings allowed).               |
-| `npm run test`  | Run the Vitest unit and integration test suite.                                    |
-| `npm run build` | Create a production build locally.                                                 |
+| Command                    | Purpose                                                                            |
+| :------------------------- | :--------------------------------------------------------------------------------- |
+| `npm run dev`              | Start the Next.js development server with hot module replacement.                  |
+| `npm run check`            | Run the full quality gate: secrets scan, formatting, typecheck, lint, test, build. |
+| `npm run format:check`     | Check Prettier formatting only.                                                    |
+| `npm run lint`             | Run ESLint (zero-tolerance policy -- no errors or warnings allowed).               |
+| `npm run typecheck`        | Run TypeScript without emitting files.                                             |
+| `npm run test`             | Run the Vitest unit and integration test suite.                                    |
+| `npm run build`            | Create a production Next.js build locally.                                         |
+| `npm run cf:build`         | Build the Cloudflare/OpenNext worker output locally (no deploy).                   |
+| `npm run cf:verify-output` | Verify the generated OpenNext output structure.                                    |
+| `npm run test:e2e`         | Run Playwright E2E checks from `config/playwright.config.ts`.                      |
 
 ### Quality Gate
 
@@ -149,6 +161,12 @@ npm run check
 ```
 
 This command runs secrets detection, Prettier formatting checks, TypeScript compilation, ESLint, the Vitest suite, and a Next.js production build. The Cloudflare/OpenNext build is a separate command.
+
+### Playwright E2E notes
+
+- `npm run test:e2e` starts its own local dev server unless `E2E_BASE_URL` is already set.
+- Authenticated specs require `E2E_EMAIL` and `E2E_PASSWORD` for a disposable test account and are skipped otherwise.
+- `E2E_BASE_URL` is optional when you want to point at an existing non-production deployment.
 
 Configure your editor to respect the project's `.editorconfig` and Prettier configuration (`config/prettier/.prettierrc.json`).
 

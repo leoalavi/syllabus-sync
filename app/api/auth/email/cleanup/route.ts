@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { jsonSuccess, jsonError, ERROR_CODES } from '@/app/api/_lib/response';
 import { logger } from '@/lib/logger';
+import { matchesBearerToken } from '@/lib/security/constant-time';
 
 /**
  * Cron endpoint: deletes expired/used verification tokens.
@@ -17,7 +18,7 @@ async function handleCleanup(request: NextRequest) {
   const cronSecret = process.env.CRON_SECRET;
   const authHeader = request.headers.get('authorization');
 
-  if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
+  if (!matchesBearerToken(authHeader, cronSecret)) {
     return jsonError('Unauthorized', 401, ERROR_CODES.UNAUTHORIZED);
   }
 

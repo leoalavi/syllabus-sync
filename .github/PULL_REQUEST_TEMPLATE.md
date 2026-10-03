@@ -41,10 +41,13 @@ Fixes #
 
 - [ ] `npm run check` passes locally (secrets, format, typecheck, lint, tests, build)
 - [ ] Cloudflare/OpenNext build and output verification pass when deployment code changes
+- [ ] `npm run test:e2e` passes locally, or the change is documented as not affecting E2E-covered behaviour
 - [ ] New or updated tests cover the changes
 - [ ] No console errors or warnings in the browser
 - [ ] Self-review completed -- no debugging code or leftover TODOs
 - [ ] Accessibility: interactive elements are keyboard-navigable and screen-reader-friendly
+- [ ] Documentation and product claims distinguish implemented behaviour from planned work
+- [ ] No secrets, private vulnerability details, or production credentials are included in the PR
 
 ## Deployment Notes
 

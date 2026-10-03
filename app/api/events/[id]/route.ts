@@ -56,7 +56,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       // SECURITY: Parse with size limit protection
       const bodyResult = await parseJsonBody(request);
       if (!bodyResult.success) {
-        return jsonError(bodyResult.error, 413, ERROR_CODES.VALIDATION_ERROR);
+        return jsonError(bodyResult.error, bodyResult.status, ERROR_CODES.VALIDATION_ERROR);
       }
       const parsed = eventUpdateSchema.safeParse(bodyResult.data);
 

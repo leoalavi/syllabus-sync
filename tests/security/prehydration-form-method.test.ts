@@ -8,6 +8,8 @@ const CLIENT_FORMS = [
   'app/reset-password/reset-password-client.tsx',
   'app/onboarding/OnboardingClient.tsx',
   'app/contact/contact-client.tsx',
+  'app/calendar/CalendarClient.tsx',
+  'features/settings/components/privacy/ChangePasswordDialog.tsx',
 ];
 
 describe('client-handled forms before hydration', () => {

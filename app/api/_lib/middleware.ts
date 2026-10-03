@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase/server';
-import { jsonUnauthorized, jsonError, ERROR_CODES } from './response';
+import { jsonUnauthorized, jsonError, ERROR_CODES, applyNoStoreHeaders } from './response';
 import {
   checkRateLimit,
   type RateLimitConfig,
@@ -152,7 +152,7 @@ export const requireAuth = async (
     const mfaGate = await enforceMfaAssuranceLevel(supabase);
     if (!mfaGate.ok) return mfaGate.response;
 
-    return await handler(user.id);
+    return applyNoStoreHeaders(await handler(user.id));
   } catch (error) {
     logger.error(
       'Authentication middleware error:',
@@ -289,7 +289,7 @@ export const requireAuthWithRateLimit = async (
     }
 
     // Execute handler and add rate limit headers
-    const response = await handler(user.id);
+    const response = applyNoStoreHeaders(await handler(user.id));
 
     // Add rate limit headers to response
     const newResponse = new NextResponse(response.body, response);
@@ -486,7 +486,7 @@ const DEFAULT_MAX_BODY_SIZE = 100 * 1024; // 100KB
 export async function parseJsonBody<T = unknown>(
   request: Request,
   maxSize: number = DEFAULT_MAX_BODY_SIZE,
-): Promise<{ success: true; data: T } | { success: false; error: string }> {
+): Promise<{ success: true; data: T } | { success: false; error: string; status: 400 | 413 }> {
   try {
     // Check Content-Length header first (fast rejection)
     const contentLength = request.headers.get('content-length');
@@ -494,21 +494,49 @@ export async function parseJsonBody<T = unknown>(
       return {
         success: false,
         error: `Request body too large. Maximum size is ${Math.round(maxSize / 1024)}KB`,
+        status: 413,
       };
     }
 
-    // Read body as text to check actual size
-    const body = await request.text();
-
-    if (body.length > maxSize) {
-      return {
-        success: false,
-        error: `Request body too large. Maximum size is ${Math.round(maxSize / 1024)}KB`,
-      };
+    const reader = request.body?.getReader();
+    if (!reader) {
+      return { success: true, data: {} as T };
     }
 
-    // Parse JSON
-    if (!body || body.trim() === '') {
+    const chunks: Uint8Array[] = [];
+    let receivedBytes = 0;
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      receivedBytes += value.byteLength;
+      if (receivedBytes > maxSize) {
+        await reader.cancel();
+        return {
+          success: false,
+          error: `Request body too large. Maximum size is ${Math.round(maxSize / 1024)}KB`,
+          status: 413,
+        };
+      }
+
+      chunks.push(value);
+    }
+
+    if (receivedBytes === 0) {
+      return { success: true, data: {} as T };
+    }
+
+    const bytes = new Uint8Array(receivedBytes);
+    let offset = 0;
+    for (const chunk of chunks) {
+      bytes.set(chunk, offset);
+      offset += chunk.byteLength;
+    }
+
+    const body = new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+
+    if (body.trim() === '') {
       return { success: true, data: {} as T };
     }
 
@@ -516,9 +544,9 @@ export async function parseJsonBody<T = unknown>(
     return { success: true, data };
   } catch (error) {
     if (error instanceof SyntaxError) {
-      return { success: false, error: 'Invalid JSON in request body' };
+      return { success: false, error: 'Invalid JSON in request body', status: 400 };
     }
-    return { success: false, error: 'Failed to parse request body' };
+    return { success: false, error: 'Failed to parse request body', status: 400 };
   }
 }
 
@@ -543,7 +571,7 @@ export const validateRequest = <T>(
       // SECURITY: Parse with size limit
       const bodyResult = await parseJsonBody(request, maxBodySize);
       if (!bodyResult.success) {
-        return jsonError(bodyResult.error, 413, ERROR_CODES.VALIDATION_ERROR);
+        return jsonError(bodyResult.error, bodyResult.status, ERROR_CODES.VALIDATION_ERROR);
       }
 
       const result = schema.safeParse(bodyResult.data);
