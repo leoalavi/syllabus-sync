@@ -63,7 +63,7 @@ export async function POST(request: Request) {
       // SECURITY: Parse with size limit protection
       const bodyResult = await parseJsonBody(request);
       if (!bodyResult.success) {
-        return jsonError(bodyResult.error, 413, ERROR_CODES.VALIDATION_ERROR);
+        return jsonError(bodyResult.error, bodyResult.status, ERROR_CODES.VALIDATION_ERROR);
       }
       const parsed = deadlineSchema.safeParse(bodyResult.data);
 

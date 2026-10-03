@@ -81,6 +81,18 @@ export const jsonSuccess = <T = unknown>(
   }
 };
 
+export function applyNoStoreHeaders<T extends NextResponse>(response: T): T {
+  if (!response.headers.has('Cache-Control')) {
+    response.headers.set('Cache-Control', 'private, no-store, max-age=0');
+  }
+
+  if (!response.headers.has('Pragma')) {
+    response.headers.set('Pragma', 'no-cache');
+  }
+
+  return response;
+}
+
 /**
  * Create an error response
  */

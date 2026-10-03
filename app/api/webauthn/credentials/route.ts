@@ -7,6 +7,7 @@ import {
   parseJsonBody,
   BODY_SIZE_LIMITS,
   ERROR_CODES,
+  applyNoStoreHeaders,
 } from '@/app/api/_lib/response';
 import {
   getCredentialsForUser,
@@ -46,16 +47,18 @@ export async function GET(request: NextRequest) {
 
     const credentials = await getCredentialsForUser(user.id);
 
-    return jsonSuccess({
-      credentials: credentials.map((c) => ({
-        id: c.id,
-        credentialId: c.credentialId,
-        deviceName: c.deviceName,
-        createdAt: c.createdAt,
-        lastUsedAt: c.lastUsedAt,
-      })),
-      count: credentials.length,
-    });
+    return applyNoStoreHeaders(
+      jsonSuccess({
+        credentials: credentials.map((c) => ({
+          id: c.id,
+          credentialId: c.credentialId,
+          deviceName: c.deviceName,
+          createdAt: c.createdAt,
+          lastUsedAt: c.lastUsedAt,
+        })),
+        count: credentials.length,
+      }),
+    );
   } catch (error) {
     logger.error('List credentials error:', error);
     return jsonError('Failed to list passkeys', 500, ERROR_CODES.INTERNAL_ERROR);
@@ -112,7 +115,7 @@ export async function DELETE(request: NextRequest) {
       credentialDbId: parsed.data.credentialDbId,
     });
 
-    return jsonSuccess({ removed: true });
+    return applyNoStoreHeaders(jsonSuccess({ removed: true }));
   } catch (error) {
     logger.error('Delete credential error:', error);
     return jsonError('Failed to remove passkey', 500, ERROR_CODES.INTERNAL_ERROR);

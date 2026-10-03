@@ -24,7 +24,7 @@ Thank you for your interest in contributing to Syllabus Sync. This document desc
 ## Getting Started
 
 1. **Read first.** Before writing any code, review:
-   - [`AGENT.md`](./AGENT.md) -- architectural constraints and conventions.
+   - [`AGENTS.md`](./AGENTS.md) -- architectural constraints and conventions.
    - [`CHANGELOG.md`](./CHANGELOG.md) -- recent changes and context.
    - [`docs/architecture/ARCHITECTURE.md`](./docs/architecture/ARCHITECTURE.md) -- system design.
 
@@ -59,6 +59,15 @@ npm run dev
 Full environment configuration guide: [`docs/operations/ENVIRONMENT_SETUP.md`](./docs/operations/ENVIRONMENT_SETUP.md).
 
 Use a dedicated test Supabase project. Review migrations before applying them; `npx supabase db push` changes the linked project's schema. Never include credentials, student data, or private security findings in a public issue or PR.
+
+For database work, the minimum safe sequence is:
+
+```bash
+npx supabase link --project-ref <your-dev-project-ref>
+npx supabase db push
+```
+
+Contributor docs intentionally assume **non-production** infrastructure. `npm run build`, `npm run cf:build`, and anonymous Playwright flows can run with dummy public environment values; authenticated local flows need a disposable test account, not production credentials.
 
 ---
 
@@ -144,6 +153,12 @@ This executes the following stages in order:
 
 Changes to the Worker or runtime should also pass `npm run cf:build` and `npm run cf:verify-output`. Deployment is maintainer controlled; contributors should not deploy the shared production Worker.
 
+Documentation-only changes should also pass the local link checker:
+
+```bash
+node tools/docs/check-local-links.mjs
+```
+
 ---
 
 ## Testing Requirements
@@ -179,6 +194,18 @@ npx vitest run tests/path/to/file.test.ts
 # Run tests in watch mode during development
 npx vitest tests/path/to/file.test.ts
 ```
+
+### End-to-End Testing
+
+```bash
+# Runs Playwright with the checked-in config
+npm run test:e2e
+```
+
+- `config/playwright.config.ts` starts a local `next dev` server with dummy public Supabase values when `E2E_BASE_URL` is unset.
+- Anonymous flows do not require secrets.
+- Authenticated specs are skipped unless `E2E_EMAIL` and `E2E_PASSWORD` are set for a **disposable** test account.
+- `E2E_BASE_URL` is optional when you want Playwright to target an already-running non-production environment.
 
 ---
 
@@ -258,6 +285,8 @@ These constraints are non-negotiable. PRs that violate them will be rejected.
 
 `middleware.ts` and `lib/proxy.ts` handle page redirects and request-level controls, but deliberately do not resolve users for API requests. Every protected API route must enforce authentication in its own handler with `requireAuth`, `requireAuthWithRateLimit`, or a reviewed inline `getUser()` check. Document intentionally public routes and test both access paths.
 
+In this Cloudflare/OpenNext deployment, `middleware.ts` is the intentional framework entrypoint and `lib/proxy.ts` holds the request logic. Do not rename the entry file to `proxy.ts` or assume proxy-level auth protects new API routes.
+
 ### Database Discipline
 
 - **Never modify the database through the Supabase Dashboard UI.** All schema changes must be scripted as idempotent, reversible SQL migrations in `supabase/migrations/`.
@@ -269,6 +298,8 @@ These constraints are non-negotiable. PRs that violate them will be rejected.
 - All new API routes must use `requireAuth` or `requireAuthWithRateLimit` middleware.
 - Input validation via Zod schemas is mandatory for all request bodies.
 - Error responses must use sanitized messages -- never expose stack traces, internal paths, or database details.
+- The header scanner is restricted to approved first-party project origins; do not expand it into an arbitrary-host fetcher without a reviewed egress design.
+- Client IP trust is runtime-specific. The reviewed Cloudflare path trusts `CF-Connecting-IP`; local Node servers and other proxies must be treated separately.
 
 ---
 
@@ -280,6 +311,7 @@ Security is a first-class concern, not a post-launch consideration.
 - **Use private vulnerability reporting.** The public issue tracker is for ordinary bugs. Follow [`SECURITY.md`](./SECURITY.md) for security findings.
 - **Never disable security controls** (CSP, rate limiting, RLS policies) to make development easier. If a control blocks your workflow, ask for help.
 - **Report vulnerabilities privately.** If you discover a security issue, do not open a public issue. Follow the process in [`SECURITY.md`](./SECURITY.md).
+- **Keep security and product claims accurate.** Distinguish implemented behaviour from planned work, and do not imply Macquarie endorsement or multi-university rollout that the repository does not implement.
 
 ---
 
@@ -294,6 +326,8 @@ Open a GitHub Issue with:
 - Browser/OS/Node version.
 - Console errors or network traces, if applicable.
 
+For sensitive security or privacy bugs, use [GitHub private vulnerability reporting](https://github.com/leoalavi/syllabus-sync/security/advisories/new) instead of a public issue.
+
 ### Feature Requests
 
 Open a GitHub Discussion with:
@@ -306,6 +340,14 @@ Open a GitHub Discussion with:
 
 Use GitHub Discussions for general questions about the codebase, architecture, or setup.
 
+### Good First Contribution Areas
+
+- Documentation corrections, broken links, and setup clarity
+- Translation review for the currently documented English fallback keys
+- Small test reliability fixes in Vitest or Playwright
+- Publicly verifiable campus data corrections
+- CI/documentation hardening that does not weaken security boundaries
+
 ---
 
 ## AI-Assisted Contributions
@@ -316,7 +358,7 @@ We welcome contributions developed with AI assistance (Claude, Copilot, Codex, e
 - Verifying that AI-generated code passes all quality gates.
 - Ensuring AI-generated tests actually test meaningful behavior (not just achieving coverage numbers).
 
-When using AI agents in this repository, they must follow the **Raouf Change Protocol** defined in `AGENT.md`: preflight reading, minimal/surgical changes, atomic commits, and postflight changelog updates.
+When using AI agents in this repository, they must follow the **Leo Change Protocol** defined in `AGENTS.md`: preflight reading, minimal/surgical changes, atomic commits, and postflight changelog updates.
 
 ---
 

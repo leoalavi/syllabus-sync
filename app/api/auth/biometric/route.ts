@@ -7,6 +7,7 @@ import {
   parseJsonBody,
   BODY_SIZE_LIMITS,
   ERROR_CODES,
+  applyNoStoreHeaders,
 } from '@/app/api/_lib/response';
 import { z } from 'zod';
 import { logger } from '@/lib/logger';
@@ -52,15 +53,17 @@ export async function GET() {
 
     const hasDbCredentials = (dbCredentialCount ?? 0) > 0;
 
-    return jsonSuccess({
-      enabled: Boolean(metadata.biometric_enabled) || hasDbCredentials,
-      credentialId: metadata.biometric_credential_id ?? null,
-      publicKey: metadata.biometric_public_key ?? null,
-      counter: metadata.biometric_counter ?? null,
-      transports: metadata.biometric_transports ?? null,
-      updatedAt: metadata.biometric_updated_at ?? null,
-      credentialCount: dbCredentialCount ?? 0,
-    });
+    return applyNoStoreHeaders(
+      jsonSuccess({
+        enabled: Boolean(metadata.biometric_enabled) || hasDbCredentials,
+        credentialId: metadata.biometric_credential_id ?? null,
+        publicKey: metadata.biometric_public_key ?? null,
+        counter: metadata.biometric_counter ?? null,
+        transports: metadata.biometric_transports ?? null,
+        updatedAt: metadata.biometric_updated_at ?? null,
+        credentialCount: dbCredentialCount ?? 0,
+      }),
+    );
   } catch (error) {
     logger.error('Biometric GET error:', error);
     return jsonError('Internal server error', 500, ERROR_CODES.INTERNAL_ERROR);
@@ -125,14 +128,16 @@ export async function POST(request: NextRequest) {
       return jsonError('Failed to update biometric settings', 400, ERROR_CODES.BAD_REQUEST);
     }
 
-    return jsonSuccess({
-      enabled,
-      credentialId: enabled ? (credentialId ?? null) : null,
-      publicKey: enabled ? (publicKey ?? null) : null,
-      counter: enabled ? (counter ?? 0) : null,
-      transports: enabled ? (transports ?? null) : null,
-      credentialCount: enabled ? undefined : 0,
-    });
+    return applyNoStoreHeaders(
+      jsonSuccess({
+        enabled,
+        credentialId: enabled ? (credentialId ?? null) : null,
+        publicKey: enabled ? (publicKey ?? null) : null,
+        counter: enabled ? (counter ?? 0) : null,
+        transports: enabled ? (transports ?? null) : null,
+        credentialCount: enabled ? undefined : 0,
+      }),
+    );
   } catch (error) {
     logger.error('Biometric POST error:', error);
     return jsonError('Internal server error', 500, ERROR_CODES.INTERNAL_ERROR);

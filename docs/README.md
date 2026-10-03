@@ -20,14 +20,14 @@ Structural decisions, component interactions, and the technical patterns that po
 
 Current reporting guidance and historical security-review material.
 
-| Document                                                           | Description                                                           |
-| ------------------------------------------------------------------ | --------------------------------------------------------------------- |
-| [Security Posture Report](./security/SECURITY_POSTURE.md)          | Historical snapshot; reverify all control claims against current code |
-| [Security Evidence Index](./security/SECURITY_EVIDENCE_INDEX.md)   | Historical code pointers for security review                          |
-| [Header Scanner Boundary](./security/HEADER_SCANNER_LIMITATION.md) | Approved-host scope and Worker network assumptions                    |
+| Document                                                            | Description                                                           |
+| ------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| [Security Posture Report](./security/SECURITY_POSTURE.md)           | Historical snapshot; reverify all control claims against current code |
+| [Security Evidence Index](./security/SECURITY_EVIDENCE_INDEX.md)    | Historical code pointers for security review                          |
+| [Header Scanner Boundary](./security/HEADER_SCANNER_LIMITATION.md)  | Approved-host scope and Worker network assumptions                    |
 | [Development Dependency Advisories](./security/DEV_DEPENDENCIES.md) | Remaining lint-tool advisory chain and upgrade decision               |
-| [Security Policy](../SECURITY.md)                                  | Vulnerability disclosure process and high-level security tenets       |
-| [Privacy Policy](./policies/privacy-policy.md)                     | Data collection, processing, retention, and user deletion rights      |
+| [Security Policy](../SECURITY.md)                                   | Vulnerability disclosure process and high-level security tenets       |
+| [Privacy Policy](./policies/privacy-policy.md)                      | Data collection, processing, retention, and user deletion rights      |
 
 ## Internationalisation
 

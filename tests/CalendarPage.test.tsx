@@ -148,4 +148,14 @@ describe('CalendarPage', () => {
     todayButtons[0].focus();
     expect(document.activeElement).toBe(todayButtons[0]);
   });
+
+  it('does not introduce a nested main landmark inside the shared app shell', () => {
+    render(
+      <main role="main">
+        <CalendarPage />
+      </main>,
+    );
+
+    expect(screen.getAllByRole('main')).toHaveLength(1);
+  });
 });

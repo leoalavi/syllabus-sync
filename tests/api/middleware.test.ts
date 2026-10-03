@@ -36,6 +36,7 @@ describe('API Middleware', () => {
       expect(result.success).toBe(false);
       if (!result.success) {
         expect(result.error).toContain('too large');
+        expect(result.status).toBe(413);
       }
     });
 
@@ -49,6 +50,7 @@ describe('API Middleware', () => {
       expect(result.success).toBe(false);
       if (!result.success) {
         expect(result.error).toContain('Invalid JSON');
+        expect(result.status).toBe(400);
       }
     });
 

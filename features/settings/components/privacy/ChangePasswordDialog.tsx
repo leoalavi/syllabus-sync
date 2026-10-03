@@ -118,7 +118,7 @@ export function ChangePasswordDialog({ open, onOpenChange, t }: ChangePasswordDi
           <DialogDescription>{t('changePasswordDialogDesc')}</DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 py-4">
+        <form method="post" onSubmit={handleSubmit(onSubmit)} className="space-y-4 py-4">
           {/* Current Password */}
           <div className="space-y-2">
             <label htmlFor="current-password" className="text-sm font-medium text-mq-content">

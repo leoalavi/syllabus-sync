@@ -100,7 +100,7 @@ export async function POST(request: Request) {
       const supabase = await createServerClient();
       const bodyResult = await parseJsonBody(request);
       if (!bodyResult.success) {
-        return jsonError(bodyResult.error, 413, ERROR_CODES.VALIDATION_ERROR);
+        return jsonError(bodyResult.error, bodyResult.status, ERROR_CODES.VALIDATION_ERROR);
       }
       const parsed = todoSchema.safeParse(bodyResult.data);
 

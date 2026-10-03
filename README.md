@@ -73,7 +73,7 @@ These screenshots show selected interfaces; the product is still being developed
 
 <br/>
 
-## Key Features
+## Implemented Today
 
 ```text
 ╔══════════════════════════════════════════════════════════════════════╗
@@ -84,7 +84,7 @@ These screenshots show selected interfaces; the product is still being developed
 ║  🌍  35 locale dictionaries · RTL layout support                     ║
 ║  🎮  XP and streak tracking (leaderboard/achievements: backend only) ║
 ║  🔔  Push + in-app notifications (email reminders: not yet wired)    ║
-║  ⚡  GitHub Actions CI · Vitest tests · Cloudflare Worker              ║
+║  ⚡  GitHub Actions validation · Vitest · Playwright · Cloudflare     ║
 ╚══════════════════════════════════════════════════════════════════════╝
 ```
 
@@ -98,23 +98,24 @@ These screenshots show selected interfaces; the product is still being developed
 
 ### Runtime Stack
 
-| Layer               | Technology                                                           |
-| ------------------- | -------------------------------------------------------------------- |
-| **Framework**       | Next.js 16 (App Router), `middleware.ts` request interceptor         |
-| **UI**              | React 19, Tailwind CSS 4, Radix UI primitives, Framer Motion         |
-| **State**           | Zustand (persisted stores), TanStack Query                           |
-| **Database & Auth** | Supabase PostgreSQL with Row-Level Security, Supabase Auth           |
-| **Infrastructure**  | Cloudflare Workers with the OpenNext adapter                         |
-| **Rate Limiting**   | Upstash Redis, fail-closed on security-critical routes in production |
-| **Error Tracking**  | Sentry (client, server, edge configs)                                |
-| **Testing**         | Vitest + Testing Library; run `npm test` for the current count       |
+| Layer               | Technology                                                             |
+| ------------------- | ---------------------------------------------------------------------- |
+| **Framework**       | Next.js 16 (App Router), `middleware.ts` entrypoint for `lib/proxy.ts` |
+| **UI**              | React 19, Tailwind CSS 4, Radix UI primitives, Framer Motion           |
+| **State**           | Zustand (persisted stores), TanStack Query                             |
+| **Database & Auth** | Supabase PostgreSQL with Row-Level Security, Supabase Auth             |
+| **Infrastructure**  | Cloudflare Workers with the OpenNext adapter                           |
+| **Rate Limiting**   | Upstash Redis, fail-closed on security-critical routes in production   |
+| **Error Tracking**  | Sentry (client, server, edge configs)                                  |
+| **Testing**         | Vitest + Testing Library + Playwright E2E                              |
 
 ### Key Architectural Decisions
 
-- **Request Interceptor:** `middleware.ts` exports `lib/proxy.ts` for Cloudflare compatibility. It handles security headers, CSRF and protected-page redirects. API routes authenticate in their own handlers.
+- **Intentional `middleware.ts` Entrypoint:** the runtime entry file stays `middleware.ts` because this Cloudflare/OpenNext setup expects the framework convention there; the actual request logic lives in `lib/proxy.ts`.
 - **Fail-Closed Rate Limiting:** `lib/services/rateLimitService.ts` denies requests to security-critical endpoints (login, signup, password reset) if the Upstash store is unavailable in production, rather than silently allowing traffic through.
 - **API Auth:** Each protected `/api/*` route must use a shared auth helper or a reviewed inline `getUser()` check. Adding a route does not automatically protect it.
 - **Single-Provider-Per-Account:** A user who signs up with email/password can't sign in with Google on the same account, even if Supabase auto-links identities — enforced via `lib/auth/providerGuard.ts`.
+- **Runtime-Specific IP Trust:** client IP handling depends on the deployment runtime. On Cloudflare, `CF-Connecting-IP` is the reviewed trusted source; do not assume the same trust model on other proxies or local Node servers.
 
 > **Deep Dive:** [Technical Explanation](./TECHNICAL_EXPLANATION.md) | [Architecture Reference](./docs/architecture/ARCHITECTURE.md)
 
@@ -132,6 +133,7 @@ These screenshots show selected interfaces; the product is still being developed
 - **Rate Limiting:** Upstash Redis-backed, fail-closed on auth-critical routes.
 - **Audit Logging:** Structured logging for sensitive auth/session operations (`lib/security/audit.ts`).
 - **Secret Scanning:** Custom `check:secrets` script runs in CI for pushes and pull requests targeting `main` or `develop`.
+- **Header Scanner Boundary:** the authenticated header scanner is intentionally restricted to `https://www.syllabus-sync.app/` and `https://info.syllabus-sync.app/`; it is not a general-purpose arbitrary-host scanner.
 
 Accessibility is treated as a linting concern, not a certified standard: the codebase uses `eslint-plugin-jsx-a11y` and supports RTL layouts across 35 locales, but there is no formal WCAG audit in this repo — don't take that as a compliance claim.
 
@@ -151,11 +153,13 @@ Released under the **MIT License**.
 
 ### Open-source participation
 
-The repository is public and accepts focused contributions. Start with the [contributing guide](./CONTRIBUTING.md), which covers local setup, tests, security boundaries and review expectations. Useful areas include accessibility, reliable tests, documentation, and carefully validated campus or academic data improvements. Report vulnerabilities privately through [SECURITY.md](./SECURITY.md); do not include exploit details in public issues.
+The repository is public and accepts focused contributions. Start with the [contributing guide](./CONTRIBUTING.md), which covers local setup, tests, security boundaries and review expectations. Useful areas include accessibility, reliable tests, documentation, translation review, and carefully validated campus or academic data improvements. Report vulnerabilities privately through [GitHub private vulnerability reporting](https://github.com/leoalavi/syllabus-sync/security/advisories/new); do not include exploit details in public issues.
 
 The current app is Macquarie-focused. Institution-specific adapters and broader university support are design goals, not shipped integrations. Contributions toward that direction should begin with a small design discussion and avoid assuming another institution's data or endorsement.
 
-### Roadmap (not yet built)
+<a id="roadmap-not-yet-built"></a>
+
+### Planned, separate, or intentionally incomplete
 
 - **Syllabus extraction pipeline:** Parsing syllabus PDFs into structured deadlines (OCR/LLM) — planned, no code exists yet.
 - **Email reminder delivery:** Settings toggles exist and persist, but no cron job dispatches reminder emails yet (push and in-app notifications are fully wired).
@@ -163,6 +167,14 @@ The current app is Macquarie-focused. Institution-specific adapters and broader 
 - **Campus Navigation handoff:** A connected mobile wayfinding companion is planned; the current web map should not be presented as full mobile turn-by-turn navigation.
 - Institution-specific academic and campus data adapters and support for other universities.
 - Federated identity via institution SSO (SAML/OIDC) — aspirational, not scheduled.
+
+### Contributor-friendly starting points
+
+- Documentation accuracy, broken links, and setup clarity
+- Translation review for the non-English fallback gaps
+- Targeted test reliability improvements in Vitest or Playwright
+- Campus/reference data fixes that can be verified from public sources
+- Security hardening that preserves existing controls and least privilege
 
 ### Maintainers
 
@@ -207,6 +219,8 @@ tools/              Repo utilities (i18n checks, secret scanning, exports)
 ```
 
 > **Full Inventory:** [Repository Inventory](./docs/reference/REPOSITORY_INVENTORY.md)
+>
+> **University-specific data boundary:** the current Macquarie-focused catalogue, map overlays, and other reference data live in `data/`, `public/maps/`, and reviewed Supabase migrations/seeds. Future multi-university work should add explicit institution-specific adapters or datasets there instead of hard-coding another institution into shared UI logic.
 
 <br/>
 
@@ -229,7 +243,7 @@ tools/              Repo utilities (i18n checks, secret scanning, exports)
 # Clone and install
 git clone https://github.com/leoalavi/syllabus-sync.git
 cd syllabus-sync
-npm install
+npm ci
 
 # Configure environment
 cp .env.example .env.local
@@ -253,9 +267,33 @@ npm run check
 # Runs: secrets scan → format check → typecheck → lint → tests → build
 ```
 
-Individual steps are also available: `npm run typecheck`, `npm run lint`, `npm test`, `npm run build`.
+Individual steps are also available:
+
+```bash
+npm run format:check
+npm run lint
+npm run typecheck
+npm test
+npm run build
+npm run cf:build
+npm run cf:verify-output
+npm run test:e2e
+```
 
 For Cloudflare packaging, run `npm run cf:build` and `npm run cf:verify-output` after configuring the required build variables. These commands build locally; neither deploys.
+
+### Local development without production credentials
+
+- Use a dedicated local or test Supabase project — never production credentials.
+- `npm run build` and `npm run cf:build` can run with dummy public values for `NEXT_PUBLIC_APP_URL`, `NEXT_PUBLIC_SUPABASE_URL`, and `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
+- `npm run test:e2e` uses `config/playwright.config.ts`, starts a local dev server with dummy public Supabase values when `E2E_BASE_URL` is unset, and does not require secrets for anonymous flows.
+- Authenticated Playwright specs are intentionally skipped unless you provide `E2E_EMAIL` and `E2E_PASSWORD` for a disposable test account. `E2E_BASE_URL` is optional when you want to point at an already running non-production environment.
+
+### Dependency audit status
+
+- `npm audit --omit=dev --audit-level high` is the production-focused gate and should stay clean.
+- The full audit still reports five high-severity entries in the development-only `eslint-config-next` → `@next/eslint-plugin-next` → `fast-glob` → `micromatch` chain.
+- That chain is tooling-only, not shipped runtime code. The currently suggested downgrade is breaking for this Next.js 16 line. See [Development dependency advisories](./docs/security/DEV_DEPENDENCIES.md) before changing it.
 
 <br/>
 
@@ -284,7 +322,7 @@ Full setup notes: [Environment Setup](./docs/setup/ENVIRONMENT_SETUP.md).
 > **Ecosystem note:** Syllabus Sync can share its Supabase login with the sibling
 > [Sylla](https://sylla.syllabus-sync.app) study-assistant app via a parent-domain
 > auth cookie and an explicit trusted-origin allowlist (no open redirects). See the
-> [Sylla Shared Authentication](./docs/operations/deployment-checklist.md#8-sylla-shared-authentication-ecosystem)
+> [Sylla Shared Authentication](./docs/operations/deployment-checklist.md#sylla-shared-authentication)
 > section of the deployment checklist. Sylla itself is a separate application.
 
 <br/>
@@ -312,26 +350,34 @@ Full setup notes: [Environment Setup](./docs/setup/ENVIRONMENT_SETUP.md).
 
 <br/>
 
+## Internationalisation note
+
+- English is the reviewed source locale.
+- Each non-English locale currently falls back to English for 12 campus/Sylla keys until reviewed translations are added.
+- Run `npm run check:i18n` before changing locale files, and see the [translation fallback policy](./docs/i18n/FALLBACKS.md) for the current gap list and expectations.
+
+<br/>
+
+<img src="https://capsule-render.vercel.app/api?type=rect&color=0:0f172a,30:6366f1,60:22c55e,100:0f172a&height=2" width="100%"/>
+
+<br/>
+
 ## Acknowledgements
 
 - [Supabase](https://supabase.com/) — Open-source backend with RLS.
 - [Cloudflare Workers](https://developers.cloudflare.com/workers/) — Current production runtime through OpenNext.
+- [Translation fallback policy](./docs/i18n/FALLBACKS.md) — documents the 12 current non-English fallback keys that intentionally resolve to English until reviewed translations land.
+- [Development dependency advisories](./docs/security/DEV_DEPENDENCIES.md) — explains the remaining dev-only `npm audit` chain (`eslint-config-next` → `@next/eslint-plugin-next` → `fast-glob` → `micromatch`) and why the suggested downgrade is not applied.
 
 <br/>
 
 <div align="center">
 
-### `> ping --authors`
+### Project channels
 
-```text
-> Authors    : Leo Alavi — Software Engineer | Mohammad Raouf Abedini — Back-End Developer
-> University : Macquarie University, Sydney, NSW
-> Status     : [●] ONLINE — open to grad & junior opportunities
-```
-
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-6366f1?style=for-the-badge&logo=linkedin&logoColor=ffffff&labelColor=0f172a)](https://www.linkedin.com/in/leo-alavi/)
-[![GitHub](https://img.shields.io/badge/GitHub-Follow-22c55e?style=for-the-badge&logo=github&logoColor=ffffff&labelColor=0f172a)](https://github.com/leoalavi)
-[![Email](https://img.shields.io/badge/Email-Contact-f59e0b?style=for-the-badge&logo=gmail&logoColor=09090b&labelColor=0f172a)](mailto:leo@leoalavi.dev)
+[![Issues](https://img.shields.io/badge/GitHub-Issues-22c55e?style=for-the-badge&logo=github&logoColor=ffffff&labelColor=0f172a)](https://github.com/leoalavi/syllabus-sync/issues)
+[![Feature Requests](https://img.shields.io/badge/GitHub-Feature_Requests-6366f1?style=for-the-badge&logo=github&logoColor=ffffff&labelColor=0f172a)](https://github.com/leoalavi/syllabus-sync/issues/new/choose)
+[![Private Security Report](https://img.shields.io/badge/GitHub-Private_Security_Report-f59e0b?style=for-the-badge&logo=github&logoColor=09090b&labelColor=0f172a)](https://github.com/leoalavi/syllabus-sync/security/advisories/new)
 
 <br/>
 

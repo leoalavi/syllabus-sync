@@ -1,6 +1,6 @@
 // import { NextRequest } from 'next/server';
 import { createServerClient } from '@/lib/supabase/server';
-import { jsonSuccess, jsonError } from '@/app/api/_lib/response';
+import { jsonSuccess, jsonError, applyNoStoreHeaders } from '@/app/api/_lib/response';
 import { logger } from '@/lib/logger';
 
 export async function GET() {
@@ -27,10 +27,12 @@ export async function GET() {
       console.warn('Profile fetch error:', profileError);
     }
 
-    return jsonSuccess({
-      user,
-      profile: profile || null,
-    });
+    return applyNoStoreHeaders(
+      jsonSuccess({
+        user,
+        profile: profile || null,
+      }),
+    );
   } catch (error) {
     logger.error('User fetch error:', error);
     return jsonError('Internal server error', 500);

@@ -22,7 +22,11 @@ describe('public CSP report endpoint', () => {
       new NextRequest(url, {
         method: 'POST',
         body: JSON.stringify({
-          'csp-report': { 'blocked-uri': { invalid: true }, 'violated-directive': 'script-src', disposition: 'enforce' },
+          'csp-report': {
+            'blocked-uri': { invalid: true },
+            'violated-directive': 'script-src',
+            disposition: 'enforce',
+          },
         }),
       }),
     );

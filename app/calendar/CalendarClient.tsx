@@ -1335,6 +1335,7 @@ export default function CalendarClient() {
             </DialogTitle>
           </DialogHeader>
           <form
+            method="post"
             onSubmit={async (e) => {
               e.preventDefault();
               if (editTodoTitle.trim() && editTodoDueDate && !todoSaving) {

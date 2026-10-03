@@ -1,0 +1,15 @@
+# Default reviewers
+* @leoalavi @raouf-mq
+
+# Repository governance and automation
+.github/ @leoalavi @raouf-mq
+
+# Documentation and public project guidance
+README.md @leoalavi @raouf-mq
+CONTRIBUTING.md @leoalavi @raouf-mq
+SECURITY.md @leoalavi @raouf-mq
+docs/ @leoalavi @raouf-mq
+
+# Database and platform configuration
+supabase/ @raouf-mq @leoalavi
+.env.example @raouf-mq @leoalavi

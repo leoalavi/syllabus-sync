@@ -7,6 +7,7 @@ import {
   parseJsonBody,
   BODY_SIZE_LIMITS,
   ERROR_CODES,
+  applyNoStoreHeaders,
 } from '@/app/api/_lib/response';
 import { z } from 'zod';
 import { logger } from '@/lib/logger';
@@ -39,16 +40,18 @@ export async function GET(request: NextRequest) {
     const device = getDeviceLabelFromUA(request.headers.get('user-agent'));
     const lastActive = user.last_sign_in_at ?? new Date().toISOString();
 
-    return jsonSuccess({
-      sessions: [
-        {
-          id: 'current-session',
-          device,
-          lastActive,
-          current: true,
-        },
-      ],
-    });
+    return applyNoStoreHeaders(
+      jsonSuccess({
+        sessions: [
+          {
+            id: 'current-session',
+            device,
+            lastActive,
+            current: true,
+          },
+        ],
+      }),
+    );
   } catch (error) {
     logger.error('Sessions GET error:', error);
     return jsonError('Internal server error', 500, ERROR_CODES.INTERNAL_ERROR);
@@ -82,7 +85,7 @@ export async function POST(request: NextRequest) {
       return jsonError('Failed to sign out sessions', 400, ERROR_CODES.BAD_REQUEST);
     }
 
-    return jsonSuccess({ scope });
+    return applyNoStoreHeaders(jsonSuccess({ scope }));
   } catch (error) {
     logger.error('Sessions POST error:', error);
     return jsonError('Internal server error', 500, ERROR_CODES.INTERNAL_ERROR);

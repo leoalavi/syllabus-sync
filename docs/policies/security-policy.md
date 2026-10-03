@@ -1,6 +1,8 @@
 # Security Vulnerability Disclosure
 
-Report suspected Syllabus Sync vulnerabilities privately by emailing [leo@leoalavi.dev](mailto:leo@leoalavi.dev?subject=Syllabus%20Sync%20security%20report). GitHub private vulnerability reporting is currently disabled for this repository.
+Report suspected Syllabus Sync vulnerabilities privately through GitHub private vulnerability reporting:
+
+<https://github.com/leoalavi/syllabus-sync/security/advisories/new>
 
 Please include the affected feature, reproduction steps, and likely impact. Do not post exploit details, credentials, or personal data in a public issue, discussion, or pull request.
 

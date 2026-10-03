@@ -2,6 +2,7 @@ import { jsonError, jsonSuccess, ERROR_CODES } from '@/app/api/_lib/response';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { logger } from '@/lib/logger';
 import { sendPushNotificationToUser, isWebPushConfigured } from '@/lib/server/push';
+import { matchesBearerToken } from '@/lib/security/constant-time';
 
 const DEFAULT_LOOKAHEAD_MINUTES = 10;
 
@@ -229,7 +230,7 @@ function isAuthorized(request: Request): boolean {
   const authHeader = request.headers.get('authorization');
   const cronSecret = process.env.CRON_SECRET;
 
-  return Boolean(cronSecret && authHeader === `Bearer ${cronSecret}`);
+  return matchesBearerToken(authHeader, cronSecret);
 }
 
 export async function GET(request: Request) {

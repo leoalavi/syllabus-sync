@@ -82,18 +82,20 @@ export async function POST(request: NextRequest) {
     }
 
     // 3. Mark token as used (atomic — prevents double-use race condition)
-    const { error: updateError } = await adminClient
+    const { data: consumedToken, error: updateError } = await adminClient
       .from('email_verifications')
       .update({ used: true })
       .eq('id', record.id)
-      .eq('used', false); // Extra guard against race condition
+      .eq('used', false) // Extra guard against race condition
+      .select('id')
+      .maybeSingle();
 
-    if (updateError) {
+    if (updateError || !consumedToken) {
       logger.error('Failed to mark verification token used', {
         tokenId: record.id,
-        error: updateError.message,
+        error: updateError?.message ?? 'token already consumed',
       });
-      return jsonError('Verification failed', 500, ERROR_CODES.INTERNAL_ERROR);
+      return jsonError('Invalid or expired verification link', 400, ERROR_CODES.BAD_REQUEST);
     }
 
     // 4. Mark user as email-verified via admin API

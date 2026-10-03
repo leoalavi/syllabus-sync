@@ -95,7 +95,7 @@ export async function POST(request: NextRequest) {
       // Parse and validate request body - SECURITY: Parse with size limit protection
       const bodyResult = await parseJsonBody(req);
       if (!bodyResult.success) {
-        return jsonError(bodyResult.error, 413, ERROR_CODES.VALIDATION_ERROR);
+        return jsonError(bodyResult.error, bodyResult.status, ERROR_CODES.VALIDATION_ERROR);
       }
       const parseResult = awardXPSchema.safeParse(bodyResult.data);
 

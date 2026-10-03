@@ -1,6 +1,12 @@
 import { NextRequest } from 'next/server';
 import { createServerClient } from '@/lib/supabase/server';
-import { jsonSuccess, jsonError, jsonUnauthorized, ERROR_CODES } from '@/app/api/_lib/response';
+import {
+  jsonSuccess,
+  jsonError,
+  jsonUnauthorized,
+  ERROR_CODES,
+  applyNoStoreHeaders,
+} from '@/app/api/_lib/response';
 import { mapSupabaseFactor, type MFAFactor, type MFAStatus } from '@/lib/security/mfa';
 import { logger } from '@/lib/logger';
 
@@ -54,7 +60,7 @@ export async function GET(_request: NextRequest) {
       phoneEnabled: phoneFactors.length > 0,
     };
 
-    return jsonSuccess(status);
+    return applyNoStoreHeaders(jsonSuccess(status));
   } catch (error) {
     logger.error('MFA status error:', error);
     return jsonError('Failed to check MFA status', 500, ERROR_CODES.INTERNAL_ERROR);
