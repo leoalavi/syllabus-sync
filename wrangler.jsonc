@@ -71,4 +71,6 @@
   // and confirm the dashboard's Workers Builds environment variables
   // (NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, etc.) are
   // actually visible to `next build` there, not just in a local/manual deploy.
+  // wrangler.jsonc
+  "name": "syllabus-sync-info",
 }
