@@ -1,9 +1,9 @@
 # Google Maps Platform Setup
 
 > **Audience:** Engineers configuring Google Maps for the `/map?view=google` mode.
-> **Last verified:** 2026-03-21
+> **Production URL verified:** 2026-10-03. Recheck Google Cloud key settings before changing them.
 
-This runbook walks through provisioning Google Cloud APIs, creating API keys, and configuring the application for both local development and Vercel production.
+This runbook walks through provisioning Google Cloud APIs, creating API keys, and configuring the application for local development and the Cloudflare-hosted production app.
 
 ---
 
@@ -45,8 +45,8 @@ This key is loaded by the Google Maps JavaScript API in the client browser.
    - **Application restriction:** HTTP referrers (websites).
    - **Website restrictions:** Add each domain that serves the application:
      - `http://localhost:3000/*`
-     - `https://your-preview-domain.vercel.app/*`
-     - `https://your-production-domain.vercel.app/*`
+     - `https://www.syllabus-sync.app/*`
+     - Add an exact preview origin only if that preview needs the browser key.
    - **API restriction:** Restrict to **Maps JavaScript API** only.
 4. Save the key.
 
@@ -70,7 +70,7 @@ These proxies keep the server key off the client. They include rate limiting (`a
 
 1. Create a second API key in **APIs & Services > Credentials**.
 2. Configure restrictions:
-   - **Application restriction:** Choose IP addresses or "None" depending on your deployment platform. Vercel serverless functions do not have stable IPs, so IP restriction may not be practical.
+   - **Application restriction:** Review the Cloudflare Worker egress model before choosing an IP restriction. Do not assume a stable outbound IP.
    - **API restriction:** Restrict to **Routes API** and **Places API (New)**.
 3. Save the key.
 

@@ -3,7 +3,7 @@
 import { FormEvent, useState } from 'react';
 import Link from 'next/link';
 import { Mail, FileText, ShieldCheck, ArrowLeft, ArrowRight, Send } from 'lucide-react';
-import { APP_CONFIG, EXTERNAL_LINKS, UNIVERSITY_CONFIG } from '@/lib/config';
+import { APP_CONFIG, EXTERNAL_LINKS } from '@/lib/config';
 import { useTypedTranslation } from '@/lib/hooks/useTypedTranslation';
 
 export default function ContactClient() {
@@ -27,7 +27,7 @@ export default function ContactClient() {
     const body = encodeURIComponent(
       `${t('contact_emailFieldLabel')}: ${contactEmail.trim() || t('contact_notProvided')}\n\n${t('contact_feedbackFieldLabel')}:\n${trimmedFeedback}`,
     );
-    window.location.href = `mailto:${UNIVERSITY_CONFIG.supportEmail}?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:${APP_CONFIG.contactEmail}?subject=${subject}&body=${body}`;
     setSubmitted(true);
   };
 
@@ -106,10 +106,10 @@ export default function ContactClient() {
                 <div>
                   <p className="text-sm font-semibold text-mq-content">{t('email')}</p>
                   <a
-                    href={`mailto:${UNIVERSITY_CONFIG.supportEmail}`}
+                    href={`mailto:${APP_CONFIG.contactEmail}`}
                     className="mt-0.5 inline-block text-sm text-mq-content-secondary transition-colors hover:text-mq-primary"
                   >
-                    {UNIVERSITY_CONFIG.supportEmail}
+                    {APP_CONFIG.contactEmail}
                   </a>
                 </div>
               </div>
@@ -122,16 +122,18 @@ export default function ContactClient() {
                   <FileText className="h-4 w-4 text-mq-primary" aria-hidden="true" />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-mq-content">{t('contact_helpfulLinks')}</p>
+                  <p className="text-sm font-semibold text-mq-content">
+                    {t('contact_helpfulLinks')}
+                  </p>
                   <div className="mt-1.5 flex flex-col gap-1.5">
                     {/* Fix: moved `group` from missing parent to the `<a>` itself */}
                     <a
-                      href={EXTERNAL_LINKS.documentation}
+                      href={EXTERNAL_LINKS.projectInfo}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="group/link inline-flex items-center gap-1 text-sm text-mq-content-secondary transition-colors hover:text-mq-primary"
                     >
-                      {t('documentation')}
+                      {t('aboutTitle')}
                       <ArrowRight
                         className="h-3 w-3 opacity-0 transition-opacity group-hover/link:opacity-100"
                         aria-hidden="true"
@@ -200,7 +202,10 @@ export default function ContactClient() {
                     ({t('optional')})
                   </span>
                 </label>
-                <p id="contact-email-desc" className="mt-1 text-xs leading-relaxed text-mq-content-secondary">
+                <p
+                  id="contact-email-desc"
+                  className="mt-1 text-xs leading-relaxed text-mq-content-secondary"
+                >
                   {t('contact_emailFieldDesc')}
                 </p>
                 <input

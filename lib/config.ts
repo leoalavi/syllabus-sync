@@ -5,7 +5,6 @@ export const UNIVERSITY_CONFIG = {
   name: 'Macquarie University',
   shortName: 'Macquarie University',
   website: 'https://www.mq.edu.au',
-  supportEmail: 'support@mq.edu.au',
 } as const;
 
 /**
@@ -14,8 +13,9 @@ export const UNIVERSITY_CONFIG = {
 export const APP_CONFIG = {
   name: 'Syllabus Sync',
   url: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
-  description: 'Campus navigation and schedule management',
-  fullDescription: `Campus navigation and schedule management for ${UNIVERSITY_CONFIG.name}`,
+  description: 'Independent student platform for academic planning and university life',
+  fullDescription: `Syllabus Sync is an independent student platform for academic planning and university-life management, currently developed and validated around ${UNIVERSITY_CONFIG.name}. Not officially affiliated with the university.`,
+  contactEmail: 'leo@leoalavi.dev',
   version: '1.0.0',
 } as const;
 
@@ -70,18 +70,15 @@ export const HOME_STYLE_VARIANT = 'solid';
  * Social Links
  */
 export const SOCIAL_LINKS = {
-  twitter: 'https://x.com/macquarieuni',
-  facebook: 'https://facebook.com/macquarieuniversity',
-  instagram: 'https://instagram.com/macquarieuni',
-  linkedin: 'https://linkedin.com/school/macquarie-university',
+  linkedin: 'https://www.linkedin.com/company/syllabuss-sync/',
 } as const;
 
 /**
  * External Links
  */
 export const EXTERNAL_LINKS = {
-  documentation: UNIVERSITY_CONFIG.website,
-  feedback: 'mailto:support@mq.edu.au?subject=Syllabus Sync Feedback',
+  projectInfo: 'https://info.syllabus-sync.app',
+  feedback: 'mailto:leo@leoalavi.dev?subject=Syllabus Sync Feedback',
   privacy: '/privacy',
   terms: '/terms',
 } as const;

@@ -36,7 +36,7 @@ export default function PrivacyPolicyClient() {
   const { t } = useTypedTranslation();
 
   // Fix: encode mailto subject to avoid spaces breaking the URL in some email clients
-  const privacyComplaintHref = `mailto:${UNIVERSITY_CONFIG.supportEmail}?subject=${encodeURIComponent(`Privacy Complaint - ${APP_CONFIG.name}`)}`;
+  const privacyComplaintHref = `mailto:${APP_CONFIG.contactEmail}?subject=${encodeURIComponent(`Privacy Complaint - ${APP_CONFIG.name}`)}`;
 
   return (
     <div className="min-h-screen bg-mq-background">
@@ -101,14 +101,16 @@ export default function PrivacyPolicyClient() {
 
             {/* Main content */}
             <div className="space-y-8">
-
               {/* 1. Purpose and Scope */}
               <section
                 id="section-1"
                 aria-labelledby="privacy-heading-1"
                 className="scroll-mt-8 space-y-3 border-l-2 border-mq-border/40 hover:border-mq-primary/50 pl-5 transition-colors duration-300"
               >
-                <h2 id="privacy-heading-1" className="text-lg font-bold text-mq-content flex items-center gap-3">
+                <h2
+                  id="privacy-heading-1"
+                  className="text-lg font-bold text-mq-content flex items-center gap-3"
+                >
                   <span className="flex-shrink-0 w-7 h-7 rounded-lg bg-mq-primary/10 text-mq-primary flex items-center justify-center text-xs font-bold border border-mq-primary/20">
                     1
                   </span>
@@ -131,7 +133,10 @@ export default function PrivacyPolicyClient() {
                 aria-labelledby="privacy-heading-2"
                 className="scroll-mt-8 space-y-3 border-l-2 border-mq-border/40 hover:border-mq-primary/50 pl-5 transition-colors duration-300"
               >
-                <h2 id="privacy-heading-2" className="text-lg font-bold text-mq-content flex items-center gap-3">
+                <h2
+                  id="privacy-heading-2"
+                  className="text-lg font-bold text-mq-content flex items-center gap-3"
+                >
                   <span className="flex-shrink-0 w-7 h-7 rounded-lg bg-mq-primary/10 text-mq-primary flex items-center justify-center text-xs font-bold border border-mq-primary/20">
                     2
                   </span>
@@ -150,7 +155,10 @@ export default function PrivacyPolicyClient() {
                       'privacy_s2_a_li6',
                     ] as const
                   ).map((k) => (
-                    <li key={k} className="flex items-start gap-2 text-sm text-mq-content-secondary">
+                    <li
+                      key={k}
+                      className="flex items-start gap-2 text-sm text-mq-content-secondary"
+                    >
                       <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-mq-primary/60" />
                       {t(k)}
                     </li>
@@ -160,7 +168,10 @@ export default function PrivacyPolicyClient() {
                 <h3 className="text-sm font-semibold text-mq-content">{t('privacy_s2_b_title')}</h3>
                 <ul className="space-y-1.5">
                   {(['privacy_s2_b_li1', 'privacy_s2_b_li2'] as const).map((k) => (
-                    <li key={k} className="flex items-start gap-2 text-sm text-mq-content-secondary">
+                    <li
+                      key={k}
+                      className="flex items-start gap-2 text-sm text-mq-content-secondary"
+                    >
                       <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-mq-primary/60" />
                       {t(k)}
                     </li>
@@ -177,7 +188,10 @@ export default function PrivacyPolicyClient() {
                       'privacy_s2_c_li4',
                     ] as const
                   ).map((k) => (
-                    <li key={k} className="flex items-start gap-2 text-sm text-mq-content-secondary">
+                    <li
+                      key={k}
+                      className="flex items-start gap-2 text-sm text-mq-content-secondary"
+                    >
                       <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-mq-primary/60" />
                       {t(k)}
                     </li>
@@ -187,7 +201,10 @@ export default function PrivacyPolicyClient() {
                 <h3 className="text-sm font-semibold text-mq-content">{t('privacy_s2_d_title')}</h3>
                 <ul className="space-y-1.5">
                   {(['privacy_s2_d_li1', 'privacy_s2_d_li2'] as const).map((k) => (
-                    <li key={k} className="flex items-start gap-2 text-sm text-mq-content-secondary">
+                    <li
+                      key={k}
+                      className="flex items-start gap-2 text-sm text-mq-content-secondary"
+                    >
                       <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-mq-primary/60" />
                       {t(k)}
                     </li>
@@ -234,7 +251,10 @@ export default function PrivacyPolicyClient() {
                 aria-labelledby="privacy-heading-3"
                 className="scroll-mt-8 space-y-3 border-l-2 border-mq-border/40 hover:border-mq-primary/50 pl-5 transition-colors duration-300"
               >
-                <h2 id="privacy-heading-3" className="text-lg font-bold text-mq-content flex items-center gap-3">
+                <h2
+                  id="privacy-heading-3"
+                  className="text-lg font-bold text-mq-content flex items-center gap-3"
+                >
                   <span className="flex-shrink-0 w-7 h-7 rounded-lg bg-mq-primary/10 text-mq-primary flex items-center justify-center text-xs font-bold border border-mq-primary/20">
                     3
                   </span>
@@ -245,7 +265,10 @@ export default function PrivacyPolicyClient() {
                 </p>
                 <ul className="space-y-1.5">
                   {(['privacy_s3_li1', 'privacy_s3_li2'] as const).map((k) => (
-                    <li key={k} className="flex items-start gap-2 text-sm text-mq-content-secondary">
+                    <li
+                      key={k}
+                      className="flex items-start gap-2 text-sm text-mq-content-secondary"
+                    >
                       <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-mq-primary/60" />
                       {t(k)}
                     </li>
@@ -262,7 +285,10 @@ export default function PrivacyPolicyClient() {
                 aria-labelledby="privacy-heading-4"
                 className="scroll-mt-8 space-y-3 border-l-2 border-mq-border/40 hover:border-mq-primary/50 pl-5 transition-colors duration-300"
               >
-                <h2 id="privacy-heading-4" className="text-lg font-bold text-mq-content flex items-center gap-3">
+                <h2
+                  id="privacy-heading-4"
+                  className="text-lg font-bold text-mq-content flex items-center gap-3"
+                >
                   <span className="flex-shrink-0 w-7 h-7 rounded-lg bg-mq-primary/10 text-mq-primary flex items-center justify-center text-xs font-bold border border-mq-primary/20">
                     4
                   </span>
@@ -282,7 +308,10 @@ export default function PrivacyPolicyClient() {
                       'privacy_s4_li6',
                     ] as const
                   ).map((k) => (
-                    <li key={k} className="flex items-start gap-2 text-sm text-mq-content-secondary">
+                    <li
+                      key={k}
+                      className="flex items-start gap-2 text-sm text-mq-content-secondary"
+                    >
                       <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-mq-primary/60" />
                       {t(k)}
                     </li>
@@ -299,7 +328,10 @@ export default function PrivacyPolicyClient() {
                 aria-labelledby="privacy-heading-5"
                 className="scroll-mt-8 space-y-3 border-l-2 border-mq-border/40 hover:border-mq-primary/50 pl-5 transition-colors duration-300"
               >
-                <h2 id="privacy-heading-5" className="text-lg font-bold text-mq-content flex items-center gap-3">
+                <h2
+                  id="privacy-heading-5"
+                  className="text-lg font-bold text-mq-content flex items-center gap-3"
+                >
                   <span className="flex-shrink-0 w-7 h-7 rounded-lg bg-mq-primary/10 text-mq-primary flex items-center justify-center text-xs font-bold border border-mq-primary/20">
                     5
                   </span>
@@ -310,7 +342,10 @@ export default function PrivacyPolicyClient() {
                 </p>
                 <ul className="space-y-1.5">
                   {(['privacy_s5_li1', 'privacy_s5_li2', 'privacy_s5_li3'] as const).map((k) => (
-                    <li key={k} className="flex items-start gap-2 text-sm text-mq-content-secondary">
+                    <li
+                      key={k}
+                      className="flex items-start gap-2 text-sm text-mq-content-secondary"
+                    >
                       <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-mq-primary/60" />
                       {t(k)}
                     </li>
@@ -327,7 +362,10 @@ export default function PrivacyPolicyClient() {
                 aria-labelledby="privacy-heading-6"
                 className="scroll-mt-8 space-y-3 border-l-2 border-mq-border/40 hover:border-mq-primary/50 pl-5 transition-colors duration-300"
               >
-                <h2 id="privacy-heading-6" className="text-lg font-bold text-mq-content flex items-center gap-3">
+                <h2
+                  id="privacy-heading-6"
+                  className="text-lg font-bold text-mq-content flex items-center gap-3"
+                >
                   <span className="flex-shrink-0 w-7 h-7 rounded-lg bg-mq-primary/10 text-mq-primary flex items-center justify-center text-xs font-bold border border-mq-primary/20">
                     6
                   </span>
@@ -355,7 +393,10 @@ export default function PrivacyPolicyClient() {
                     {/* Fix: use row[0] (stable translation key) instead of array index as key */}
                     <tbody className="divide-y divide-mq-border">
                       {TABLE_ROWS.map((row) => (
-                        <tr key={row[0]} className="hover:bg-mq-card-background/50 transition-colors">
+                        <tr
+                          key={row[0]}
+                          className="hover:bg-mq-card-background/50 transition-colors"
+                        >
                           {row.map((cell) => (
                             <td key={cell} className="px-4 py-3 text-mq-content-secondary">
                               {t(cell as Parameters<typeof t>[0])}
@@ -374,7 +415,10 @@ export default function PrivacyPolicyClient() {
                 aria-labelledby="privacy-heading-7"
                 className="scroll-mt-8 space-y-3 border-l-2 border-mq-border/40 hover:border-mq-primary/50 pl-5 transition-colors duration-300"
               >
-                <h2 id="privacy-heading-7" className="text-lg font-bold text-mq-content flex items-center gap-3">
+                <h2
+                  id="privacy-heading-7"
+                  className="text-lg font-bold text-mq-content flex items-center gap-3"
+                >
                   <span className="flex-shrink-0 w-7 h-7 rounded-lg bg-mq-primary/10 text-mq-primary flex items-center justify-center text-xs font-bold border border-mq-primary/20">
                     7
                   </span>
@@ -397,7 +441,10 @@ export default function PrivacyPolicyClient() {
                       'privacy_s7_li9',
                     ] as const
                   ).map((k) => (
-                    <li key={k} className="flex items-start gap-2 text-sm text-mq-content-secondary">
+                    <li
+                      key={k}
+                      className="flex items-start gap-2 text-sm text-mq-content-secondary"
+                    >
                       <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-mq-primary/60" />
                       {t(k)}
                     </li>
@@ -414,7 +461,10 @@ export default function PrivacyPolicyClient() {
                 aria-labelledby="privacy-heading-8"
                 className="scroll-mt-8 space-y-3 border-l-2 border-mq-border/40 hover:border-mq-primary/50 pl-5 transition-colors duration-300"
               >
-                <h2 id="privacy-heading-8" className="text-lg font-bold text-mq-content flex items-center gap-3">
+                <h2
+                  id="privacy-heading-8"
+                  className="text-lg font-bold text-mq-content flex items-center gap-3"
+                >
                   <span className="flex-shrink-0 w-7 h-7 rounded-lg bg-mq-primary/10 text-mq-primary flex items-center justify-center text-xs font-bold border border-mq-primary/20">
                     8
                   </span>
@@ -425,9 +475,17 @@ export default function PrivacyPolicyClient() {
                 </p>
                 <ul className="space-y-1.5">
                   {(
-                    ['privacy_s8_li1', 'privacy_s8_li2', 'privacy_s8_li3', 'privacy_s8_li4'] as const
+                    [
+                      'privacy_s8_li1',
+                      'privacy_s8_li2',
+                      'privacy_s8_li3',
+                      'privacy_s8_li4',
+                    ] as const
                   ).map((k) => (
-                    <li key={k} className="flex items-start gap-2 text-sm text-mq-content-secondary">
+                    <li
+                      key={k}
+                      className="flex items-start gap-2 text-sm text-mq-content-secondary"
+                    >
                       <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-mq-primary/60" />
                       {t(k)}
                     </li>
@@ -444,7 +502,10 @@ export default function PrivacyPolicyClient() {
                 aria-labelledby="privacy-heading-9"
                 className="scroll-mt-8 space-y-3 border-l-2 border-mq-border/40 hover:border-mq-primary/50 pl-5 transition-colors duration-300"
               >
-                <h2 id="privacy-heading-9" className="text-lg font-bold text-mq-content flex items-center gap-3">
+                <h2
+                  id="privacy-heading-9"
+                  className="text-lg font-bold text-mq-content flex items-center gap-3"
+                >
                   <span className="flex-shrink-0 w-7 h-7 rounded-lg bg-mq-primary/10 text-mq-primary flex items-center justify-center text-xs font-bold border border-mq-primary/20">
                     9
                   </span>
@@ -455,7 +516,10 @@ export default function PrivacyPolicyClient() {
                 </p>
                 <ul className="space-y-1.5">
                   {(['privacy_s9_li1', 'privacy_s9_li2', 'privacy_s9_li3'] as const).map((k) => (
-                    <li key={k} className="flex items-start gap-2 text-sm text-mq-content-secondary">
+                    <li
+                      key={k}
+                      className="flex items-start gap-2 text-sm text-mq-content-secondary"
+                    >
                       <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-mq-primary/60" />
                       {t(k)}
                     </li>
@@ -472,7 +536,10 @@ export default function PrivacyPolicyClient() {
                 aria-labelledby="privacy-heading-10"
                 className="scroll-mt-8 space-y-3 border-l-2 border-mq-border/40 hover:border-mq-primary/50 pl-5 transition-colors duration-300"
               >
-                <h2 id="privacy-heading-10" className="text-lg font-bold text-mq-content flex items-center gap-3">
+                <h2
+                  id="privacy-heading-10"
+                  className="text-lg font-bold text-mq-content flex items-center gap-3"
+                >
                   <span className="flex-shrink-0 w-7 h-7 rounded-lg bg-mq-primary/10 text-mq-primary flex items-center justify-center text-xs font-bold border border-mq-primary/20">
                     10
                   </span>
@@ -495,10 +562,10 @@ export default function PrivacyPolicyClient() {
                   </Link>
                   {t('privacy_s10_p2_part3')}{' '}
                   <a
-                    href={`mailto:${UNIVERSITY_CONFIG.supportEmail}`}
+                    href={`mailto:${APP_CONFIG.contactEmail}`}
                     className="text-mq-primary hover:underline font-medium"
                   >
-                    {UNIVERSITY_CONFIG.supportEmail}
+                    {APP_CONFIG.contactEmail}
                   </a>
                   {t('privacy_s10_p2_part4')}
                 </p>
@@ -510,7 +577,10 @@ export default function PrivacyPolicyClient() {
                 aria-labelledby="privacy-heading-11"
                 className="scroll-mt-8 space-y-3 border-l-2 border-mq-border/40 hover:border-mq-primary/50 pl-5 transition-colors duration-300"
               >
-                <h2 id="privacy-heading-11" className="text-lg font-bold text-mq-content flex items-center gap-3">
+                <h2
+                  id="privacy-heading-11"
+                  className="text-lg font-bold text-mq-content flex items-center gap-3"
+                >
                   <span className="flex-shrink-0 w-7 h-7 rounded-lg bg-mq-primary/10 text-mq-primary flex items-center justify-center text-xs font-bold border border-mq-primary/20">
                     11
                   </span>
@@ -523,7 +593,7 @@ export default function PrivacyPolicyClient() {
                     href={privacyComplaintHref}
                     className="text-mq-primary hover:underline font-medium"
                   >
-                    {UNIVERSITY_CONFIG.supportEmail}
+                    {APP_CONFIG.contactEmail}
                   </a>{' '}
                   {t('privacy_s11_p1_part2')}
                 </p>
@@ -547,7 +617,10 @@ export default function PrivacyPolicyClient() {
                 aria-labelledby="privacy-heading-12"
                 className="scroll-mt-8 space-y-3 border-l-2 border-mq-border/40 hover:border-mq-primary/50 pl-5 transition-colors duration-300"
               >
-                <h2 id="privacy-heading-12" className="text-lg font-bold text-mq-content flex items-center gap-3">
+                <h2
+                  id="privacy-heading-12"
+                  className="text-lg font-bold text-mq-content flex items-center gap-3"
+                >
                   <span className="flex-shrink-0 w-7 h-7 rounded-lg bg-mq-primary/10 text-mq-primary flex items-center justify-center text-xs font-bold border border-mq-primary/20">
                     12
                   </span>
@@ -573,7 +646,10 @@ export default function PrivacyPolicyClient() {
                 aria-labelledby="privacy-heading-13"
                 className="scroll-mt-8 space-y-3 border-l-2 border-mq-border/40 hover:border-mq-primary/50 pl-5 transition-colors duration-300"
               >
-                <h2 id="privacy-heading-13" className="text-lg font-bold text-mq-content flex items-center gap-3">
+                <h2
+                  id="privacy-heading-13"
+                  className="text-lg font-bold text-mq-content flex items-center gap-3"
+                >
                   <span className="flex-shrink-0 w-7 h-7 rounded-lg bg-mq-primary/10 text-mq-primary flex items-center justify-center text-xs font-bold border border-mq-primary/20">
                     13
                   </span>
@@ -593,7 +669,10 @@ export default function PrivacyPolicyClient() {
                 aria-labelledby="privacy-heading-14"
                 className="scroll-mt-8 space-y-3 border-l-2 border-mq-border/40 hover:border-mq-primary/50 pl-5 transition-colors duration-300"
               >
-                <h2 id="privacy-heading-14" className="text-lg font-bold text-mq-content flex items-center gap-3">
+                <h2
+                  id="privacy-heading-14"
+                  className="text-lg font-bold text-mq-content flex items-center gap-3"
+                >
                   <span className="flex-shrink-0 w-7 h-7 rounded-lg bg-mq-primary/10 text-mq-primary flex items-center justify-center text-xs font-bold border border-mq-primary/20">
                     14
                   </span>
@@ -603,7 +682,6 @@ export default function PrivacyPolicyClient() {
                   {t('privacy_s14_p1')}
                 </p>
               </section>
-
             </div>
           </div>
         </div>

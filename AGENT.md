@@ -58,6 +58,15 @@ Whether you are a human or an AI, you must follow this protocol for every code c
 
 ## Change Log (Raouf Template)
 
+### 2026-10-03 (Australia/Sydney) — Public Positioning and Cloudflare Readiness
+
+**Raouf:**
+- **Scope:** Corrected production Worker identity, private vulnerability reporting guidance, public project links and positioning, and current deployment documentation.
+- **Summary:** Kept the main Worker named `syllabus-sync-production` and removed the stray info-site name from its Wrangler config. Removed the public security issue template and directed reports to private email after verifying GitHub private reporting is disabled. Replaced university-owned support and social destinations, added the info-site link to the website, clarified Syllabus Sync, Sylla, Campus Navigation, and Astronomy Open Night boundaries, and refreshed public metadata, contributor guidance, architecture, and Cloudflare release instructions.
+- **Files Changed:** `wrangler.jsonc`, `.github/ISSUE_TEMPLATE/security_report.md` (deleted), `SECURITY.md`, `README.md`, `CONTRIBUTING.md`, `package.json`, `app/*` public routes and layout, `components/layout/*`, `features/settings/components/AboutSettings.tsx`, `lib/config.ts`, `lib/constants/index.ts`, `locales/*/translations.json`, related tests, and referenced setup, operations, security, and policy guides.
+- **Verification:** Typecheck, lint, secrets scan, 912 tests, Next.js build, Cloudflare/OpenNext build, output verification, and Wrangler dry run passed. Translation parity still warns on 12 pre-existing campus/Sylla keys in non-English locales. No deployment, commit, push, or PR was made.
+- **Follow-ups:** Review translation quality; evaluate the header-scanner DNS rebinding fix separately before implementation.
+
 ### 2026-07-07 (Australia/Sydney) — App-Icon Logo Rebrand
 
 **Raouf:**

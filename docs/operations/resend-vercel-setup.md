@@ -1,5 +1,7 @@
 # Resend and Vercel Setup
 
+> **Legacy Vercel reference:** Syllabus Sync production currently uses Cloudflare Workers through OpenNext. Do not follow this page for a production release; use the [current deployment checklist](./deployment-checklist.md). Resend-specific concepts here may still help with email configuration.
+
 > **Audience:** Engineers configuring email delivery and the Vercel deployment environment.
 > **Last verified:** 2026-03-21
 

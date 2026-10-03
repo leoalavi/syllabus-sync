@@ -1,6 +1,6 @@
 // tests/settings/AboutSettings.test.tsx
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { AboutSettings } from '@/features/settings/components';
 
 // Mock toast utils
@@ -18,25 +18,17 @@ vi.mock('@/lib/config', () => ({
   APP_CONFIG: {
     version: '1.0.0',
     name: 'Syllabus Sync',
-    description: 'Campus navigation and schedule management',
+    description: 'Independent student platform',
   },
   UNIVERSITY_CONFIG: {
     name: 'Macquarie University',
     shortName: 'MQ',
-    supportEmail: 'support@mq.edu.au',
   },
   EXTERNAL_LINKS: {
-    documentation: 'https://docs.example.com',
+    projectInfo: 'https://info.syllabus-sync.app',
     feedback: 'mailto:feedback@example.com',
   },
 }));
-
-// Mock window.open and window.location
-const mockWindowOpen = vi.fn();
-Object.defineProperty(window, 'open', {
-  value: mockWindowOpen,
-  writable: true,
-});
 
 // Mock useRouter
 vi.mock('next/navigation', () => ({
@@ -52,9 +44,9 @@ describe('AboutSettings', () => {
       helpSupport: 'About Syllabus Sync',
       aboutTitle: 'About',
       version: 'Version',
-      aboutDesc: 'Campus navigation and schedule management app',
+      aboutDesc: 'Independent student platform',
       needHelp: 'Need Help?',
-      helpDesc: 'Check our documentation for guides and tutorials',
+      helpDesc: 'Read about the project and its direction',
       viewDocumentation: 'View Documentation',
       documentationOpening: 'Opening documentation...',
       feedback: 'Send Feedback',
@@ -89,7 +81,7 @@ describe('AboutSettings', () => {
     // Use a more specific query since "About" appears multiple times
     expect(screen.getByRole('heading', { name: 'About', level: 3 })).toBeInTheDocument();
     expect(screen.getByText(/Version 1.0.0/)).toBeInTheDocument();
-    expect(screen.getByText(/Campus navigation and schedule management app/)).toBeInTheDocument();
+    expect(screen.getByText(/Independent student platform/)).toBeInTheDocument();
   });
 
   it('renders privacy policy section', () => {
@@ -103,27 +95,14 @@ describe('AboutSettings', () => {
     render(<AboutSettings {...defaultProps} />);
 
     expect(screen.getByText('Need Help?')).toBeInTheDocument();
-    expect(
-      screen.getByText('Check our documentation for guides and tutorials'),
-    ).toBeInTheDocument();
+    expect(screen.getByText('Read about the project and its direction')).toBeInTheDocument();
   });
 
-  it('renders view documentation button', () => {
+  it('renders the public project information link', () => {
     render(<AboutSettings {...defaultProps} />);
-
-    expect(screen.getByTestId('view-documentation-button')).toBeInTheDocument();
-    expect(screen.getByText('View Documentation')).toBeInTheDocument();
-  });
-
-  it('opens documentation link when button is clicked', () => {
-    render(<AboutSettings {...defaultProps} />);
-
-    fireEvent.click(screen.getByTestId('view-documentation-button'));
-
-    expect(mockWindowOpen).toHaveBeenCalledWith(
-      'https://docs.example.com',
-      '_blank',
-      'noopener,noreferrer',
+    expect(screen.getByTestId('project-info-link')).toHaveAttribute(
+      'href',
+      'https://info.syllabus-sync.app',
     );
   });
 

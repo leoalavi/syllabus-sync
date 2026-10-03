@@ -45,7 +45,7 @@ Runbooks and checklists for managing the application lifecycle.
 | [Environment Setup](./operations/ENVIRONMENT_SETUP.md)                   | Prerequisites, local configuration, and required third-party services |
 | [Deployment Checklist](./operations/deployment-checklist.md)             | Pre-production quality gates and release verification steps           |
 | [Google Maps Platform Setup](./operations/google-maps-platform-setup.md) | Configuration for Google Maps Embed API, Routes API, and Places API   |
-| [Resend and Vercel Setup](./operations/resend-vercel-setup.md)           | Transactional email and scheduled cron job configuration              |
+| [Legacy Resend and Vercel Setup](./operations/resend-vercel-setup.md)    | Historical Vercel instructions; not the production release path       |
 | [Supabase OAuth Setup](./operations/supabase-oauth-setup.md)             | OAuth provider configuration for Supabase Auth                        |
 
 ## Project Planning
@@ -100,9 +100,9 @@ Project-level policies and contributor guidelines (located in the repository roo
 
 ## Database
 
-| File                                              | Description                                               |
-| ------------------------------------------------- | --------------------------------------------------------- |
-| [Database Schema](./database/database-schema.sql) | Canonical SQL schema for the Supabase PostgreSQL database |
+| File                                           | Description                                                           |
+| ---------------------------------------------- | --------------------------------------------------------------------- |
+| [Supabase migrations](../supabase/migrations/) | Source-controlled SQL migration history; verify live state separately |
 
 ---
 

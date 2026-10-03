@@ -1,5 +1,7 @@
 # Security Posture and Hardening Report
 
+> **Historical security snapshot:** Some Vercel runtime and proxy-level API-auth descriptions below are outdated. Use the [current architecture guide](../architecture/ARCHITECTURE.md) and inspect the implementation before relying on a control claim. This file is not a current certification or completed security audit.
+
 **System:** Syllabus Sync Campus Platform
 **Classification:** Internal / Auditor-Facing
 **Audience:** Security Architects, Compliance Auditors, Penetration Testers, Technical Reviewers

@@ -1,46 +1,34 @@
 import type { MetadataRoute } from 'next';
-import { UNIVERSITY_CONFIG } from '@/lib/config';
+import { APP_CONFIG } from '@/lib/config';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = UNIVERSITY_CONFIG.website;
+  const baseUrl = APP_CONFIG.url;
   const now = new Date();
 
   return [
     {
-      url: `${baseUrl}/home`,
+      url: `${baseUrl}/about`,
       lastModified: now,
       changeFrequency: 'daily',
       priority: 1,
     },
     {
-      url: `${baseUrl}/calendar`,
+      url: `${baseUrl}/contact`,
       lastModified: now,
       changeFrequency: 'weekly',
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/map`,
+      url: `${baseUrl}/terms`,
       lastModified: now,
       changeFrequency: 'monthly',
       priority: 0.7,
     },
     {
-      url: `${baseUrl}/feed`,
+      url: `${baseUrl}/privacy`,
       lastModified: now,
       changeFrequency: 'weekly',
       priority: 0.6,
-    },
-    {
-      url: `${baseUrl}/settings`,
-      lastModified: now,
-      changeFrequency: 'monthly',
-      priority: 0.4,
-    },
-    {
-      url: `${baseUrl}/manage-profiles`,
-      lastModified: now,
-      changeFrequency: 'monthly',
-      priority: 0.3,
     },
   ];
 }

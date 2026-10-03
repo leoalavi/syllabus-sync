@@ -12,7 +12,7 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
 ![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS_4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
-![Tests](https://img.shields.io/badge/Vitest-878_passing-6E9F18?style=for-the-badge)
+![Tests](https://img.shields.io/badge/Tests-Vitest-6E9F18?style=for-the-badge)
 ![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub_Actions-2088FF?style=for-the-badge&logo=githubactions&logoColor=white)
 
 </div>
@@ -21,15 +21,15 @@
 
 <br/>
 
-# Syllabus Sync - Student Planning Platform
+# Syllabus Sync — Independent Student Platform
 
-> **A full-stack student planning platform that brings unit management, assessment deadlines, study organisation, and basic campus support into one interface.**
+> **Syllabus Sync is an independent student platform for academic planning and university-life management.**
 
-Syllabus Sync helps university students track enrolled units, class times, and assessment deadlines, and gives them a lightweight campus map for finding buildings. It started as a project built around Macquarie University's unit and building data, and is architected so that data layer can be swapped for another institution.
+The current web app helps students track units, class times, assignments, exams, deadlines and events, with campus information and map features. It is developed and validated around Macquarie University. The longer-term vision connects academic planning, campus information, navigation through a companion app, and AI-assisted study through Sylla in one student experience.
 
-It is an independent project, **not officially affiliated with Macquarie University**. Built on Next.js 16, React 19, and Supabase with TypeScript throughout, it's primarily a portfolio piece demonstrating full-stack engineering, applied security practices, and CI/CD discipline.
+It is **not officially affiliated with Macquarie University**. Institution-specific data adapters, support for other universities, and a multi-institution architecture are future directions. Australia-wide expansion is an aspiration, not an announced rollout.
 
-**[🔗 Live Demo](https://www.syllabus-sync.app)** &nbsp;·&nbsp; **[📖 Docs](./docs/README.md)** &nbsp;·&nbsp; **[🔐 Security](./SECURITY.md)** &nbsp;·&nbsp; **[🤝 Contributing](./CONTRIBUTING.md)**
+**[Live App](https://www.syllabus-sync.app)** · **[Project Info](https://info.syllabus-sync.app)** · **[Docs](./docs/README.md)** · **[Security](./SECURITY.md)** · **[Contributing](./CONTRIBUTING.md)**
 
 <br/>
 
@@ -45,7 +45,7 @@ University tools are often fragmented — timetables, deadlines, campus maps, an
 - **Basic Campus Support:** A Leaflet-based campus map with building search and an embedded Google Maps view — location context, not turn-by-turn wayfinding.
 - **Security-Focused Architecture:** Defence-in-depth with WebAuthn (passkeys), TOTP-based MFA, edge middleware auth gating, rate limiting, and PostgreSQL Row-Level Security.
 - **Engagement Mechanics:** XP and streak tracking to nudge consistent use, backed by anti-abuse rate limiting.
-- **Portfolio-Grade Process:** Every change runs through a CI pipeline that checks secrets, formatting, types, lint, tests, and build before merge.
+- **Contributor Checks:** The repository provides commands for secrets, formatting, types, lint, tests, and builds; see the validation section for the current CI scope.
 
 <br/>
 
@@ -86,7 +86,7 @@ University tools are often fragmented — timetables, deadlines, campus maps, an
 ║  🌍  35 locale dictionaries · RTL layout support                     ║
 ║  🎮  XP and streak tracking (leaderboard/achievements: backend only) ║
 ║  🔔  Push + in-app notifications (email reminders: not yet wired)    ║
-║  ⚡  GitHub Actions CI · 878 Vitest tests · Vercel deployment        ║
+║  ⚡  GitHub Actions CI · Vitest tests · Cloudflare Worker              ║
 ╚══════════════════════════════════════════════════════════════════════╝
 ```
 
@@ -102,20 +102,20 @@ University tools are often fragmented — timetables, deadlines, campus maps, an
 
 | Layer               | Technology                                                           |
 | ------------------- | -------------------------------------------------------------------- |
-| **Framework**       | Next.js 16 (App Router), `proxy.ts` edge middleware                  |
+| **Framework**       | Next.js 16 (App Router), `middleware.ts` request interceptor         |
 | **UI**              | React 19, Tailwind CSS 4, Radix UI primitives, Framer Motion         |
 | **State**           | Zustand (persisted stores), TanStack Query                           |
 | **Database & Auth** | Supabase PostgreSQL with Row-Level Security, Supabase Auth           |
-| **Infrastructure**  | Vercel (Edge Middleware, Serverless Functions)                       |
+| **Infrastructure**  | Cloudflare Workers with the OpenNext adapter                         |
 | **Rate Limiting**   | Upstash Redis, fail-closed on security-critical routes in production |
 | **Error Tracking**  | Sentry (client, server, edge configs)                                |
-| **Testing**         | Vitest + Testing Library, 94 test files / 878 tests                  |
+| **Testing**         | Vitest + Testing Library; run `npm test` for the current count       |
 
 ### Key Architectural Decisions
 
-- **Edge-First Security Middleware:** All routing passes through `proxy.ts` (Next.js 16's replacement for `middleware.ts`). Auth state, email verification gates, CSRF checks, and rate limiting are enforced here.
+- **Request Interceptor:** `middleware.ts` exports `lib/proxy.ts` for Cloudflare compatibility. It handles security headers, CSRF and protected-page redirects. API routes authenticate in their own handlers.
 - **Fail-Closed Rate Limiting:** `lib/services/rateLimitService.ts` denies requests to security-critical endpoints (login, signup, password reset) if the Upstash store is unavailable in production, rather than silently allowing traffic through.
-- **Proxy Auth Gate:** `/api/*` routes require authentication by default — new endpoints are secure unless explicitly opted out.
+- **API Auth:** Each protected `/api/*` route must use a shared auth helper or a reviewed inline `getUser()` check. Adding a route does not automatically protect it.
 - **Single-Provider-Per-Account:** A user who signs up with email/password can't sign in with Google on the same account, even if Supabase auto-links identities — enforced via `lib/auth/providerGuard.ts`.
 
 > **Deep Dive:** [Technical Explanation](./TECHNICAL_EXPLANATION.md) | [Architecture Reference](./docs/architecture/ARCHITECTURE.md)
@@ -128,12 +128,12 @@ University tools are often fragmented — timetables, deadlines, campus maps, an
 
 ## 🔒 Security-Focused Architecture
 
-- **Authentication:** WebAuthn passkeys (`@simplewebauthn`), TOTP-based MFA with backup codes, audited session termination.
+- **Authentication:** WebAuthn passkeys (`@simplewebauthn`) and TOTP MFA; see the route tests and security evidence for current coverage.
 - **Authorisation:** PostgreSQL Row-Level Security enforced across Supabase tables.
 - **Transport & Policy:** Strict Content Security Policy, CSRF token verification (`lib/security/csrf.ts`), HTTPS-enforced deployment.
 - **Rate Limiting:** Upstash Redis-backed, fail-closed on auth-critical routes.
 - **Audit Logging:** Structured logging for sensitive auth/session operations (`lib/security/audit.ts`).
-- **Secret Scanning:** Custom `check:secrets` script runs in CI before every merge.
+- **Secret Scanning:** Custom `check:secrets` script runs in CI for pushes and pull requests targeting `main` or `develop`.
 
 Accessibility is treated as a linting concern, not a certified standard: the codebase uses `eslint-plugin-jsx-a11y` and supports RTL layouts across 35 locales, but there is no formal WCAG audit in this repo — don't take that as a compliance claim.
 
@@ -156,16 +156,27 @@ Released under the **MIT License**.
 - **Syllabus extraction pipeline:** Parsing syllabus PDFs into structured deadlines (OCR/LLM) — planned, no code exists yet.
 - **Email reminder delivery:** Settings toggles exist and persist, but no cron job dispatches reminder emails yet (push and in-app notifications are fully wired).
 - **Gamification UI:** A `mv_xp_leaderboard` materialized view exists in the database, but there is no leaderboard or achievements UI surfaced to users yet.
-- **MQ Navigation integration:** [MQ Navigation](https://github.com/leoalavi/MQ_Navigation) is a separate, unpublished mobile wayfinding prototype. Syllabus Sync links out to its repo — there's no in-app deep link or advanced routing integration.
-- Reference dataset support for additional universities (USYD, UNSW).
+- **Campus Navigation handoff:** A connected mobile wayfinding companion is planned; the current web map should not be presented as full mobile turn-by-turn navigation.
+- Institution-specific academic and campus data adapters and support for other universities.
 - Federated identity via institution SSO (SAML/OIDC) — aspirational, not scheduled.
 
 ### Maintainers
 
-| Name               | Role                                           |
-| ------------------ | ---------------------------------------------- |
-| Leo Alavi        | Lead maintainer — architecture, infrastructure |
-| Raouf Abedini      | Co-maintainer — security, backend              |
+| Name          | Role                                           |
+| ------------- | ---------------------------------------------- |
+| Leo Alavi     | Lead maintainer — architecture, infrastructure |
+| Raouf Abedini | Co-maintainer — security, backend              |
+
+### Connected products and project boundaries
+
+| Name                          | Relationship                                           | Current status                                                    |
+| ----------------------------- | ------------------------------------------------------ | ----------------------------------------------------------------- |
+| **Syllabus Sync**             | Core academic planning and student-experience platform | Macquarie-focused web app under active development and validation |
+| **Sylla**                     | Connected AI-assisted study layer                      | Separate app; optional configured link and shared-login setup     |
+| **Campus Navigation**         | Connected mobile wayfinding companion                  | Separate mobile work; integration is a future direction           |
+| **Astronomy Open Night 2026** | Separate event project by the same team                | Not a Syllabus Sync product                                       |
+
+See the [public project information site](https://info.syllabus-sync.app) for the broader vision. Current features and future directions are deliberately separated in this README.
 
 <br/>
 
@@ -176,7 +187,7 @@ Released under the **MIT License**.
 ## Repository Layout
 
 ```text
-app/                Next.js routes, layouts, 65 API route handlers
+app/                Next.js routes, layouts, and API handlers
 components/         Shared UI and layout components
 config/             ESLint, Next, Prettier, Sentry, Tailwind, TS, Vitest, Lighthouse
 data/               Static academic data (unit catalogue, building maps)
@@ -184,10 +195,10 @@ docs/               Architecture, operations, API, policy, security, reference d
 features/           Feature-first client modules (home, calendar, map, settings, auth, gamification)
 infra/              Docker assets
 lib/                Stores, hooks, services, security, utilities, Supabase clients
-locales/            35 locale dictionaries
+locales/            Locale dictionaries and RTL copy
 public/             Static assets, icons, map tiles, overlays, service worker
 supabase/           Migration history and configuration
-tests/              Vitest test suites (94 files, 878 tests)
+tests/              Vitest test suites
 tools/              Repo utilities (i18n checks, secret scanning, exports)
 ```
 
@@ -224,7 +235,7 @@ cp .env.example .env.local
 npm run dev
 ```
 
-If you want your local database schema to match the app, link and push Supabase migrations:
+Use a dedicated local or test Supabase project. Review migration files before linking and applying them; `db push` changes the selected project's schema:
 
 ```bash
 npx supabase link --project-ref <your-project-ref>
@@ -240,6 +251,8 @@ npm run check
 
 Individual steps are also available: `npm run typecheck`, `npm run lint`, `npm test`, `npm run build`.
 
+For Cloudflare packaging, run `npm run cf:build` and `npm run cf:verify-output` after configuring the required build variables. These commands build locally; neither deploys.
+
 <br/>
 
 <img src="https://capsule-render.vercel.app/api?type=rect&color=0:0f172a,30:6366f1,60:22c55e,100:0f172a&height=2" width="100%"/>
@@ -250,17 +263,17 @@ Individual steps are also available: `npm run typecheck`, `npm run lint`, `npm t
 
 See [`.env.example`](./.env.example) for the full list. Key groups:
 
-| Variable                                                     | Required                  | Purpose                                                                                                       |
-| ------------------------------------------------------------ | ------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Yes                       | Supabase client config                                                                                        |
-| `SUPABASE_SERVICE_ROLE_KEY`                                  | Yes (server)              | Server-side Supabase access                                                                                   |
-| `WEBAUTHN_RP_ID` / `WEBAUTHN_ORIGIN`                         | Yes                       | Passkey registration/auth — must match your domain                                                            |
-| `VERIFICATION_EMAIL_FROM` / Resend key                       | Yes                       | Auth/verification emails via Resend                                                                           |
-| `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN`        | Recommended in production | Distributed rate limiting; falls back to in-memory (fail-closed on critical routes) if unset                  |
-| `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`                            | Optional                  | Enables the Google Maps embed view on `/map`                                                                  |
-| `SENTRY_*`                                                   | Optional                  | Error tracking                                                                                                |
-| `NEXT_PUBLIC_AUTH_COOKIE_DOMAIN`                             | Prod only                 | Shares the Supabase session across `*.syllabus-sync.app` subdomains (applied only when `NODE_ENV=production`) |
-| `NEXT_PUBLIC_TRUSTED_ORIGINS` / `NEXT_PUBLIC_SYLLA_URL`      | Optional                  | Sylla companion app: explicit CSRF + redirect allowlist, and the sidebar entry point                          |
+| Variable                                                     | Required                   | Purpose                                                                                                       |
+| ------------------------------------------------------------ | -------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Yes                        | Supabase client config                                                                                        |
+| `SUPABASE_SERVICE_ROLE_KEY`                                  | Feature-dependent (server) | Privileged flows and production tasks; bypasses RLS                                                           |
+| `WEBAUTHN_RP_ID` / `WEBAUTHN_ORIGIN`                         | Passkeys                   | Passkey registration/auth — must match the app origin                                                         |
+| `VERIFICATION_EMAIL_FROM` / Resend key                       | Email flows                | Auth/verification emails via Resend                                                                           |
+| `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN`        | Production option          | Distributed rate limiting; see the backend alternatives in the architecture guide                             |
+| `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`                            | Optional                   | Enables the Google Maps embed view on `/map`                                                                  |
+| `SENTRY_*`                                                   | Optional                   | Error tracking                                                                                                |
+| `NEXT_PUBLIC_AUTH_COOKIE_DOMAIN`                             | Prod only                  | Shares the Supabase session across `*.syllabus-sync.app` subdomains (applied only when `NODE_ENV=production`) |
+| `NEXT_PUBLIC_TRUSTED_ORIGINS` / `NEXT_PUBLIC_SYLLA_URL`      | Optional                   | Sylla companion app: explicit CSRF + redirect allowlist, and the sidebar entry point                          |
 
 Full setup notes: [Environment Setup](./docs/operations/ENVIRONMENT_SETUP.md).
 
@@ -298,7 +311,7 @@ Full setup notes: [Environment Setup](./docs/operations/ENVIRONMENT_SETUP.md).
 ## Acknowledgements
 
 - [Supabase](https://supabase.com/) — Open-source backend with RLS.
-- [Vercel](https://vercel.com/) — Deployment infrastructure.
+- [Cloudflare Workers](https://developers.cloudflare.com/workers/) — Current production runtime through OpenNext.
 
 <br/>
 

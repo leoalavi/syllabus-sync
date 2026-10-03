@@ -188,6 +188,6 @@ Changes to this privacy policy will be reflected by updating the "Last Updated" 
 
 For privacy or data protection questions:
 
-- **Email:** security@syllabus-sync.dev
+- **Email:** leo@leoalavi.dev
 - **Security disclosure:** See [SECURITY.md](../../SECURITY.md) for the vulnerability reporting process
 - **Security policy:** See [security-policy.md](./security-policy.md) for the full disclosure program
