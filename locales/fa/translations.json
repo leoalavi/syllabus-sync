@@ -2433,19 +2433,5 @@
   "opensInNewTab": " (در برگه جدید باز می‌شود)",
   "loadingEvents": "در حال بارگذاری رویدادها",
   "deadlines": "مهلت‌ها",
-  "heroSection": "Hero Section",
-  "campusNavOpenInApp": "باز کردن در Campus Navigation",
-  "campusNavOpenInAppDesc": "مسیریابی گام‌به‌گام در پردیس",
-  "campusNavInstallTitle": "مسیریابی با Campus Navigation",
-  "campusNavInstallDesc": "Campus Navigation مسیریابی گام‌به‌گام پردیس را در اختیار شما می‌گذارد.",
-  "campusNavDownloadIos": "دریافت برای iOS",
-  "campusNavIosSubtitle": "دریافت از App Store",
-  "campusNavIosComingSoon": "به‌زودی در App Store",
-  "campusNavDownloadAndroid": "دریافت برای Android",
-  "campusNavAndroidSubtitle": "دریافت از Google Play",
-  "mqNavCompanionTitle": "Campus Navigation",
-  "mqNavCompanionStatus": "اندروید و iOS",
-  "mqNavCompanionDesc": "Campus Navigation اپلیکیشن همراه برای مسیریابی گام‌به‌گام در پردیس، تورهای ۳۶۰ درجه داخلی، نقشه آفلاین و حمل‌ونقل زنده است. در هر بخش از Syllabus Sync گزینه مسیریابی را بزنید تا مکان مستقیماً در اپ باز شود.",
-  "mqNavCompanionCta": "دریافت اپلیکیشن",
-  "mqNavCompanionCtaAria": "دریافت Campus Navigation برای اندروید یا iOS"
+  "heroSection": "Hero Section"
 }
