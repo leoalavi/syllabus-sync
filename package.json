@@ -61,7 +61,7 @@
     "@radix-ui/react-toast": "^1.2.15",
     "@sentry/nextjs": "^10.40.0",
     "@simplewebauthn/browser": "^13.2.2",
-    "@simplewebauthn/server": "^13.2.2",
+    "@simplewebauthn/server": "^13.3.3",
     "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.93.3",
     "@tanstack/react-query": "^5.90.20",
@@ -74,7 +74,7 @@
     "leaflet": "^1.9.4",
     "leaflet-routing-machine": "^3.2.12",
     "lucide-react": "^0.575.0",
-    "next": "^16.1.6",
+    "next": "^16.3.8",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-hook-form": "^7.71.1",
@@ -92,7 +92,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "3.2.0",
     "@next/bundle-analyzer": "^16.1.6",
-    "@next/eslint-plugin-next": "^16.1.6",
+    "@next/eslint-plugin-next": "^16.3.8",
     "@opennextjs/cloudflare": "^1.20.0",
     "@tailwindcss/postcss": "^4.1.18",
     "@testing-library/jest-dom": "^6.6.3",
@@ -110,13 +110,13 @@
     "@typescript-eslint/eslint-plugin": "^8.32.1",
     "@typescript-eslint/parser": "^8.32.1",
     "@vitejs/plugin-react": "^5.1.2",
-    "@vitest/coverage-v8": "^4.0.17",
+    "@vitest/coverage-v8": "^4.1.11",
     "autoprefixer": "^10.4.23",
-    "browserslist": "^4.28.1",
+    "browserslist": "^4.29.3",
     "caniuse-lite": "^1.0.30001767",
     "dotenv": "^17.2.3",
     "eslint": "^9.39.4",
-    "eslint-config-next": "^16.1.6",
+    "eslint-config-next": "^16.3.8",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.0.1",
@@ -129,8 +129,8 @@
     "tailwindcss": "^4.1.18",
     "typescript": "^5",
     "vite-tsconfig-paths": "^6.0.5",
-    "vitest": "^4.0.16",
-    "wrangler": "^4.118.0"
+    "vitest": "^4.1.11",
+    "wrangler": "^4.147.0"
   },
   "keywords": [
     "react",
@@ -166,7 +166,9 @@
     "path-to-regexp": "^8.3.0",
     "tar": "^7.5.11",
     "@tootallnate/once": "^3.0.1",
-    "svix": "1.92.2"
+    "svix": "1.92.2",
+    "brace-expansion": "^5.0.12",
+    "fast-uri": "^3.1.8"
   },
   "lint-staged": {
     "*.{ts,tsx}": [

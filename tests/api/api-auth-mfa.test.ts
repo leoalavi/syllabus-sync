@@ -157,7 +157,10 @@ describe('route-level API auth and MFA enforcement', () => {
       // never a destructive sign-out that would invalidate a valid cookie.
       supabaseMocks.getUserMock.mockResolvedValueOnce({
         data: { user: null },
-        error: { message: 'Invalid Refresh Token: Refresh Token Not Found', code: 'refresh_token_not_found' },
+        error: {
+          message: 'Invalid Refresh Token: Refresh Token Not Found',
+          code: 'refresh_token_not_found',
+        },
       });
 
       const { requireAuth } = await import('@/app/api/_lib/middleware');

@@ -10,6 +10,8 @@ import {
   jsonError,
   handleValidationError,
   handleDatabaseError,
+  parseJsonBody,
+  BODY_SIZE_LIMITS,
   ERROR_CODES,
 } from '@/app/api/_lib/response';
 import { mapNotificationRow } from '@/app/api/_lib/mappers';
@@ -84,8 +86,12 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 
   return requireAuthWithRateLimit(request, async (userId) => {
     try {
+      const { data: body, error: bodyError } = await parseJsonBody(
+        request,
+        BODY_SIZE_LIMITS.DEFAULT,
+      );
+      if (bodyError) return bodyError;
       const supabase = await createServerClient();
-      const body = await request.json();
 
       const validationResult = updateNotificationSchema.safeParse(body);
       if (!validationResult.success) {

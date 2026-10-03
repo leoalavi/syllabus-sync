@@ -1,6 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { DELETE as DELETE_COLLECTION, GET, POST } from '@/app/api/notifications/route';
-import { DELETE as DELETE_BY_ID, GET as GET_BY_ID } from '@/app/api/notifications/[id]/route';
+import {
+  DELETE as DELETE_BY_ID,
+  GET as GET_BY_ID,
+  PUT as PUT_BY_ID,
+} from '@/app/api/notifications/[id]/route';
 import { PUT as MARK_ALL_READ } from '@/app/api/notifications/mark-all-read/route';
 
 const createServerClientMock = vi.fn();
@@ -161,6 +165,19 @@ describe('notifications API routes', () => {
 
     expect(response.status).toBe(200);
     expect(table.is).toHaveBeenCalledWith('deleted_at', null);
+  });
+
+  it('returns 400 for malformed notification update JSON before database access', async () => {
+    const response = await PUT_BY_ID(
+      new Request('http://localhost/api/notifications/n1', {
+        method: 'PUT',
+        body: '{invalid',
+      }),
+      { params: Promise.resolve({ id: 'n1' }) },
+    );
+
+    expect(response.status).toBe(400);
+    expect(createServerClientMock).not.toHaveBeenCalled();
   });
 
   it('POST /api/notifications with invalid body returns 400', async () => {

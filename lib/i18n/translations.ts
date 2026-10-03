@@ -120,8 +120,8 @@ export const SUPPORTED_LANGUAGES: Language[] = [
   'he',
 ];
 
-// Partial translation type - non-English languages may have missing keys
-type TranslationData = Partial<typeof en>;
+// Cached translations are complete; missing localized values use reviewed English copy.
+type TranslationData = typeof en;
 
 // Cache for loaded translations
 const translationsCache: Map<Language, TranslationData> = new Map([['en', en]]);
@@ -139,7 +139,7 @@ export async function loadTranslations(lang: Language): Promise<TranslationData>
 
   // Load translations dynamically
   try {
-    let translations: TranslationData;
+    let translations: Partial<TranslationData>;
 
     switch (lang) {
       case 'es':
@@ -248,9 +248,10 @@ export async function loadTranslations(lang: Language): Promise<TranslationData>
         translations = en;
     }
 
-    // Cache the loaded translations
-    translationsCache.set(lang, translations);
-    return translations;
+    // Keep direct consumers and the translation hook on the same fallback path.
+    const completeTranslations = { ...en, ...translations };
+    translationsCache.set(lang, completeTranslations);
+    return completeTranslations;
   } catch (error) {
     logger.error(`Failed to load translations for ${lang}:`, error);
     // Fall back to English on error

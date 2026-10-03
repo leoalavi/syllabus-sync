@@ -48,7 +48,9 @@ function normalizeProvider(provider: string | undefined | null): SignupProvider 
  * Returns 'other' if the user has no identities or the earliest is neither
  * email nor google (future providers: github, apple, etc.).
  */
-export function getSignupProvider(user: Pick<User, 'identities'> | null | undefined): SignupProvider {
+export function getSignupProvider(
+  user: Pick<User, 'identities'> | null | undefined,
+): SignupProvider {
   const identities = user?.identities ?? [];
   if (identities.length === 0) return 'other';
 

@@ -25,6 +25,7 @@ import {
 import { passkeyAuthLimiter } from '@/lib/services/rateLimitService';
 import { z } from 'zod';
 import { logger } from '@/lib/logger';
+import { getClientIP } from '@/lib/security/ip';
 
 const verifySchema = z.object({
   credential: z.record(z.string(), z.unknown()),
@@ -38,7 +39,7 @@ export async function POST(request: NextRequest) {
     }
 
     // SECURITY: Rate limit passkey verification to prevent brute-force
-    const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
+    const ip = getClientIP(request);
     const rateLimitResult = await passkeyAuthLimiter(`ip:${ip}:passkey-verify`);
     if (!rateLimitResult.allowed) {
       return jsonError(

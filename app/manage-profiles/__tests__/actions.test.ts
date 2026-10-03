@@ -12,10 +12,10 @@ vi.mock('next/headers', () => ({
 }));
 
 describe('Profile Server Actions', () => {
-  it('should reject invalid student IDs', async () => {
+  it('rejects student IDs longer than the schema limit', async () => {
     const invalidData = {
       name: 'Raouf',
-      studentId: '123', // Too short (needs 8 digits)
+      studentId: '123456789012345678901',
       faculty: 'Science',
       course: 'Cyber Security',
       year: '1st Year',

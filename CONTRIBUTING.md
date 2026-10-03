@@ -38,21 +38,21 @@ Thank you for your interest in contributing to Syllabus Sync. This document desc
 
 ### Prerequisites
 
-| Requirement  | Version    |
-| ------------ | ---------- |
-| Node.js      | `>=22 <23` |
-| npm          | `>=10`     |
-| Supabase CLI | Latest     |
-| Git          | `>=2.40`   |
+| Requirement  | Version                     |
+| ------------ | --------------------------- |
+| Node.js      | `>=22 <23`                  |
+| npm          | `>=10`                      |
+| Supabase CLI | Only needed for schema work |
+| Git          | `>=2.40`                    |
 
 ### Setup
 
 ```bash
 git clone https://github.com/leoalavi/syllabus-sync.git
 cd syllabus-sync
-npm install
+npm ci
 cp .env.example .env.local
-# Populate .env.local with your Supabase, Redis, and API credentials
+# Set the required Supabase values; add optional integration keys only when needed
 npm run dev
 ```
 

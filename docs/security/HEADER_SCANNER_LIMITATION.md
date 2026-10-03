@@ -1,0 +1,9 @@
+# Header scanner network boundary
+
+The authenticated `/api/security/scan-headers` diagnostic now accepts only the HTTPS roots of `www.syllabus-sync.app` and `info.syllabus-sync.app`. It rejects arbitrary domains, IP literals, credentials, other ports, paths, query strings, and fragments. The same check runs immediately before the shared scanner's `fetch`, so internal helper callers cannot bypass the route check. The fetch uses `HEAD`, disables redirects, and has an eight-second timeout.
+
+This is a deliberate product boundary: the repository has no application call site requiring arbitrary third-party scans. Adding another host requires an explicit code review. This implementation does not perform a separate DNS lookup: Cloudflare Workers does not implement `node:dns.lookup`, and a DNS check followed by a new fetch resolution cannot prevent rebinding. Cloudflare's outbound HTTP proxy restricts requests to public Internet services or the Worker's own zone origin; the configured `global_fetch_strictly_public` flag sends same-zone fetches through the public front door. Do not generalize this allowlist to user-supplied hosts without an egress design that validates and pins the actual connection.
+
+The regression tests reject private, loopback, deceptive subdomains, credentials, nonstandard ports and paths, and verify that invalid targets never reach `fetch`. A production smoke check of the approved origins remains useful after deployment; local Node tests do not simulate Cloudflare's outbound proxy.
+
+Primary references: [Cloudflare DNS compatibility](https://developers.cloudflare.com/workers/runtime-apis/nodejs/dns/), [Worker security model](https://developers.cloudflare.com/workers/reference/security-model/), and [global fetch compatibility flag](https://developers.cloudflare.com/workers/configuration/compatibility-flags/).

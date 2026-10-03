@@ -1,12 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { DELETE, POST } from '@/app/api/push/subscription/route';
 
-const createAdminClientMock = vi.fn();
 const createServerClientMock = vi.fn();
-
-vi.mock('@/lib/supabase/admin', () => ({
-  createAdminClient: () => createAdminClientMock(),
-}));
 
 vi.mock('@/lib/supabase/server', () => ({
   createServerClient: () => createServerClientMock(),
@@ -50,17 +45,16 @@ function createDeleteChain(result: { error: unknown }) {
 
 describe('push subscription route', () => {
   beforeEach(() => {
-    createAdminClientMock.mockReset();
     createServerClientMock.mockReset();
   });
 
   it('stores a push subscription via POST', async () => {
     const table = createUpsertChain({
-      data: { id: 'sub-1', endpoint: 'https://push.example/sub' },
+      data: { id: 'sub-1', endpoint: 'https://fcm.googleapis.com/fcm/send/sub' },
       error: null,
     });
 
-    createAdminClientMock.mockReturnValue({
+    createServerClientMock.mockReturnValue({
       from: vi.fn(() => table),
     });
 
@@ -68,7 +62,7 @@ describe('push subscription route', () => {
       new Request('http://localhost/api/push/subscription', {
         method: 'POST',
         body: JSON.stringify({
-          endpoint: 'https://push.example/sub',
+          endpoint: 'https://fcm.googleapis.com/fcm/send/sub',
           expirationTime: null,
           keys: {
             p256dh: 'p256dh-key',
@@ -80,11 +74,12 @@ describe('push subscription route', () => {
     );
 
     expect(response.status).toBe(201);
+    expect(createServerClientMock).toHaveBeenCalledTimes(1);
     expect(table.upsert).toHaveBeenCalledTimes(1);
     expect(table.upsert.mock.calls[0][0]).toEqual(
       expect.objectContaining({
         user_id: 'user-1',
-        endpoint: 'https://push.example/sub',
+        endpoint: 'https://fcm.googleapis.com/fcm/send/sub',
         p256dh_key: 'p256dh-key',
         auth_key: 'auth-key',
       }),
@@ -93,7 +88,7 @@ describe('push subscription route', () => {
 
   it('deletes a push subscription via DELETE', async () => {
     const table = createDeleteChain({ error: null });
-    createAdminClientMock.mockReturnValue({
+    createServerClientMock.mockReturnValue({
       from: vi.fn(() => table),
     });
 
@@ -101,11 +96,44 @@ describe('push subscription route', () => {
       new Request('http://localhost/api/push/subscription', {
         method: 'DELETE',
         body: JSON.stringify({
-          endpoint: 'https://push.example/sub',
+          endpoint: 'https://fcm.googleapis.com/fcm/send/sub',
         }),
       }),
     );
 
     expect(response.status).toBe(200);
+    expect(createServerClientMock).toHaveBeenCalledTimes(1);
+    expect(table.eq).toHaveBeenCalledWith('user_id', 'user-1');
+  });
+
+  it('rejects an arbitrary server-side push destination before database access', async () => {
+    const response = await POST(
+      new Request('http://localhost/api/push/subscription', {
+        method: 'POST',
+        body: JSON.stringify({
+          endpoint: 'https://127.0.0.1/internal',
+          keys: { p256dh: 'key', auth: 'key' },
+        }),
+      }),
+    );
+
+    expect(response.status).toBe(400);
+    expect(createServerClientMock).not.toHaveBeenCalled();
+  });
+
+  it('rejects an expiration outside the Date range', async () => {
+    const response = await POST(
+      new Request('http://localhost/api/push/subscription', {
+        method: 'POST',
+        body: JSON.stringify({
+          endpoint: 'https://fcm.googleapis.com/fcm/send/sub',
+          expirationTime: 9e15,
+          keys: { p256dh: 'key', auth: 'key' },
+        }),
+      }),
+    );
+
+    expect(response.status).toBe(400);
+    expect(createServerClientMock).not.toHaveBeenCalled();
   });
 });

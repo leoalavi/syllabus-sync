@@ -816,7 +816,7 @@ export default function MapClient() {
           </div>
         </div>
 
-        {/* MQ Navigation companion app card — positions advanced wayfinding as a
+        {/* Campus Navigation companion app card — positions advanced wayfinding as a
             separate mobile-first companion, keeping Syllabus Sync's scope honest. */}
         <div className="mb-2">
           <MagicCard isLiquidEnhanced>
@@ -841,7 +841,7 @@ export default function MapClient() {
               </div>
               <div className="flex-shrink-0">
                 <a
-                  href="https://github.com/mrpouyaalavi/MQ_Navigation"
+                  href="https://github.com/leoalavi/campus-navigation"
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={t('mqNavCompanionCtaAria')}
@@ -849,7 +849,10 @@ export default function MapClient() {
                 >
                   <Github className="h-4 w-4" aria-hidden="true" />
                   {t('mqNavCompanionCta')}
-                  <ExternalLink className="h-3.5 w-3.5 text-mq-content-tertiary" aria-hidden="true" />
+                  <ExternalLink
+                    className="h-3.5 w-3.5 text-mq-content-tertiary"
+                    aria-hidden="true"
+                  />
                 </a>
               </div>
             </div>

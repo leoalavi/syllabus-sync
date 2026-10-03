@@ -7,10 +7,10 @@
       "startServerReadyTimeout": 120000,
       "url": [
         "http://localhost:3003",
-        "http://localhost:3003/home",
-        "http://localhost:3003/calendar",
-        "http://localhost:3003/manage-profiles",
-        "http://localhost:3003/settings"
+        "http://localhost:3003/about",
+        "http://localhost:3003/contact",
+        "http://localhost:3003/terms",
+        "http://localhost:3003/privacy"
       ]
     },
     "assert": {

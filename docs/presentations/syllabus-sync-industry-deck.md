@@ -8,6 +8,8 @@ description: Industry stakeholder presentation covering architecture, security p
 
 # Syllabus Sync
 
+> **Historical presentation:** This deck predates the current Leo Alavi identity, repository URL, Cloudflare deployment, and independent-platform positioning. Do not use its links or claims for a current application; see the [README](../../README.md) and [public information site](https://info.syllabus-sync.app).
+
 ## The Campus Platform Built Like Production Software
 
 A full-stack campus productivity platform with enterprise-grade security, built on Next.js 16, React 19, and Supabase.
@@ -186,7 +188,7 @@ Most serverless rate limiters fail open -- if Redis is unavailable, requests pas
 - MCP server for AI agent integration
 - Multi-university deployment
 
-Full roadmap: [`IMPROVEMENTS-ROADMAP.md`](../../IMPROVEMENTS-ROADMAP.md)
+Current project direction: [README roadmap](../../README.md#roadmap-not-yet-built)
 
 ---
 

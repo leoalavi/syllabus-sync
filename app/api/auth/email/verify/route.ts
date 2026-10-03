@@ -10,6 +10,7 @@ import {
 import { hashToken } from '@/lib/security/emailVerification';
 import { emailVerifyTokenLimiter } from '@/lib/services/rateLimitService';
 import { logger } from '@/lib/logger';
+import { getClientIP } from '@/lib/security/ip';
 import { z } from 'zod';
 
 const verifySchema = z.object({
@@ -42,7 +43,7 @@ export async function POST(request: NextRequest) {
     }
 
     // SECURITY: Rate limit token verification to prevent brute-force
-    const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
+    const ip = getClientIP(request);
     const rateLimitResult = await emailVerifyTokenLimiter(`ip:${ip}:email-verify`);
     if (!rateLimitResult.allowed) {
       return jsonError(

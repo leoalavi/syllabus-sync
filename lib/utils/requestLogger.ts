@@ -1,4 +1,5 @@
 import { logger } from '@/lib/logger';
+import { getClientIPFromHeaders } from '@/lib/security/ip';
 /**
  * Request Logging Utility
  *
@@ -109,22 +110,7 @@ export const requestLogger = new RequestLogger();
  * SECURITY: Only trust verified proxy headers
  */
 export function extractClientIP(headers: Headers): string {
-  // Vercel's verified header
-  const vercelIp = headers.get('x-vercel-forwarded-for');
-  if (vercelIp) return vercelIp.split(',')[0].trim();
-
-  // Cloudflare's verified header
-  const cfIp = headers.get('cf-connecting-ip');
-  if (cfIp) return cfIp;
-
-  // Standard forwarded header (be careful in production)
-  const forwarded = headers.get('x-forwarded-for');
-  if (forwarded) return forwarded.split(',')[0].trim();
-
-  const realIp = headers.get('x-real-ip');
-  if (realIp) return realIp;
-
-  return 'unknown';
+  return getClientIPFromHeaders(headers);
 }
 
 /**

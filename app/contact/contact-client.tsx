@@ -79,7 +79,7 @@ export default function ContactClient() {
       </section>
 
       {/* ── Content ── */}
-      <main>
+      <div>
         <div className="mx-auto grid w-full max-w-6xl grid-cols-1 gap-6 px-4 py-14 sm:px-6 lg:grid-cols-3 lg:px-8 lg:py-20">
           {/* ── Sidebar ── */}
           <aside
@@ -191,7 +191,7 @@ export default function ContactClient() {
               {t('contact_formDesc')}
             </p>
 
-            <form className="mt-8 space-y-6" onSubmit={handleSubmit} noValidate>
+            <form method="post" className="mt-8 space-y-6" onSubmit={handleSubmit} noValidate>
               <div>
                 <label
                   htmlFor="contact-email"
@@ -267,7 +267,7 @@ export default function ContactClient() {
             </form>
           </article>
         </div>
-      </main>
+      </div>
     </div>
   );
 }

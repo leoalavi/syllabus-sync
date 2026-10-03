@@ -5,6 +5,8 @@ on:
     - cron: '*/10 * * * *'
   workflow_dispatch:
 
+permissions: {}
+
 jobs:
   push-reminders:
     name: Trigger push reminders endpoint
@@ -20,6 +22,6 @@ jobs:
             exit 1
           fi
 
-          curl --fail --silent --show-error \
+          curl --fail --silent --show-error --output /dev/null \
             -H "Authorization: Bearer $PUSH_REMINDERS_CRON_SECRET" \
-            "$PUSH_REMINDERS_CRON_URL" | cat
+            "$PUSH_REMINDERS_CRON_URL"

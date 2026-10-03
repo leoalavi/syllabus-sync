@@ -104,12 +104,7 @@ export const PublicEventCard = memo(
           />
 
           {/* Category Strip */}
-          <div
-            className={cn(
-              'h-1.5 rounded-t-2xl relative z-10',
-              categoryStyle.bg,
-            )}
-          />
+          <div className={cn('h-1.5 rounded-t-2xl relative z-10', categoryStyle.bg)} />
 
           {/* Content */}
           <div className="p-5 flex-1 flex flex-col relative z-10">

@@ -9,6 +9,8 @@ labels: bug, needs-triage
 
 A clear, concise description of what the bug is.
 
+For security vulnerabilities, do not open a public issue. Follow the [private reporting guidance](https://github.com/leoalavi/syllabus-sync/blob/main/SECURITY.md). Remove personal information and credentials from screenshots and logs.
+
 ## Steps to Reproduce
 
 1. Navigate to `...`

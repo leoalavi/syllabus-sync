@@ -58,9 +58,20 @@ Whether you are a human or an AI, you must follow this protocol for every code c
 
 ## Change Log (Raouf Template)
 
+### 2026-10-03 (Australia/Sydney) — Open-Source Readiness Follow-Through
+
+**Raouf:**
+
+- **Scope:** Finished the local open-source readiness pass without publishing changes.
+- **Summary:** Added colocated app tests to Vitest, corrected a stale profile test, hardened malformed development map-pin payload handling, aligned CI with format and Cloudflare/OpenNext checks, updated contributor and API documentation, removed an outdated personal screenshot, refreshed dependencies to clear production audit findings, and documented the header-scanner runtime limitation.
+- **Files Changed:** `README.md`, `CONTRIBUTING.md`, `docs/`, `.github/`, `config/`, `app/api/maps/dev-pin/route.ts`, `app/manage-profiles/__tests__/actions.test.ts`, `tests/api/maps.dev-pin.route.test.ts`, `features/map/components/MapClient.tsx`, `locales/en/translations.json`, `package.json`, and `package-lock.json`, plus formatting-only files.
+- **Verification:** Secrets, formatting, typecheck, lint, 920 tests, Next.js build, Cloudflare/OpenNext build, output verification, Wrangler dry run, production dependency audit, and `git diff --check` passed.
+- **Follow-ups:** Review 14 development-tool dependency advisories and non-English translation gaps. Decide separately on the header-scanner egress design and proxy-specific client-IP header trust before changing security behavior.
+
 ### 2026-10-03 (Australia/Sydney) — Public Positioning and Cloudflare Readiness
 
 **Raouf:**
+
 - **Scope:** Corrected production Worker identity, private vulnerability reporting guidance, public project links and positioning, and current deployment documentation.
 - **Summary:** Kept the main Worker named `syllabus-sync-production` and removed the stray info-site name from its Wrangler config. Removed the public security issue template and directed reports to private email after verifying GitHub private reporting is disabled. Replaced university-owned support and social destinations, added the info-site link to the website, clarified Syllabus Sync, Sylla, Campus Navigation, and Astronomy Open Night boundaries, and refreshed public metadata, contributor guidance, architecture, and Cloudflare release instructions.
 - **Files Changed:** `wrangler.jsonc`, `.github/ISSUE_TEMPLATE/security_report.md` (deleted), `SECURITY.md`, `README.md`, `CONTRIBUTING.md`, `package.json`, `app/*` public routes and layout, `components/layout/*`, `features/settings/components/AboutSettings.tsx`, `lib/config.ts`, `lib/constants/index.ts`, `locales/*/translations.json`, related tests, and referenced setup, operations, security, and policy guides.
@@ -70,6 +81,7 @@ Whether you are a human or an AI, you must follow this protocol for every code c
 ### 2026-07-07 (Australia/Sydney) — App-Icon Logo Rebrand
 
 **Raouf:**
+
 - **Scope:** Replaced the Macquarie University crest logo with the new Syllabus Sync app-icon image across the entire app, including the PWA/favicon icon set and all 35 locale alt-text strings.
 - **Summary:** New master asset `public/syllabus-sync-logo.png` cropped from the supplied app-icon artwork and used to regenerate `favicon.ico`, `apple-touch-icon.png`, and `icon-192/384/512.png`/`maskable-512.png`. All ~25 code references (login, signup, header, sidebar, onboarding, reset-password, OG/Twitter meta, JSON-LD schema, push-notification fallbacks, service worker) repointed from `/MQ_Logo_Final.png` to `/syllabus-sync-logo.png`; old crest file deleted. Service worker cache versions bumped (`v6` → `v7`) to force-refresh cached assets. `mqLogoAlt` translation value switched to a `{{appName}}`-interpolated string in all 35 locales, replacing hardcoded "Macquarie University" wording.
 - **Files Changed:** `public/syllabus-sync-logo.png`, `public/icons/*.png`, `public/apple-touch-icon.png`, `app/favicon.ico`, `public/MQ_Logo_Final.png` (deleted), `app/layout.tsx`, `app/home/page.tsx`, `app/calendar/page.tsx`, `app/map/page.tsx`, `app/feed/page.tsx`, `app/manage-profiles/layout.tsx`, `app/login/LoginClient.tsx`, `app/signup/SignupClient.tsx`, `app/onboarding/OnboardingClient.tsx`, `app/reset-password/reset-password-client.tsx`, `components/layout/Header.tsx`, `components/layout/Sidebar.tsx`, `lib/server/push.ts`, `lib/services/notificationService.ts`, `public/sw.js`, `locales/*/translations.json` (35 files).
@@ -79,6 +91,7 @@ Whether you are a human or an AI, you must follow this protocol for every code c
 ### 2026-04-06 (Australia/Sydney) — Internationalization Update
 
 **Raouf:**
+
 - **Scope:** i18n Expansion (34 Locales)
 - **Summary:** Added missing `heroSection`, `opensInNewTab`, and `loadingEvents` keys to all 34 translation files in `locales/`. Used localized translations for major languages (Arabic, German, Spanish, French, Italian, Portuguese, Chinese, Japanese, etc.) and English fallbacks for others. `heroSection` is used for ARIA labels on hero sections; `opensInNewTab` provides an accessible suffix for links; `loadingEvents` is used for screen reader status updates during feed loading.
 - **Files Changed:** `locales/*/translations.json` (34 files).

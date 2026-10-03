@@ -600,6 +600,7 @@ export default function LoginClient() {
             />
           ) : (
             <form
+              method="post"
               onSubmit={handleSubmit(onSubmit)}
               className="space-y-4 flex-1 flex flex-col min-w-0"
             >

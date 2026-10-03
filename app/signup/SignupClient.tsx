@@ -302,13 +302,13 @@ export default function SignupClient() {
                   </div>
                 ) : (
                   <BrandLogo
-                  alt={APP_CONFIG.name}
-                  height={96}
-                  priority
-                  tile
-                  tileClassName="rounded-2xl p-3 shadow-lg"
-                  variant="icon"
-                />
+                    alt={APP_CONFIG.name}
+                    height={96}
+                    priority
+                    tile
+                    tileClassName="rounded-2xl p-3 shadow-lg"
+                    variant="icon"
+                  />
                 )}
               </div>
 
@@ -387,7 +387,7 @@ export default function SignupClient() {
                 </Alert>
               )}
 
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              <form method="post" onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 {/* Honeypot field */}
                 <input
                   {...register('_gotcha')}
@@ -488,7 +488,9 @@ export default function SignupClient() {
                       className="h-12 rounded-xl"
                       {...register('confirmPassword')}
                       aria-invalid={!!errors.confirmPassword}
-                      aria-describedby={errors.confirmPassword ? 'confirmPassword-error' : undefined}
+                      aria-describedby={
+                        errors.confirmPassword ? 'confirmPassword-error' : undefined
+                      }
                     />
                     {errors.confirmPassword && (
                       <p id="confirmPassword-error" className="text-xs text-mq-error">

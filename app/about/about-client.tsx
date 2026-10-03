@@ -142,7 +142,7 @@ export default function AboutClient() {
         </div>
       </section>
 
-      <main>
+      <div>
         {/* ── Values ── */}
         <section
           aria-labelledby="values-heading"
@@ -280,7 +280,7 @@ export default function AboutClient() {
             ))}
           </div>
         </section>
-      </main>
+      </div>
     </div>
   );
 }

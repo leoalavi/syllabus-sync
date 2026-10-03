@@ -45,7 +45,7 @@ if (missing.length) {
     '  This means the Cloudflare Build command produced a plain `next build`\n' +
       '  (only .next/) instead of the OpenNext Cloudflare build (.next/ AND\n' +
       '  .open-next/). `wrangler deploy` auto-detects this as an OpenNext\n' +
-      "  project and will fail with a generic \"Could not find compiled Open\n" +
+      '  project and will fail with a generic "Could not find compiled Open\n' +
       '  Next config\" error — this check exists to explain why up front.\n\n' +
       '  Fix: set the Cloudflare Workers Builds "Build command" to\n' +
       '  `npm run cf:build`, not `npm run build`. `npm run build` must stay a\n' +
@@ -57,4 +57,4 @@ if (missing.length) {
   process.exit(1);
 }
 
-console.log('[cf:verify-output] ok — OpenNext build output present, proceeding to deploy');
+console.log('[cf:verify-output] ok — OpenNext build output present');

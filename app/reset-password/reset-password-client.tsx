@@ -167,7 +167,12 @@ export default function ResetPasswordClient() {
   const requestSchema = useMemo(
     () =>
       z.object({
-        email: z.string().min(1, t('loginEmailRequired')).email(t('loginValidEmail')).trim().toLowerCase(),
+        email: z
+          .string()
+          .min(1, t('loginEmailRequired'))
+          .email(t('loginValidEmail'))
+          .trim()
+          .toLowerCase(),
       }),
     [t],
   );
@@ -302,13 +307,13 @@ export default function ResetPasswordClient() {
           <div className="bg-mq-card-background/85 backdrop-blur-xl border border-mq-border/30 rounded-2xl shadow-[0_18px_70px_rgba(0,0,0,0.3)] p-8 text-center space-y-6">
             <div className="flex justify-center">
               <BrandLogo
-                  alt={APP_CONFIG.name}
-                  height={88}
-                  priority
-                  tile
-                  tileClassName="rounded-2xl p-3 shadow-lg"
-                  variant="icon"
-                />
+                alt={APP_CONFIG.name}
+                height={88}
+                priority
+                tile
+                tileClassName="rounded-2xl p-3 shadow-lg"
+                variant="icon"
+              />
             </div>
             <div className="flex justify-center">
               <div className="w-16 h-16 rounded-full bg-mq-success/15 border border-mq-success/20 flex items-center justify-center">
@@ -354,13 +359,13 @@ export default function ResetPasswordClient() {
           <div className="bg-mq-card-background/85 backdrop-blur-xl border border-mq-border/30 rounded-2xl shadow-[0_18px_70px_rgba(0,0,0,0.3)] p-6 sm:p-8 space-y-6">
             <div className="flex justify-center">
               <BrandLogo
-                  alt={APP_CONFIG.name}
-                  height={88}
-                  priority
-                  tile
-                  tileClassName="rounded-2xl p-3 shadow-lg"
-                  variant="icon"
-                />
+                alt={APP_CONFIG.name}
+                height={88}
+                priority
+                tile
+                tileClassName="rounded-2xl p-3 shadow-lg"
+                variant="icon"
+              />
             </div>
 
             <div className="space-y-1 text-center">
@@ -385,7 +390,7 @@ export default function ResetPasswordClient() {
             )}
 
             {mode === 'request' ? (
-              <form onSubmit={requestForm.handleSubmit(onRequest)} className="space-y-4">
+              <form method="post" onSubmit={requestForm.handleSubmit(onRequest)} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="email" className="text-mq-content font-bold">
                     {t('email')}
@@ -437,7 +442,7 @@ export default function ResetPasswordClient() {
                 </div>
               </form>
             ) : (
-              <form onSubmit={setForm.handleSubmit(onSet)} className="space-y-4">
+              <form method="post" onSubmit={setForm.handleSubmit(onSet)} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="newPassword" className="text-mq-content font-bold">
                     {t('newPassword')}
@@ -490,13 +495,14 @@ export default function ResetPasswordClient() {
                     {...setForm.register('confirmPassword')}
                     aria-invalid={!!setForm.formState.errors.confirmPassword}
                     aria-describedby={
-                      setForm.formState.errors.confirmPassword
-                        ? 'confirmPassword-error'
-                        : undefined
+                      setForm.formState.errors.confirmPassword ? 'confirmPassword-error' : undefined
                     }
                   />
                   {setForm.formState.errors.confirmPassword?.message && (
-                    <p id="confirmPassword-error" className="text-xs text-mq-error font-medium ml-1">
+                    <p
+                      id="confirmPassword-error"
+                      className="text-xs text-mq-error font-medium ml-1"
+                    >
                       {setForm.formState.errors.confirmPassword.message}
                     </p>
                   )}

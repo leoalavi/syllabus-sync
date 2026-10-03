@@ -1,6 +1,6 @@
 # Syllabus Sync -- Documentation Index
 
-This directory is the central navigation hub for all project documentation. Documents are organized by domain so that engineers, security reviewers, and stakeholders can find what they need without scanning the full repository.
+This directory is the navigation hub for project documentation. Start with the current architecture, deployment guide, API overview, and security policy. Older reports and presentations are retained for history; verify their claims against current source before reuse.
 
 ---
 
@@ -18,23 +18,29 @@ Structural decisions, component interactions, and the technical patterns that po
 
 ## Security and Compliance
 
-Evidence-backed documentation of the project's security posture, suitable for institutional review and audit.
+Current reporting guidance and historical security-review material.
 
-| Document                                                         | Description                                                                                            |
-| ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| [Security Posture Report](./security/SECURITY_POSTURE.md)        | Executive summary, threat models, and implemented control catalogue                                    |
-| [Security Evidence Index](./security/SECURITY_EVIDENCE_INDEX.md) | Direct links from specific security controls (WebAuthn, MFA, CSP, RLS) to their implementation in code |
-| [Security Policy](../SECURITY.md)                                | Vulnerability disclosure process and high-level security tenets                                        |
-| [Privacy Policy](./policies/privacy-policy.md)                   | Data collection, processing, retention, and user deletion rights                                       |
+| Document                                                           | Description                                                           |
+| ------------------------------------------------------------------ | --------------------------------------------------------------------- |
+| [Security Posture Report](./security/SECURITY_POSTURE.md)          | Historical snapshot; reverify all control claims against current code |
+| [Security Evidence Index](./security/SECURITY_EVIDENCE_INDEX.md)   | Historical code pointers for security review                          |
+| [Header Scanner Boundary](./security/HEADER_SCANNER_LIMITATION.md) | Approved-host scope and Worker network assumptions                    |
+| [Development Dependency Advisories](./security/DEV_DEPENDENCIES.md) | Remaining lint-tool advisory chain and upgrade decision               |
+| [Security Policy](../SECURITY.md)                                  | Vulnerability disclosure process and high-level security tenets       |
+| [Privacy Policy](./policies/privacy-policy.md)                     | Data collection, processing, retention, and user deletion rights      |
+
+## Internationalisation
+
+[Translation fallback policy](./i18n/FALLBACKS.md) explains how untranslated keys use reviewed English text and identifies the current campus and Sylla gaps.
 
 ## API Reference
 
 Documentation for developers interacting with or extending the backend.
 
-| Document                                                                        | Description                                                                                               |
-| ------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| [API Reference](./api/API_REFERENCE.md)                                         | REST API surface (`app/api/**`), authentication requirements, rate limiting, and request/response schemas |
-| [University Integration Requirements](./university-integration-requirements.md) | Technical proposal for integration with institutional systems (SSO, timetables, Canvas/iLearn)            |
+| Document                                                                        | Description                                                                                    |
+| ------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| [API Reference](./api/API_REFERENCE.md)                                         | Current route families and route-level authentication model                                    |
+| [University Integration Requirements](./university-integration-requirements.md) | Technical proposal for integration with institutional systems (SSO, timetables, Canvas/iLearn) |
 
 ## Operations and Deployment
 
@@ -52,12 +58,12 @@ Runbooks and checklists for managing the application lifecycle.
 
 Roadmap, team structure, and historical context for engineering decisions.
 
-| Document                                                              | Description                                                                                          |
-| --------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| [Product Roadmap](../IMPROVEMENTS-ROADMAP.md)                         | Strategic roadmap organized by theme: delivered milestones, current priorities, and future direction |
-| [Team Roadmap](./project/team_plan/TEAM_ROADMAP.md)                   | Phase-by-phase tracking of project milestones                                                        |
-| [Team Roles](./project/team_plan/TEAM_ROLES.md)                       | Maintainer responsibilities and ownership areas                                                      |
-| [Calendar Upgrade Plan](./project/team_plan/Calendar_Upgrade_Plan.md) | Feature plan for calendar system enhancements                                                        |
+| Document                                                              | Description                                            |
+| --------------------------------------------------------------------- | ------------------------------------------------------ |
+| [Project Direction](../README.md#roadmap-not-yet-built)               | Current roadmap items, clearly marked as not yet built |
+| [Team Roadmap](./project/team_plan/TEAM_ROADMAP.md)                   | Phase-by-phase tracking of project milestones          |
+| [Team Roles](./project/team_plan/TEAM_ROLES.md)                       | Maintainer responsibilities and ownership areas        |
+| [Calendar Upgrade Plan](./project/team_plan/Calendar_Upgrade_Plan.md) | Feature plan for calendar system enhancements          |
 
 ## Design and Planning Documents
 
@@ -112,6 +118,6 @@ Project-level policies and contributor guidelines (located in the repository roo
 
 **For security reviewers:** Start with [Security Posture Report](./security/SECURITY_POSTURE.md), then [Security Evidence Index](./security/SECURITY_EVIDENCE_INDEX.md).
 
-**For stakeholders:** Start with [Industry Deck](./presentations/syllabus-sync-industry-deck.md), then [Product Roadmap](../IMPROVEMENTS-ROADMAP.md).
+**For stakeholders:** Start with the [public project information site](https://info.syllabus-sync.app), then the [current project direction](../README.md#roadmap-not-yet-built). The [industry deck](./presentations/syllabus-sync-industry-deck.md) is historical.
 
 **For API consumers:** Start with [API Reference](./api/API_REFERENCE.md), then [University Integration Requirements](./university-integration-requirements.md).
