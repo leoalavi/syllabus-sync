@@ -185,12 +185,12 @@ The current app is Macquarie-focused. Institution-specific adapters and broader 
 
 ### Connected products and project boundaries
 
-| Name                          | Relationship                                           | Current status                                                    |
-| ----------------------------- | ------------------------------------------------------ | ----------------------------------------------------------------- |
-| **Syllabus Sync**             | Core academic planning and student-experience platform | Macquarie-focused web app under active development and validation |
-| **Sylla**                     | Connected AI-assisted study layer                      | Separate app; optional configured link and shared-login setup     |
+| Name                          | Relationship                                           | Current status                                                            |
+| ----------------------------- | ------------------------------------------------------ | ------------------------------------------------------------------------- |
+| **Syllabus Sync**             | Core academic planning and student-experience platform | Macquarie-focused web app under active development and validation         |
+| **Sylla**                     | Connected AI-assisted study layer                      | Separate app; optional configured link and shared-login setup             |
 | **Campus Navigation**         | Connected mobile wayfinding companion                  | Separate Flutter app with deep-link integration; under active development |
-| **Astronomy Open Night 2026** | Separate event project by the same team                | Not a Syllabus Sync product                                       |
+| **Astronomy Open Night 2026** | Separate event project by the same team                | Not a Syllabus Sync product                                               |
 
 See the [public project information site](https://info.syllabus-sync.app) for the broader vision. Current features and future directions are deliberately separated in this README.
 
