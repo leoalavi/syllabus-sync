@@ -153,7 +153,7 @@ Released under the **MIT License**.
 
 ### Open-source participation
 
-The repository is public and accepts focused contributions. Start with the [contributing guide](./CONTRIBUTING.md), which covers local setup, tests, security boundaries and review expectations. Useful areas include accessibility, reliable tests, documentation, translation review, and carefully validated campus or academic data improvements. Report vulnerabilities privately through [GitHub private vulnerability reporting](https://github.com/leoalavi/syllabus-sync/security/advisories/new); do not include exploit details in public issues.
+The repository is public and accepts focused contributions. Start with the [contributing guide](./CONTRIBUTING.md), which covers local setup, tests, security boundaries and review expectations. Useful areas include accessibility, reliable tests, documentation, translation review, and carefully validated campus or academic data improvements. Report vulnerabilities privately by following the process in [SECURITY.md](./SECURITY.md); do not include exploit details in public issues.
 
 The current app is Macquarie-focused. Institution-specific adapters and broader university support are design goals, not shipped integrations. Contributions toward that direction should begin with a small design discussion and avoid assuming another institution's data or endorsement.
 
@@ -164,7 +164,7 @@ The current app is Macquarie-focused. Institution-specific adapters and broader 
 - **Syllabus extraction pipeline:** Parsing syllabus PDFs into structured deadlines (OCR/LLM) — planned, no code exists yet.
 - **Email reminder delivery:** Settings toggles exist and persist, but no cron job dispatches reminder emails yet (push and in-app notifications are fully wired).
 - **Gamification UI:** A `mv_xp_leaderboard` materialized view exists in the database, but there is no leaderboard or achievements UI surfaced to users yet.
-- **Campus Navigation handoff:** A connected mobile wayfinding companion is planned; the current web map should not be presented as full mobile turn-by-turn navigation.
+- **Campus Navigation integration:** A separate Flutter mobile wayfinding companion with destination-based deep linking from Syllabus Sync. Further integration and navigation capabilities remain under active development.
 - Institution-specific academic and campus data adapters and support for other universities.
 - Federated identity via institution SSO (SAML/OIDC) — aspirational, not scheduled.
 
@@ -178,10 +178,10 @@ The current app is Macquarie-focused. Institution-specific adapters and broader 
 
 ### Maintainers
 
-| Name          | Role                                           |
-| ------------- | ---------------------------------------------- |
-| Leo Alavi     | Lead maintainer — architecture, infrastructure |
-| Raouf Abedini | Co-maintainer — security, backend              |
+| Name          | Role                                                            |
+| ------------- | --------------------------------------------------------------- |
+| Leo Alavi     | Co-maintainer — frontend, product, integration & infrastructure |
+| Raouf Abedini | Co-maintainer — backend & security                              |
 
 ### Connected products and project boundaries
 
@@ -189,7 +189,7 @@ The current app is Macquarie-focused. Institution-specific adapters and broader 
 | ----------------------------- | ------------------------------------------------------ | ----------------------------------------------------------------- |
 | **Syllabus Sync**             | Core academic planning and student-experience platform | Macquarie-focused web app under active development and validation |
 | **Sylla**                     | Connected AI-assisted study layer                      | Separate app; optional configured link and shared-login setup     |
-| **Campus Navigation**         | Connected mobile wayfinding companion                  | Separate mobile work; integration is a future direction           |
+| **Campus Navigation**         | Connected mobile wayfinding companion                  | Separate Flutter app with deep-link integration; under active development |
 | **Astronomy Open Night 2026** | Separate event project by the same team                | Not a Syllabus Sync product                                       |
 
 See the [public project information site](https://info.syllabus-sync.app) for the broader vision. Current features and future directions are deliberately separated in this README.
