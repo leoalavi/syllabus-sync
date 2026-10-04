@@ -381,6 +381,14 @@ Full setup notes: [Environment Setup](./docs/setup/ENVIRONMENT_SETUP.md).
 
 <br/>
 
+### Connect
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-6366f1?style=for-the-badge&logo=linkedin&logoColor=ffffff&labelColor=0f172a)](https://www.linkedin.com/in/leo-alavi/)
+[![GitHub](https://img.shields.io/badge/GitHub-Follow-22c55e?style=for-the-badge&logo=github&logoColor=ffffff&labelColor=0f172a)](https://github.com/leoalavi)
+[![Email](https://img.shields.io/badge/Email-Contact-f59e0b?style=for-the-badge&logo=gmail&logoColor=09090b&labelColor=0f172a)](mailto:leo@leoalavi.dev)
+
+<br/>
+
 _Syllabus Sync is an independent open-source project and is not officially affiliated with Macquarie University._
 
 </div>
