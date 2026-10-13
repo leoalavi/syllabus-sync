@@ -20,6 +20,7 @@ import {
 import { Button } from '@/components/ui/mq/button';
 import { Label } from '@/components/ui/label';
 import { isValidRedirect } from '@/lib/utils/security';
+import { getConfirmedBrowserAuthSnapshot } from '@/lib/supabase/browserSession';
 import { APP_CONFIG } from '@/lib/config';
 import { ArrowRight, Loader2 } from 'lucide-react';
 import { useTypedTranslation } from '@/lib/hooks/useTypedTranslation';
@@ -44,6 +45,28 @@ export default function OnboardingClient() {
   const next = isValidRedirect(rawNext) ? rawNext : '/home';
 
   const [serverError, setServerError] = useState('');
+
+  // /onboarding is public in the proxy (it must not trip the verify/MFA gates
+  // mid-OAuth), so a signed-out visitor can land here. Send them to login and
+  // return them to this step afterwards instead of letting them fill in a
+  // form that can only fail with a 401.
+  const loginUrl = `/login?redirectTo=${encodeURIComponent(
+    next === '/home' ? '/onboarding' : `/onboarding?next=${encodeURIComponent(next)}`,
+  )}`;
+
+  useEffect(() => {
+    let cancelled = false;
+    void getConfirmedBrowserAuthSnapshot().then(({ user, resolution }) => {
+      // Only redirect on a confirmed signed-out result; an 'unknown' read
+      // (network blip) leaves the form usable and the 401 path below covers it.
+      if (!cancelled && resolution === 'resolved' && !user) {
+        router.replace(loginUrl);
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [loginUrl, router]);
 
   const {
     control,
@@ -79,6 +102,11 @@ export default function OnboardingClient() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
+      if (res.status === 401) {
+        // Session expired while the form was open.
+        router.replace(loginUrl);
+        return;
+      }
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
         throw new Error(body?.error?.message || t('failedToSave'));

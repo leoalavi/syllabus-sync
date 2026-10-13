@@ -655,7 +655,11 @@ const Header = memo(() => {
                   if (isSupabaseConfigured()) {
                     try {
                       const supabase = createBrowserClient();
-                      await supabase.auth.signOut();
+                      // This device only. supabase-js defaults to 'global', which
+                      // would also sign the user out on every other device;
+                      // that is the separate "Sign out all sessions" action
+                      // in Settings → Sessions.
+                      await supabase.auth.signOut({ scope: 'local' });
                     } catch {
                       // Continue with redirect even if sign out fails
                     }

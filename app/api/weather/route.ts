@@ -4,6 +4,8 @@ import { apiLimiter } from '@/lib/services/rateLimitService';
 import { getClientIP } from '@/lib/security/ip';
 import { logger } from '@/lib/logger';
 import { GoogleWeatherProvider } from '@/lib/weather/providers/googleWeatherProvider';
+import { OpenMeteoProvider } from '@/lib/weather/providers/openMeteoProvider';
+import type { WeatherProvider } from '@/lib/weather/providers/provider';
 import { z } from 'zod';
 import { WeatherResult } from '@/lib/weather/types';
 
@@ -12,6 +14,10 @@ import { WeatherResult } from '@/lib/weather/types';
  *
  * SECURITY: Proxies requests to Google Weather API.
  * The API key is kept server-side only (not NEXT_PUBLIC_).
+ *
+ * Google is the primary provider when GOOGLE_WEATHER_API_KEY is set. Open-Meteo
+ * (keyless) is the fallback, so a missing key or a Google outage degrades to a
+ * second source instead of a 503 for every user.
  */
 
 // Cache weather data for 5 minutes (current) to 15 minutes (hourly)
@@ -19,15 +25,41 @@ const weatherCache = new Map<string, { data: WeatherResult; timestamp: number }>
 const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes standard ttl
 const EDGE_CACHE_CONTROL = 'public, max-age=0, s-maxage=300, stale-while-revalidate=60';
 
-// Lazy-init provider at runtime (not build time) to avoid breaking page collection
-let _provider: GoogleWeatherProvider | null = null;
-function getProvider(): GoogleWeatherProvider {
-  if (!_provider) {
+type NamedProvider = { name: string; provider: WeatherProvider };
+
+// Lazy-init providers at runtime (not build time) to avoid breaking page collection
+let _providers: NamedProvider[] | null = null;
+function getProviders(): NamedProvider[] {
+  if (!_providers) {
+    const providers: NamedProvider[] = [];
     const key = process.env.GOOGLE_WEATHER_API_KEY;
-    if (!key) throw new Error('GOOGLE_WEATHER_API_KEY environment variable is required');
-    _provider = new GoogleWeatherProvider(key);
+    if (key) {
+      providers.push({ name: 'Google-Weather', provider: new GoogleWeatherProvider(key) });
+    } else {
+      logger.warn('GOOGLE_WEATHER_API_KEY is not set; using Open-Meteo for weather');
+    }
+    providers.push({ name: 'Open-Meteo', provider: new OpenMeteoProvider() });
+    _providers = providers;
   }
-  return _provider;
+  return _providers;
+}
+
+/** Try each provider in order and return the first result that passes validation. */
+async function fetchValidatedWeather(
+  lat: number,
+  lon: number,
+): Promise<{ data: z.infer<typeof WeatherResultSchema>; source: string }> {
+  let lastError: unknown;
+  for (const { name, provider } of getProviders()) {
+    try {
+      const raw = await provider.getWeather({ lat, lon });
+      return { data: WeatherResultSchema.parse(raw), source: name };
+    } catch (error) {
+      lastError = error;
+      logger.warn(`Weather provider ${name} failed; trying next provider`, error);
+    }
+  }
+  throw lastError ?? new Error('No weather provider available');
 }
 
 // 4.1 Validate response schema (Sanity Checks)
@@ -113,13 +145,8 @@ export async function GET(request: NextRequest) {
   try {
     const start = Date.now();
 
-    const weatherData = await getProvider().getWeather({
-      lat: roundedLat,
-      lon: roundedLon,
-    });
-
-    // 4.2 Sanity thresholds via Zod
-    const validatedData = WeatherResultSchema.parse(weatherData);
+    // 4.2 Sanity thresholds via Zod (applied per provider inside the fallback chain)
+    const { data: validatedData, source } = await fetchValidatedWeather(roundedLat, roundedLon);
 
     // Update cache
     weatherCache.set(cacheKey, {
@@ -129,7 +156,7 @@ export async function GET(request: NextRequest) {
 
     // Logging for observability (6.1)
     logger.info('Weather fetched successfully', {
-      source: 'Google-Weather',
+      source,
       model: validatedData.modelUsed,
       lat: roundedLat,
       lon: roundedLon,

@@ -11,6 +11,14 @@ vi.mock('@/lib/utils/api', () => ({
   apiRequest: vi.fn(),
 }));
 
+// These tests model a signed-in browser; only the stored-session gate is
+// overridden so the stores' other auth helpers keep their real behaviour.
+const hasStoredBrowserSessionMock = vi.fn().mockResolvedValue(true);
+vi.mock('@/lib/supabase/browserSession', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/lib/supabase/browserSession')>()),
+  hasStoredBrowserSession: () => hasStoredBrowserSessionMock(),
+}));
+
 const apiRequestMock = apiRequest as unknown as ReturnType<typeof vi.fn>;
 
 describe('unitsStore', () => {
@@ -527,6 +535,22 @@ describe('notificationsStore', () => {
     expect(hasLoaded).toBe(true);
     expect(notifications).toHaveLength(1);
     expect(notifications[0].id).toBe(mockNotification.id);
+  });
+
+  it('skips the request entirely when no session is stored (signed-out visitor)', async () => {
+    useNotificationsStore.setState({
+      notifications: [],
+      isLoading: false,
+      hasLoaded: false,
+      lastLoadedAt: null,
+    });
+    apiRequestMock.mockClear();
+    hasStoredBrowserSessionMock.mockResolvedValueOnce(false);
+
+    await useNotificationsStore.getState().loadNotifications({ force: true });
+
+    expect(apiRequestMock).not.toHaveBeenCalled();
+    expect(useNotificationsStore.getState().isLoading).toBe(false);
   });
 
   it('should get unread count', () => {

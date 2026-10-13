@@ -44,6 +44,14 @@ function isRefreshTokenMissingError(error: { message?: string; code?: string | n
   );
 }
 
+/** A signed-out request (no stored session). Expected traffic, not worth a log line. */
+function isSessionMissingError(error: { name?: string; message?: string }): boolean {
+  return (
+    error.name === 'AuthSessionMissingError' ||
+    (error.message || '').toLowerCase().includes('auth session missing')
+  );
+}
+
 /** Matches the deadline the proxy previously used for this same check. */
 const MFA_AAL_DEADLINE_MS = process.env.NODE_ENV === 'development' ? 4000 : 2500;
 
@@ -139,7 +147,7 @@ export const requireAuth = async (
           if (shouldLogTransientAuthError()) {
             console.warn('API auth status: transient upstream issue; treating as unauthenticated');
           }
-        } else {
+        } else if (!isSessionMissingError(error)) {
           console.warn('API auth error:', error.message);
         }
       }
@@ -186,7 +194,7 @@ export const optionalAuth = async (
               'Optional auth status: transient upstream issue; continuing without user context',
             );
           }
-        } else {
+        } else if (!isSessionMissingError(error)) {
           console.warn('Optional auth status:', error.message);
         }
       }
@@ -259,7 +267,7 @@ export const requireAuthWithRateLimit = async (
           if (shouldLogTransientAuthError()) {
             console.warn('API auth status: transient upstream issue; treating as unauthenticated');
           }
-        } else {
+        } else if (!isSessionMissingError(error)) {
           console.warn('API auth error:', error.message);
         }
       }

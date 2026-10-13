@@ -135,7 +135,9 @@ export async function GET(request: Request) {
     const guard = checkSignInProvider(data.user, 'google');
     if (!guard.allowed) {
       try {
-        await supabase.auth.signOut();
+        // Revoke only the session minted by this attempt, not the user's
+        // legitimate sessions on other devices.
+        await supabase.auth.signOut({ scope: 'local' });
       } catch (signOutError) {
         console.warn('Provider-guard signOut failed (non-fatal):', signOutError);
       }
@@ -166,7 +168,7 @@ export async function GET(request: Request) {
   // in explicitly. The `verified=1` flag triggers the green success banner in
   // LoginClient.
   try {
-    await supabase.auth.signOut();
+    await supabase.auth.signOut({ scope: 'local' });
   } catch (signOutError) {
     console.warn('Post-verification signOut failed (non-fatal):', signOutError);
   }

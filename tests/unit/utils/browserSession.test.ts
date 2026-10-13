@@ -60,6 +60,18 @@ describe('browserSession', () => {
     });
   });
 
+  it('treats a missing session as a resolved signed-out state', async () => {
+    // auth-js returns this locally (no network call) when no token is stored.
+    const missing = Object.assign(new Error('Auth session missing!'), {
+      name: 'AuthSessionMissingError',
+    });
+    getUserMock.mockResolvedValue({ data: { user: null }, error: missing });
+
+    const snapshot = await getBrowserAuthSnapshot();
+
+    expect(snapshot).toEqual({ resolution: 'resolved', session: null, user: null });
+  });
+
   it('retries once before confirming a signed-out snapshot', async () => {
     vi.useFakeTimers();
     getUserMock

@@ -9,6 +9,7 @@ import {
 } from '@/lib/services/notificationService';
 import { useNotificationsStore } from '@/lib/store/notificationsStore';
 import { apiRequest } from '@/lib/utils/api';
+import { hasStoredBrowserSession } from '@/lib/supabase/browserSession';
 import { logger } from '@/lib/logger';
 
 export interface NotificationPreferences {
@@ -128,6 +129,13 @@ function isAuthPreferenceError(error: unknown): boolean {
 
 async function loadServerNotificationPreferences(): Promise<ServerNotificationPreferences | null> {
   try {
+    // The scheduler that calls this is mounted in the root layout, so it also
+    // runs on /login and /signup. Skip the request there instead of firing a
+    // guaranteed 401 for every signed-out visitor. After login the page reloads
+    // and useFirstLoginPrompts re-runs initialize() with a session.
+    if (!(await hasStoredBrowserSession())) {
+      return null;
+    }
     return await apiRequest<ServerNotificationPreferences>('/api/user-preferences', {
       method: 'GET',
       noRetry: true,

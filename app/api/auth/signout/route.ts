@@ -5,7 +5,8 @@ import { logger } from '@/lib/logger';
 export async function POST() {
   try {
     const supabase = await createServerClient();
-    const { error } = await supabase.auth.signOut();
+    // Current session only; "sign out everywhere" is POST /api/auth/sessions.
+    const { error } = await supabase.auth.signOut({ scope: 'local' });
 
     if (error) {
       logger.error('Signout error:', error);

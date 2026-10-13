@@ -1,8 +1,18 @@
 import path from 'node:path';
+import { loadEnvConfig } from '@next/env';
 import { defineConfig, devices } from '@playwright/test';
 
 const PORT = Number(process.env.E2E_PORT ?? 3100);
 const baseURL = process.env.E2E_BASE_URL ?? `http://localhost:${PORT}`;
+
+// Authenticated specs must sign in to a real (test) Supabase project, so load
+// the developer's .env.local for those runs. Without this, the placeholder
+// values below would override it and every sign-in would fail. Anonymous runs
+// skip this and keep needing no credentials at all.
+const authenticatedRun = Boolean(process.env.E2E_EMAIL && process.env.E2E_PASSWORD);
+if (authenticatedRun && !process.env.E2E_BASE_URL) {
+  loadEnvConfig(path.resolve(__dirname, '..'), true);
+}
 
 // Without E2E_BASE_URL the suite starts `next dev` with placeholder public
 // Supabase values, so it runs with no production credentials. Authenticated

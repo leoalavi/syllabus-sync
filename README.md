@@ -287,7 +287,7 @@ For Cloudflare packaging, run `npm run cf:build` and `npm run cf:verify-output` 
 - Use a dedicated local or test Supabase project — never production credentials.
 - `npm run build` and `npm run cf:build` can run with dummy public values for `NEXT_PUBLIC_APP_URL`, `NEXT_PUBLIC_SUPABASE_URL`, and `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
 - `npm run test:e2e` uses `config/playwright.config.ts`, starts a local dev server with dummy public Supabase values when `E2E_BASE_URL` is unset, and does not require secrets for anonymous flows.
-- Authenticated Playwright specs are intentionally skipped unless you provide `E2E_EMAIL` and `E2E_PASSWORD` for a disposable test account. `E2E_BASE_URL` is optional when you want to point at an already running non-production environment.
+- Authenticated Playwright specs are intentionally skipped unless you provide `E2E_EMAIL` and `E2E_PASSWORD` for a disposable test account. The account must be email-verified, have no MFA enrolled, and live in the Supabase project your `.env.local` points to (an authenticated run loads it automatically). `E2E_BASE_URL` is optional when you want to point at an already running non-production environment.
 
 ### Dependency audit status
 

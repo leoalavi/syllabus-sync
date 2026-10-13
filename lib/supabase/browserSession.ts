@@ -32,10 +32,30 @@ export async function getBrowserAuthSnapshot(): Promise<BrowserAuthSnapshot> {
   const { data, error } = await supabase.auth.getUser();
 
   if (error) {
+    // With no stored access token, auth-js returns AuthSessionMissingError
+    // locally without a network call. That is a definitive signed-out state,
+    // not an ambiguous one; treating it as 'unknown' meant signed-out visitors
+    // were never detected client-side. Same check as auth-js's
+    // isAuthSessionMissingError(), kept local to avoid a deep import.
+    if (error.name === 'AuthSessionMissingError') {
+      return { session: null, user: null, resolution: 'resolved' };
+    }
     return { session: null, user: null, resolution: 'unknown' };
   }
 
   return { session: null, user: data.user ?? null, resolution: 'resolved' };
+}
+
+/**
+ * Cheap local check for whether any Supabase session is stored in the browser.
+ * Reads cookies only (no network). This is NOT an authorization check, since
+ * the server still validates every request; it exists so signed-out pages can
+ * skip API calls that could only return 401.
+ */
+export async function hasStoredBrowserSession(): Promise<boolean> {
+  if (!isSupabaseConfigured()) return false;
+  const { data } = await createBrowserClient().auth.getSession();
+  return Boolean(data.session);
 }
 
 /**

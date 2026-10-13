@@ -6,9 +6,14 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { useNotificationPreferencesStore } from '@/lib/store/notificationPreferencesStore';
 
 const apiRequestMock = vi.fn();
+const hasStoredBrowserSessionMock = vi.fn().mockResolvedValue(true);
 
 vi.mock('@/lib/utils/api', () => ({
   apiRequest: (...args: unknown[]) => apiRequestMock(...args),
+}));
+
+vi.mock('@/lib/supabase/browserSession', () => ({
+  hasStoredBrowserSession: () => hasStoredBrowserSessionMock(),
 }));
 
 // Mock the notificationService to avoid real browser APIs
@@ -191,6 +196,13 @@ describe('notificationPreferencesStore', () => {
     expect(s.eventsEnabled).toBe(true);
     expect(s.pushEnabled).toBe(false);
     expect(s.deadlineReminderTiming).toBe(30);
+  });
+
+  it('initialize skips the server request when no session is stored', async () => {
+    hasStoredBrowserSessionMock.mockResolvedValueOnce(false);
+    await useNotificationPreferencesStore.getState().initialize();
+    expect(apiRequestMock).not.toHaveBeenCalledWith('/api/user-preferences', expect.anything());
+    expect(useNotificationPreferencesStore.getState().permissionStatus).toBe('default');
   });
 
   // scheduleDeadlineReminder guards

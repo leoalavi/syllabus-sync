@@ -6,6 +6,7 @@ import { API_ROUTES } from '@/lib/constants/config';
 import { Notification } from '@/lib/types';
 import { errorHandler } from '@/lib/utils/errorHandling';
 import { apiRequest, isLikelyNetworkError, isBrowserOffline } from '@/lib/utils/api';
+import { hasStoredBrowserSession } from '@/lib/supabase/browserSession';
 import { toastUtils } from '@/lib/utils/toast';
 import { isValidUUID } from '@/lib/utils/uuid';
 
@@ -74,6 +75,12 @@ export const useNotificationsStore = create<NotificationsState>()((set, get) => 
     // Concurrency guard: skip if another load is already in-flight
     // (prevents a concurrent GET from overwriting just-added notifications)
     if (_loadInFlight && now - _loadStartedAt < LOAD_TIMEOUT_MS) {
+      return;
+    }
+
+    // The layout can mount the Header optimistically before auth resolves, so
+    // a signed-out visitor would otherwise fire a guaranteed 401 here.
+    if (!(await hasStoredBrowserSession())) {
       return;
     }
     _loadInFlight = true;

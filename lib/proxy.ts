@@ -39,6 +39,14 @@ function isRefreshTokenMissingError(error: { message?: string; code?: string | n
   );
 }
 
+/** A signed-out request (no stored session). Expected traffic, not worth a log line. */
+function isSessionMissingError(error: { name?: string; message?: string }): boolean {
+  return (
+    error.name === 'AuthSessionMissingError' ||
+    (error.message || '').toLowerCase().includes('auth session missing')
+  );
+}
+
 /**
  * Next.js 16 Proxy — security headers, session refresh, and route protection.
  */
@@ -259,7 +267,7 @@ export async function proxy(request: NextRequest) {
             if (shouldLogTransientProxyAuthError()) {
               console.warn('Proxy auth status: transient network/auth issue; request continuing');
             }
-          } else {
+          } else if (!isSessionMissingError(error)) {
             console.warn('Proxy auth status:', error.message);
           }
         } else {

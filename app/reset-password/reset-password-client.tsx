@@ -254,7 +254,9 @@ export default function ResetPasswordClient() {
           return;
         }
 
-        await supabase.auth.signOut();
+        // Deliberately global: a password reset must evict every existing
+        // session in case the account was compromised. Do not narrow to 'local'.
+        await supabase.auth.signOut({ scope: 'global' });
         setMode('success');
       } catch {
         setGeneralError(t('unexpectedError'));

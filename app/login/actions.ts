@@ -124,7 +124,8 @@ export async function loginAction(data: LoginFormData): Promise<LoginResult> {
   const guard = checkSignInProvider(signInData?.user ?? null, 'email');
   if (!guard.allowed) {
     try {
-      await supabase.auth.signOut();
+      // Only the session just minted; leave other devices signed in.
+      await supabase.auth.signOut({ scope: 'local' });
     } catch (signOutError) {
       logger.warn('Provider-guard signOut failed (non-fatal)', signOutError);
     }
