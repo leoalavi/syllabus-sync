@@ -224,7 +224,7 @@ Version: 0.5.9 | Last Updated: January 06, 2026
 - No biometric data stored by application (handled by device secure enclave)
 - Implement secure credential registration and verification endpoints
 
-**Frontend Implementation (Pouya):**
+**Frontend Implementation (Leo):**
 
 - Settings → Security → "Enable FaceID / TouchID" toggle
 - Clear security messaging and user education
@@ -345,9 +345,9 @@ Version: 0.5.9 | Last Updated: January 06, 2026
 
 | Tab/Feature      | Owner                             | Status         |
 | ---------------- | --------------------------------- | -------------- |
-| **Home Tab**     | Pouya                             | 🚧 In Progress |
-| **Calendar Tab** | Pouya                             | 🚧 In Progress |
-| **Feed Tab**     | Pouya (50%) + Raouf Abedini (50%) | 🚧 Shared      |
+| **Home Tab**     | Leo                             | 🚧 In Progress |
+| **Calendar Tab** | Leo                             | 🚧 In Progress |
+| **Feed Tab**     | Leo (50%) + Raouf Abedini (50%) | 🚧 Shared      |
 | **Map Tab**      | Raouf Abedini                     | 🚧 In Progress |
 | **Settings Tab** | Raouf Abedini                     | 🚧 In Progress |
 
@@ -380,7 +380,7 @@ Version: 0.5.9 | Last Updated: January 06, 2026
 - 🔒 Security updates and compliance
 - 📊 Analytics and monitoring implementation
 
-### 👨‍💻 Pouya - Frontend Lead & Home/Calendar Owner
+### 👨‍💻 Leo - Frontend Lead & Home/Calendar Owner
 
 **Primary Focus:** Home Tab, Calendar Tab, Feed Tab (Frontend), User Interface, Components, User Experience
 
@@ -541,4 +541,4 @@ Version: 0.5.9 | Last Updated: January 06, 2026
 **Questions?** Contact team leads:
 
 - **Raouf Abedini**: Map Tab, Settings Tab, Backend, Database, API, Infrastructure
-- **Pouya**: Home Tab, Calendar Tab, Frontend, UI/UX, Components, User Experience
+- **Leo**: Home Tab, Calendar Tab, Frontend, UI/UX, Components, User Experience

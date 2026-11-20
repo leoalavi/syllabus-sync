@@ -225,12 +225,12 @@ Current project direction: [README roadmap](../../README.md#roadmap-not-yet-buil
 
 ## Get Started
 
-**Repository:** [github.com/mrpouyaalavi/syllabus-sync](https://github.com/mrpouyaalavi/syllabus-sync)
+**Repository:** [github.com/leoalavi/syllabus-sync](https://github.com/leoalavi/syllabus-sync)
 
 **Quick start:**
 
 ```bash
-git clone https://github.com/mrpouyaalavi/syllabus-sync.git
+git clone https://github.com/leoalavi/syllabus-sync.git
 cd syllabus-sync && npm install && cp .env.example .env.local
 npm run dev
 ```

@@ -528,31 +528,31 @@ Verification: `eslint` and `typecheck` passed.
 
 Raouf: 2026-03-03 (Australia/Sydney)
 Scope: About Page Developer Photos & Roles Update
-Summary: Replaced developer photos with new images and updated roles: Pouya to "Front-End & UI/UX Developer", Raouf to "Back-End & Cyber Security Developer".
-Files: Updated `public/images/team/pouya.jpg`, `public/images/team/raouf.jpg`, `app/about/page.tsx`.
+Summary: Replaced developer photos with new images and updated roles: Leo to "Front-End & UI/UX Developer", Raouf to "Back-End & Cyber Security Developer".
+Files: Updated `public/images/team/leo.jpg`, `public/images/team/raouf.jpg`, `app/about/page.tsx`.
 Verification: Photos replaced and roles updated.
 
 Raouf: 2026-03-03 (Australia/Sydney)
 Scope: About Page Developer Photos Update
 Summary: Replaced developer photos on About page with updated images from Desktop.
-Files: Updated `public/images/team/pouya.jpg`, `public/images/team/raouf.jpg`.
+Files: Updated `public/images/team/leo.jpg`, `public/images/team/raouf.jpg`.
 Verification: Files present and verified.
 
 Raouf: 2026-03-03 (Australia/Sydney)
 Scope: About Page Developer Photos Ordering (Step 2)
-Summary: Added actual developer image assets to public path consumed by About page cards: copied `Pouya.jpeg` -> `public/images/team/pouya.jpg` and `Raouf.jpg` -> `public/images/team/raouf.jpg`, preserving requested display order.
-Files: Added `public/images/team/pouya.jpg`, `public/images/team/raouf.jpg`.
+Summary: Added actual developer image assets to public path consumed by About page cards: copied `Leo.jpeg` -> `public/images/team/leo.jpg` and `Raouf.jpg` -> `public/images/team/raouf.jpg`, preserving requested display order.
+Files: Added `public/images/team/leo.jpg`, `public/images/team/raouf.jpg`.
 Verification: Image files present and readable with expected dimensions.
 
 Raouf: 2026-03-03 (Australia/Sydney)
 Scope: About Page Developer Photos Ordering (Final Verification)
-Summary: Completed ordered developer presentation in About page with two profile slots in the requested sequence: Pouya first, Raouf second. Added responsive photo cards and retained existing About layout structure.
+Summary: Completed ordered developer presentation in About page with two profile slots in the requested sequence: Leo first, Raouf second. Added responsive photo cards and retained existing About layout structure.
 Files: Modified `app/about/page.tsx`.
 Verification: `npx eslint --config config/eslint/eslint.config.mjs app/about/page.tsx` passed; `npm run typecheck` passed.
 
 Raouf: 2026-03-03 (Australia/Sydney)
 Scope: About Page Developer Photos Ordering (Step 1)
-Summary: Added ordered “Our Developers” section to `/about` with two profile cards in requested order: Pouya (first developer) then Raouf (second developer), wired to stable image paths `/images/team/pouya.jpg` and `/images/team/raouf.jpg`.
+Summary: Added ordered “Our Developers” section to `/about` with two profile cards in requested order: Leo (first developer) then Raouf (second developer), wired to stable image paths `/images/team/leo.jpg` and `/images/team/raouf.jpg`.
 Files: Modified `app/about/page.tsx`.
 Verification: Pending.
 

@@ -42,7 +42,7 @@ const DEVELOPERS = [
   {
     name: 'Leo Alavi',
     roleKey: 'about_devRoleFrontend' as TranslationKey,
-    photo: '/images/team/pouya.jpg',
+    photo: '/images/team/leo.jpg',
   },
   {
     name: 'Raouf',

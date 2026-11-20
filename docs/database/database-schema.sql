@@ -53,7 +53,7 @@
 -- ==============
 -- Units are normalized PER USER. The constraint units_user_code_unique UNIQUE(user_id, code)
 -- ensures that each user can have their own "COMP2310" unit without conflicts.
--- This enables complete data isolation: updating Pouya's COMP2310 never affects Kate's.
+-- This enables complete data isolation: updating Leo's COMP2310 never affects Kate's.
 --
 -- IMPORTANT CLARIFICATIONS:
 -- ========================
@@ -77,7 +77,7 @@
 --   - 20260114013519: Add soft deletes, constraints, seed functions
 --   - 20260114014506: Schema cleanup - remove due_at, add FK constraints, sync event timestamps
 --   - 20260114015445: Simplify events - remove event_date/event_time, standardize on start_at/end_at/all_day
---   - 20260119000000: Multi-user demo seed - creates isolated data for Pouya, Raoof, Kate
+--   - 20260119000000: Multi-user demo seed - creates isolated data for Leo, Raoof, Kate
 --   - 20260114000000: Add missing materialized views (analytics, leaderboard, activity)
 
 -- Enable UUID extension

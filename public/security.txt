@@ -2,13 +2,13 @@
 # Last updated: 2026-02-16
 
 Contact: mailto:security@syllabus-sync.dev
-Contact: https://github.com/mrpouyaalavi/syllabus-sync/security/advisories
+Contact: https://github.com/leoalavi/syllabus-sync/security/advisories
 
 Policy: https://syllabus-sync.dev/SECURITY.md
 Canonical: https://syllabus-sync.dev/security.txt
 
 Preferred-Languages: en
 
-Acknowledgments: https://github.com/mrpouyaalavi/syllabus-sync/security/advisories
+Acknowledgments: https://github.com/leoalavi/syllabus-sync/security/advisories
 
 Expires: 2026-12-31T23:59:59Z

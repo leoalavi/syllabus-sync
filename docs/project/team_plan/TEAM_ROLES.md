@@ -11,16 +11,16 @@ Version: 0.5.42
 
 | Tab/Feature        | Owner                     | Status          |
 | ------------------ | ------------------------- | --------------- |
-| **Home Tab**       | Pouya                     | 🚧 In Progress  |
-| **Calendar Tab**   | Pouya                     | 🚧 In Progress  |
-| **Feed Tab**       | Pouya (50%) + Raouf (50%) | 🚧 Shared       |
+| **Home Tab**       | Leo                     | 🚧 In Progress  |
+| **Calendar Tab**   | Leo                     | 🚧 In Progress  |
+| **Feed Tab**       | Leo (50%) + Raouf (50%) | 🚧 Shared       |
 | **Map Tab**        | Raouf                     | 🚧 In Progress  |
 | **Settings Tab**   | Raouf                     | 🚧 In Progress  |
 | **AI Integration** | Kit                       | 🔜 Demo Feature |
 
 ---
 
-## 👤 POUYA - Frontend Developer
+## 👤 LEO - Frontend Developer
 
 ### Role Overview
 
@@ -56,7 +56,7 @@ Responsible for Map tab, Settings tab, half of Feed tab, backend architecture, s
 
 ---
 
-### 📂 Files Pouya Works On (Frontend)
+### 📂 Files Leo Works On (Frontend)
 
 #### **Pages (App Router)**
 
@@ -461,7 +461,7 @@ app/api/
 
 ---
 
-## 🎨 POUYA - Frontend Lead
+## 🎨 LEO - Frontend Lead
 
 ### Role Overview
 Responsible for Home tab, Calendar tab, half of Feed tab (frontend), all user-facing features, UI/UX implementation, component development, state management, and ensuring a responsive, intuitive interface.
@@ -573,7 +573,7 @@ app/api/
 
 ---
 
-### 🎯 Pouya's Completed Tasks ✅
+### 🎯 Leo's Completed Tasks ✅
 
 #### **Phase 1: Core Application Development**
 - [x] Build home dashboard layout with responsive grid
@@ -612,8 +612,8 @@ app/api/
 - [x] **Build System Optimization**: Production-ready compilation, server/client separation
 - [x] **Performance Infrastructure**: Bundle analysis setup, code splitting, caching strategies
 
-#### **🚨 CRITICAL WORKFLOW REMINDER FOR POUYA 🚨**
-Hey Pouya! Don't forget to run `npm run prepush` after every single task you complete! If you skip it, the commit gremlins will sneak into your code and turn all your semicolons into commas! 😈 Run it religiously, or your PRs will be rejected faster than a bad pun at a comedy show! 💀 This is your daily reminder to keep the codebase clean and the CI pipeline happy! 🎉
+#### **🚨 CRITICAL WORKFLOW REMINDER FOR LEO 🚨**
+Hey Leo! Don't forget to run `npm run prepush` after every single task you complete! If you skip it, the commit gremlins will sneak into your code and turn all your semicolons into commas! 😈 Run it religiously, or your PRs will be rejected faster than a bad pun at a comedy show! 💀 This is your daily reminder to keep the codebase clean and the CI pipeline happy! 🎉
 
 #### **Phase 2: Advanced Features & Performance**
 - [x] **Retry Mechanisms**: Automatic error recovery with exponential backoff and configurable options
@@ -682,7 +682,7 @@ Hey Pouya! Don't forget to run `npm run prepush` after every single task you com
 
 ## 📊 Work Distribution Summary
 
-| Category | Pouya (Frontend) | Raouf (Backend) | Kit (AI) |
+| Category | Leo (Frontend) | Raouf (Backend) | Kit (AI) |
 |----------|------------------|-----------------|----------|
 | **Tabs** | Home, Calendar, Feed (50%) | Map, Settings, Feed (50%) | AI Integration |
 | **Pages** | Home, Layout, Error pages, Calendar | Map, Settings | AI Demo features |
@@ -698,7 +698,7 @@ Hey Pouya! Don't forget to run `npm run prepush` after every single task you com
 
 ## 🔄 Workflow
 
-### Pouya's Workflow (Frontend)
+### Leo's Workflow (Frontend)
 1. Design component mockup and user interaction flow
 2. Implement React components with proper TypeScript typing
 3. Connect components to Zustand stores and handle state
@@ -722,7 +722,7 @@ Hey Pouya! Don't forget to run `npm run prepush` after every single task you com
 
 ## 📝 Development Guidelines
 
-### For Pouya (Frontend)
+### For Leo (Frontend)
 - Focus on component reusability
 - Keep components small (< 200 lines)
 - Use Tailwind utility classes
@@ -753,7 +753,7 @@ Hey Pouya! Don't forget to run `npm run prepush` after every single task you com
 
 ### Next Phase: Phase 3 (API Integration & Cloud)
 
-#### Pouya's Focus (Frontend)
+#### Leo's Focus (Frontend)
 - [ ] Supabase authentication UI (login/register forms)
 - [ ] Real-time data synchronization components
 - [ ] Enhanced collaboration features for shared schedules
@@ -773,7 +773,7 @@ Hey Pouya! Don't forget to run `npm run prepush` after every single task you com
 
 ## 📞 Contact & Coordination
 
-**Frontend Lead (Home & Calendar):** Pouya
+**Frontend Lead (Home & Calendar):** Leo
 **Backend Lead (Map & Settings):** Raouf
 **AI Integration Lead:** Kit
 
@@ -814,19 +814,19 @@ Responsible for adding AI capabilities to the web application for the demo prese
 ## ✅ Phase Completion Checklist
 
 ### Phase 1 ✅ (Complete - Core Application & Quality)
-- [x] **Pouya**: Complete home dashboard with units management
-- [x] **Pouya**: Calendar page with deadline management
-- [x] **Pouya**: All UI components, forms, and user interactions
-- [x] **Pouya**: State management and component testing
+- [x] **Leo**: Complete home dashboard with units management
+- [x] **Leo**: Calendar page with deadline management
+- [x] **Leo**: All UI components, forms, and user interactions
+- [x] **Leo**: State management and component testing
 - [x] **Raouf**: TypeScript architecture and type safety
 - [x] **Raouf**: Build system and configuration setup
 - [x] **Raouf**: Sample data creation and utility functions
 - [x] **Both**: Cross-page navigation and integration testing
 
 ### Phase 2 ✅ (Complete - Advanced Features & Polish)
-- [x] **Pouya**: UI polish, mobile responsiveness, accessibility
-- [x] **Pouya**: Component optimization and performance enhancements
-- [x] **Pouya**: Dark mode UI integration and theme consistency
+- [x] **Leo**: UI polish, mobile responsiveness, accessibility
+- [x] **Leo**: Component optimization and performance enhancements
+- [x] **Leo**: Dark mode UI integration and theme consistency
 - [x] **Raouf**: Enterprise error handling and retry systems
 - [x] **Raouf**: Service worker and offline support
 - [x] **Raouf**: Toast notification system and user feedback
@@ -834,8 +834,8 @@ Responsible for adding AI capabilities to the web application for the demo prese
 - [x] **Both**: Quality assurance and final integration testing
 
 ### Phase 3 🚧 (Next - API Integration & Cloud)
-- [ ] **Pouya**: Home tab enhancements and Calendar tab integration with real-time data
-- [ ] **Pouya**: Feed tab frontend (UI components, filtering, display)
+- [ ] **Leo**: Home tab enhancements and Calendar tab integration with real-time data
+- [ ] **Leo**: Feed tab frontend (UI components, filtering, display)
 - [ ] **Raouf**: Map tab development and Settings tab functionality
 - [ ] **Raouf**: Feed tab backend (API, data architecture, filtering logic)
 - [ ] **Raouf**: Database schema design and API implementation
