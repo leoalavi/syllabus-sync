@@ -21,6 +21,22 @@ import { randomBase64 } from './edge-crypto';
  * Generate a cryptographically random nonce for CSP.
  * Used by middleware.ts to create a per-request nonce.
  */
+/**
+ * Sylla's origin, allowed as a frame source so the bottom-right Sylla panel
+ * (components/sylla/SyllaLauncher.tsx) can show its /embed page. Empty when
+ * NEXT_PUBLIC_SYLLA_URL is unset or not an http(s) URL.
+ */
+export function syllaFrameSource(): string {
+  const raw = process.env.NEXT_PUBLIC_SYLLA_URL?.trim();
+  if (!raw) return '';
+  try {
+    const url = new URL(raw);
+    return url.protocol === 'https:' || url.protocol === 'http:' ? ` ${url.origin}` : '';
+  } catch {
+    return '';
+  }
+}
+
 export function generateNonce(): string {
   return randomBase64(16);
 }
@@ -62,7 +78,7 @@ export function buildNonceCSP(nonce: string): string {
     `connect-src 'self' https://*.supabase.co wss://*.supabase.co https://weather.googleapis.com https://maps.googleapis.com https://routes.googleapis.com https://places.googleapis.com https://maps.gstatic.com https://*.sentry.io${isDev ? ' ws://localhost:* ws://127.0.0.1:*' : ''}`,
 
     // Frame sources retained for conservative compatibility with external content.
-    "frame-src 'self' https://www.google.com https://maps.google.com",
+    `frame-src 'self' https://www.google.com https://maps.google.com${syllaFrameSource()}`,
 
     // Frame ancestors: prevent clickjacking
     "frame-ancestors 'self'",
@@ -185,7 +201,7 @@ export function buildCSP(options: CSPOptions = {}): string {
     "frame-ancestors 'self'",
 
     // Frame sources: kept for conservative compatibility
-    "frame-src 'self' https://www.google.com https://maps.google.com",
+    `frame-src 'self' https://www.google.com https://maps.google.com${syllaFrameSource()}`,
 
     // Base URI: Restrict base tag
     "base-uri 'self'",
@@ -233,7 +249,7 @@ export function buildDevCSP(): string {
     // Frame ancestors
     "frame-ancestors 'self'",
     // Frame sources
-    "frame-src 'self' https://www.google.com https://maps.google.com",
+    `frame-src 'self' https://www.google.com https://maps.google.com${syllaFrameSource()}`,
     // Base URI
     "base-uri 'self'",
     // Form actions (Google OAuth may POST back)
@@ -275,7 +291,7 @@ export function buildProdCSP(): string {
     // Frame ancestors: Prevent clickjacking
     "frame-ancestors 'self'",
     // Frame sources: allow Google Maps embed
-    "frame-src 'self' https://www.google.com https://maps.google.com",
+    `frame-src 'self' https://www.google.com https://maps.google.com${syllaFrameSource()}`,
     // Base URI: Restrict base tag
     "base-uri 'self'",
     // Form actions: Where forms can submit (Google OAuth may POST back)

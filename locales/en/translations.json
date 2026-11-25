@@ -2440,5 +2440,13 @@
   "syllaAssistant": "Sylla AI Study Assistant",
   "syllaCardDescription": "Turn study material into summaries, flashcards, quizzes, and study plans.",
   "syllaOpen": "Open Sylla",
-  "syllaOpenAria": "Open Sylla AI Study Assistant in a new tab"
+  "syllaOpenAria": "Open Sylla AI Study Assistant in a new tab",
+  "campusNavHandoffTitle": "Navigate with Campus Navigation",
+  "campusNavHandoffDesc": "Our campus wayfinding app gives step-by-step walking directions. The mobile app is coming soon; you can use the web version now.",
+  "campusNavAppComingSoon": "iOS and Android app coming soon",
+  "campusNavOpenWeb": "Open Campus Navigation on the web",
+  "campusNavOrUseHere": "Or stay in Syllabus Sync:",
+  "syllaAsk": "Ask Sylla",
+  "syllaNewChat": "New chat",
+  "syllaClose": "Close Sylla"
 }

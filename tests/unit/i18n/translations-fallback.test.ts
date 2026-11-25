@@ -23,6 +23,14 @@ const MISSING_COMPANION_KEYS = [
   'syllaCardDescription',
   'syllaOpen',
   'syllaOpenAria',
+  'campusNavHandoffTitle',
+  'campusNavHandoffDesc',
+  'campusNavAppComingSoon',
+  'campusNavOpenWeb',
+  'campusNavOrUseHere',
+  'syllaAsk',
+  'syllaNewChat',
+  'syllaClose',
 ] as const satisfies readonly (keyof typeof en)[];
 
 const NON_ENGLISH_LANGUAGES = SUPPORTED_LANGUAGES.filter(
@@ -31,7 +39,7 @@ const NON_ENGLISH_LANGUAGES = SUPPORTED_LANGUAGES.filter(
 
 describe('translation fallback', () => {
   it.each(NON_ENGLISH_LANGUAGES)(
-    'returns reviewed English text for the 12 companion keys missing from %s',
+    'returns reviewed English text for the 20 companion keys missing from %s',
     async (lang) => {
       const loaded = await loadTranslations(lang);
 
@@ -43,7 +51,7 @@ describe('translation fallback', () => {
     },
   );
 
-  it('keeps untranslated locales aligned with the documented 12-key fallback set', async () => {
+  it('keeps untranslated locales aligned with the documented 20-key fallback set', async () => {
     for (const lang of NON_ENGLISH_LANGUAGES) {
       const localePath = path.join(process.cwd(), 'locales', lang, 'translations.json');
       const locale = JSON.parse(readFileSync(localePath, 'utf8')) as Partial<typeof en>;

@@ -3,6 +3,7 @@
 import React, { useEffect, useState, memo, useCallback, useRef } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Sidebar from '@/components/layout/Sidebar';
+import { SyllaLauncher } from '@/components/sylla/SyllaLauncher';
 import Header from '@/components/layout/Header';
 import AppFooter from '@/components/layout/AppFooter';
 import ThemeProvider from '@/components/theme/ThemeProvider';
@@ -288,12 +289,13 @@ function ClientLayoutComponent({ children }: { children: React.ReactNode }) {
             </main>
             <AppFooter />
             <OfflineIndicator />
+            <SyllaLauncher />
 
             {/* PWA Install Prompt */}
             {canInstall && (
               <div
                 role="alert"
-                className="fixed bottom-4 right-4 z-50 max-w-sm rounded-mq-lg border border-mq-border bg-mq-card-background p-4 shadow-mq-lg animate-in slide-in-from-bottom-4 fade-in"
+                className="fixed bottom-4 left-4 right-20 z-50 max-w-sm rounded-mq-lg md:left-16 md:right-auto border border-mq-border bg-mq-card-background p-4 shadow-mq-lg animate-in slide-in-from-bottom-4 fade-in"
               >
                 <p className="text-sm font-medium text-mq-content">{t('installApp')}</p>
                 <p className="mt-1 text-xs text-mq-content-secondary">{t('installAppDesc')}</p>

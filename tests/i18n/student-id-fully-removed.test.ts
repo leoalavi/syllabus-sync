@@ -84,6 +84,16 @@ describe('BA-0050: nothing should still reference a student ID', () => {
       'syllaCardDescription',
       'syllaOpen',
       'syllaOpenAria',
+      // Added with the Sylla panel and Campus Navigation handoff in November
+      // 2026; English-only until translated.
+      'campusNavHandoffTitle',
+      'campusNavHandoffDesc',
+      'campusNavAppComingSoon',
+      'campusNavOpenWeb',
+      'campusNavOrUseHere',
+      'syllaAsk',
+      'syllaNewChat',
+      'syllaClose',
     ]);
 
     for (const locale of await localeDirs()) {
@@ -95,13 +105,18 @@ describe('BA-0050: nothing should still reference a student ID', () => {
     }
   });
 
-  it('still holds the known English-only set at exactly 12 keys', async () => {
+  it('still holds the known English-only set at exactly 20 keys', async () => {
     // If this number moves, the allowance above has started hiding new drift
     // rather than documenting a known one.
     const english = new Set(Object.keys(await translations('en')));
     const other = new Set(Object.keys(await translations('ar')));
     expect([...english].filter((k) => !other.has(k)).sort()).toEqual([
       'campus',
+      'campusNavAppComingSoon',
+      'campusNavHandoffDesc',
+      'campusNavHandoffTitle',
+      'campusNavOpenWeb',
+      'campusNavOrUseHere',
       'campusSupportNotice',
       'campusSupportSubtitle',
       'mqNavCompanionCta',
@@ -109,8 +124,11 @@ describe('BA-0050: nothing should still reference a student ID', () => {
       'mqNavCompanionDesc',
       'mqNavCompanionStatus',
       'mqNavCompanionTitle',
+      'syllaAsk',
       'syllaAssistant',
       'syllaCardDescription',
+      'syllaClose',
+      'syllaNewChat',
       'syllaOpen',
       'syllaOpenAria',
     ]);

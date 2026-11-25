@@ -4,20 +4,48 @@
     {
       "name": "main-app",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
       "port": 3000
     },
     {
       "name": "info-site",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["--prefix", "syllabus-sync-info-site", "run", "dev"],
+      "runtimeArgs": [
+        "--prefix",
+        "syllabus-sync-info-site",
+        "run",
+        "dev"
+      ],
       "port": 3001
     },
     {
       "name": "sylla",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["--prefix", "../Sylla", "run", "dev", "--", "-p", "3002"],
+      "runtimeArgs": [
+        "--prefix",
+        "../Sylla",
+        "run",
+        "dev",
+        "--",
+        "-p",
+        "3002"
+      ],
       "port": 3002
+    },
+    {
+      "name": "campus-nav-web",
+      "runtimeExecutable": "/usr/bin/python3",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "3003",
+        "--directory",
+        "../campus-navigation/build/web"
+      ],
+      "port": 3003
     }
   ]
 }

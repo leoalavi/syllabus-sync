@@ -1,7 +1,5 @@
 'use client';
 
-import { useState, useEffect, useSyncExternalStore } from 'react';
-import { createPortal } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import TodaySchedule from '@/features/home/components/TodaySchedule';
 import UpcomingDeadlines from '@/features/home/components/UpcomingDeadlines';
@@ -11,7 +9,7 @@ import { WelcomeHeader } from '@/features/home/components/WelcomeHeader';
 import UnitCard from '@/components/units/UnitCard';
 import { useTypedTranslation } from '@/lib/hooks/useTypedTranslation';
 import { ScrollReveal, revealChildVariants } from '@/components/ui/ScrollReveal';
-import { LazyMotion, m, domAnimation, AnimatePresence } from 'framer-motion';
+import { LazyMotion, m, domAnimation } from 'framer-motion';
 
 import { DEMO_USER } from '@/lib/config';
 import {
@@ -26,6 +24,12 @@ import {
   ListTodo,
 } from 'lucide-react';
 import { Button } from '@/components/ui/mq/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/mq/badge';
 import { CardContent, CardHeader, CardTitle } from '@/components/ui/mq/card';
 import Link from 'next/link';
@@ -48,9 +52,6 @@ interface HomeClientProps {
   initialUser?: AuthUser | null;
 }
 
-// document.body never changes, so there is nothing to subscribe to.
-const subscribeToNothing = () => () => {};
-
 export default function HomeClient({ initialUser = null }: HomeClientProps) {
   const { t } = useTypedTranslation();
   const router = useRouter();
@@ -64,31 +65,6 @@ export default function HomeClient({ initialUser = null }: HomeClientProps) {
   // Reads a sessionStorage flag set by login success handlers; no-op otherwise.
   useFirstLoginPrompts();
 
-  const [fabOpen, setFabOpen] = useState(false);
-  // Portal target is always document.body on the client. React's hydration
-  // algorithm does not compare portal content at the component's mount point
-  // (portals are teleported outside the tree), so the server/client difference
-  // here is safe — no hydration mismatch is produced.
-  // Hydration-safe: the server snapshot (null) is used while hydrating, so the
-  // first client render matches the server HTML; React then switches to
-  // document.body. A render-time `typeof document` check made the client
-  // render a portal the server never had, causing a hydration error.
-  const portalTarget = useSyncExternalStore(
-    subscribeToNothing,
-    () => document.body,
-    () => null,
-  );
-
-  // Close FAB menu on Escape key
-  useEffect(() => {
-    if (!fabOpen) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setFabOpen(false);
-    };
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [fabOpen]);
-
   const handleQuickCalendarAction = (target: CalendarIntentTarget) => {
     queueCalendarIntent({
       target,
@@ -96,8 +72,17 @@ export default function HomeClient({ initialUser = null }: HomeClientProps) {
       autoOpenForm: true,
     });
     router.push('/calendar');
-    setFabOpen(false);
   };
+
+  // Quick add lives in the header; the bottom-right corner belongs to the
+  // Sylla assistant (components/sylla/SyllaLauncher.tsx), shown on every page.
+  const quickAddItems: { target: CalendarIntentTarget; label: string; Icon: typeof Plus }[] = [
+    { target: 'unit', label: t('addUnitClass'), Icon: BookOpen },
+    { target: 'exam', label: t('addExam'), Icon: GraduationCap },
+    { target: 'assignment', label: t('addAssignment'), Icon: FileText },
+    { target: 'event', label: t('addEvent'), Icon: Calendar },
+    { target: 'reminder', label: t('addTodo'), Icon: ListTodo },
+  ];
 
   if (hasError) {
     return (
@@ -129,8 +114,33 @@ export default function HomeClient({ initialUser = null }: HomeClientProps) {
       >
         {/* Header */}
         <ScrollReveal>
-          <header className="mb-6" role="banner">
-            <WelcomeHeader name={displayName} fallbackName={DEMO_USER.name} />
+          <header
+            className="mb-6 flex flex-wrap items-start justify-between gap-3"
+            role="banner"
+          >
+            <div className="min-w-0 flex-1">
+              <WelcomeHeader name={displayName} fallbackName={DEMO_USER.name} />
+            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button className="shrink-0 gap-2" data-testid="home-quick-add">
+                  <Plus className="h-4 w-4" aria-hidden="true" />
+                  {t('quickActions')}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {quickAddItems.map(({ target, label, Icon }) => (
+                  <DropdownMenuItem
+                    key={target}
+                    onSelect={() => handleQuickCalendarAction(target)}
+                    className="gap-2"
+                  >
+                    <Icon className="h-4 w-4" aria-hidden="true" />
+                    {label}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </header>
         </ScrollReveal>
 
@@ -308,118 +318,6 @@ export default function HomeClient({ initialUser = null }: HomeClientProps) {
           </ScrollReveal>
         </section>
 
-        {/* Floating Action Button (FAB) - sticky via fixed + portal to escape overflow clipping */}
-        {portalTarget &&
-          createPortal(
-            <>
-              {/* Backdrop — click outside to close menu (sibling to FAB for correct z-stacking) */}
-              <AnimatePresence>
-                {fabOpen && (
-                  <m.div
-                    key="fab-backdrop"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="fixed inset-0 z-[998]"
-                    onClick={() => setFabOpen(false)}
-                    aria-hidden="true"
-                  />
-                )}
-              </AnimatePresence>
-
-              {/* FAB Container */}
-              <div
-                className="fixed z-[999]"
-                style={{
-                  bottom: 'calc(1.5rem + env(safe-area-inset-bottom, 0px))',
-                  right: 'calc(1.5rem + env(safe-area-inset-right, 0px))',
-                }}
-              >
-                <div className="relative">
-                  {/* FAB Menu */}
-                  <AnimatePresence>
-                    {fabOpen && (
-                      <m.div
-                        key="fab-menu"
-                        id="fab-menu"
-                        role="menu"
-                        initial={{ opacity: 0, y: 20, scale: 0.8 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: 20, scale: 0.8 }}
-                        transition={{ duration: 0.2 }}
-                        className="absolute bottom-14 sm:bottom-16 right-0 flex flex-col gap-2 items-end"
-                      >
-                        <Button
-                          size="sm"
-                          variant="secondary"
-                          role="menuitem"
-                          className="shadow-lg flex items-center gap-2 whitespace-nowrap"
-                          onClick={() => handleQuickCalendarAction('unit')}
-                        >
-                          <BookOpen className="h-4 w-4 text-mq-content" aria-hidden="true" />
-                          {t('addUnitClass')}
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="secondary"
-                          role="menuitem"
-                          className="shadow-lg flex items-center gap-2 whitespace-nowrap"
-                          onClick={() => handleQuickCalendarAction('exam')}
-                        >
-                          <GraduationCap className="h-4 w-4 text-mq-content" aria-hidden="true" />
-                          {t('addExam')}
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="secondary"
-                          role="menuitem"
-                          className="shadow-lg flex items-center gap-2 whitespace-nowrap"
-                          onClick={() => handleQuickCalendarAction('assignment')}
-                        >
-                          <FileText className="h-4 w-4 text-mq-content" aria-hidden="true" />
-                          {t('addAssignment')}
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="secondary"
-                          role="menuitem"
-                          className="shadow-lg flex items-center gap-2 whitespace-nowrap"
-                          onClick={() => handleQuickCalendarAction('event')}
-                        >
-                          <Calendar className="h-4 w-4 text-mq-content" aria-hidden="true" />
-                          {t('addEvent')}
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="secondary"
-                          role="menuitem"
-                          className="shadow-lg flex items-center gap-2 whitespace-nowrap"
-                          onClick={() => handleQuickCalendarAction('reminder')}
-                        >
-                          <ListTodo className="h-4 w-4 text-mq-content" aria-hidden="true" />
-                          {t('addTodo')}
-                        </Button>
-                      </m.div>
-                    )}
-                  </AnimatePresence>
-
-                  {/* Main FAB Button — responsive: 48px mobile, 56px desktop */}
-                  <Button
-                    className="h-12 w-12 sm:h-14 sm:w-14 rounded-full shadow-lg hover:shadow-xl p-0"
-                    onClick={() => setFabOpen(!fabOpen)}
-                    aria-expanded={fabOpen}
-                    aria-controls="fab-menu"
-                    aria-label={t('quickActions')}
-                  >
-                    <m.div animate={{ rotate: fabOpen ? 45 : 0 }} transition={{ duration: 0.2 }}>
-                      <Plus className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden="true" />
-                    </m.div>
-                  </Button>
-                </div>
-              </div>
-            </>,
-            portalTarget,
-          )}
       </section>
     </LazyMotion>
   );
