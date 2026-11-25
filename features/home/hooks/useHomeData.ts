@@ -14,11 +14,11 @@ export function useHomeData() {
   const initialLoadDone = useRef(false);
 
   const units = useUnitsStore((state) => state.units);
-  const forceRefreshUnits = useUnitsStore((state) => state.forceRefresh);
+  const revalidateUnits = useUnitsStore((state) => state.revalidate);
 
-  const forceRefreshDeadlines = useDeadlinesStore((state) => state.forceRefresh);
-  const forceRefreshTodos = useTodosStore((state) => state.forceRefresh);
-  const forceRefreshEvents = useEventsStore((state) => state.forceRefresh);
+  const revalidateDeadlines = useDeadlinesStore((state) => state.revalidate);
+  const revalidateTodos = useTodosStore((state) => state.revalidate);
+  const revalidateEvents = useEventsStore((state) => state.revalidate);
   const fetchProfile = useProfilesStore((state) => state.fetchProfile);
   const loadGamification = useGamificationStore((state) => state.loadProfile);
 
@@ -27,19 +27,19 @@ export function useHomeData() {
     if (hasHydrated && !initialLoadDone.current) {
       initialLoadDone.current = true;
       // Fire all fetches concurrently for fastest possible load
-      forceRefreshUnits();
-      forceRefreshDeadlines();
-      forceRefreshTodos();
-      forceRefreshEvents();
+      revalidateUnits();
+      revalidateDeadlines();
+      revalidateTodos();
+      revalidateEvents();
       fetchProfile();
       loadGamification();
     }
   }, [
     hasHydrated,
-    forceRefreshUnits,
-    forceRefreshDeadlines,
-    forceRefreshTodos,
-    forceRefreshEvents,
+    revalidateUnits,
+    revalidateDeadlines,
+    revalidateTodos,
+    revalidateEvents,
     fetchProfile,
     loadGamification,
   ]);
@@ -53,11 +53,11 @@ export function useHomeData() {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event: string) => {
       if (event === 'SIGNED_IN') {
-        // Force refresh all data after sign-in
-        forceRefreshUnits();
-        forceRefreshDeadlines();
-        forceRefreshTodos();
-        forceRefreshEvents();
+        // Refresh all data after sign-in (shares any request already in flight)
+        revalidateUnits();
+        revalidateDeadlines();
+        revalidateTodos();
+        revalidateEvents();
         fetchProfile();
         loadGamification();
       }
@@ -65,10 +65,10 @@ export function useHomeData() {
 
     return () => subscription.unsubscribe();
   }, [
-    forceRefreshUnits,
-    forceRefreshDeadlines,
-    forceRefreshTodos,
-    forceRefreshEvents,
+    revalidateUnits,
+    revalidateDeadlines,
+    revalidateTodos,
+    revalidateEvents,
     fetchProfile,
     loadGamification,
   ]);

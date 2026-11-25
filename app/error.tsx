@@ -2,6 +2,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { reloadOnceForChunkError } from '@/lib/utils/chunkErrorRecovery';
 import { AlertTriangle, RefreshCcw, Home } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/mq/button';
@@ -18,6 +19,8 @@ export default function Error({
   const { t } = useTypedTranslation();
 
   useEffect(() => {
+    // A stale chunk after a deploy only recovers with a full reload.
+    if (reloadOnceForChunkError(error)) return;
     // Log to local error handler
     errorHandler.logError(error, 'App Error Boundary', 'high');
   }, [error]);

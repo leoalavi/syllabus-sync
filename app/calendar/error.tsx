@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { reloadOnceForChunkError } from '@/lib/utils/chunkErrorRecovery';
 import { AlertTriangle, RefreshCcw } from 'lucide-react';
 import { Button } from '@/components/ui/mq/button';
 import { errorHandler } from '@/lib/utils/errorHandling';
@@ -16,6 +17,8 @@ export default function CalendarError({
   const { t } = useTypedTranslation();
 
   useEffect(() => {
+    // A stale chunk after a deploy only recovers with a full reload.
+    if (reloadOnceForChunkError(error)) return;
     errorHandler.logError(error, 'Calendar Error Boundary', 'high');
   }, [error]);
 

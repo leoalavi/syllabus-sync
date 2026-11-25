@@ -29,6 +29,7 @@ import { apiRequest } from '@/lib/utils/api';
 import { API_ROUTES } from '@/lib/constants/config';
 import SyncConflictDialog from '@/components/sync/SyncConflictDialog';
 import { isRunningAsPWA } from '@/lib/utils/pwa';
+import { isValidRedirect } from '@/lib/utils/redirect';
 
 const AUTH_ROUTES = ['/login', '/signup', '/reset-password'] as const;
 const PUBLIC_ROUTES = ['/terms', '/privacy', '/verify', '/about', '/contact'] as const;
@@ -133,7 +134,14 @@ function ClientLayoutComponent({ children }: { children: React.ReactNode }) {
         pathname.startsWith('/reset-password') && searchParams?.has('code');
 
       if (authenticated && isAuthRoute && !isMfaUpgradeUrl && !isPasswordResetFlow) {
-        router.push('/home');
+        // Mirror the proxy: honour a validated redirectTo (e.g. back to Sylla).
+        const requested = pathname.startsWith('/login') ? searchParams?.get('redirectTo') : null;
+        const target = isValidRedirect(requested ?? null) ? requested! : '/home';
+        if (target.startsWith('/')) {
+          router.push(target);
+        } else {
+          window.location.assign(target);
+        }
       }
 
       // Redirect unauthenticated users from protected routes to login

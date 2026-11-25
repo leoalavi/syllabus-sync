@@ -1,6 +1,7 @@
 'use client'; // Error components must be Client Components
 
 import { useEffect } from 'react';
+import { reloadOnceForChunkError } from '@/lib/utils/chunkErrorRecovery';
 import { Button } from '@/components/ui/mq/button';
 import { AlertTriangle, RefreshCcw } from 'lucide-react';
 import { logger } from '@/lib/logger';
@@ -15,6 +16,8 @@ export default function Error({
 }) {
   const { t } = useTypedTranslation();
   useEffect(() => {
+    // A stale chunk after a deploy only recovers with a full reload.
+    if (reloadOnceForChunkError(error)) return;
     // Log the error to your observability service (e.g., Sentry)
     logger.error('Profile Page Crash:', error);
   }, [error]);

@@ -14,6 +14,8 @@ interface TodosState {
   hasLoaded: boolean;
   loadTodos: () => Promise<void>;
   forceRefresh: () => Promise<void>;
+  /** Refetch for a page mount/sign-in, sharing any request already in flight. */
+  revalidate: () => Promise<void>;
   addTodo: (todo: Omit<Todo, 'id' | 'createdAt' | 'completed'>) => Promise<Todo | null>;
   removeTodo: (id: string) => Promise<void>;
   updateTodo: (id: string, todo: Partial<Todo>) => Promise<Todo | null>;
@@ -51,6 +53,20 @@ const shouldSyncTodos = async (): Promise<boolean> => {
   }
 };
 
+// One shared in-flight GET. Home/Calendar mount several components that each
+// ask for this data in the same render pass; without this they each fired an
+// identical request. Mutation recovery still calls forceRefresh() directly,
+// which always fetches, so it never receives a pre-mutation response.
+let pendingRequest: Promise<void> | null = null;
+function shareRequest(run: () => Promise<void>): Promise<void> {
+  if (!pendingRequest) {
+    pendingRequest = run().finally(() => {
+      pendingRequest = null;
+    });
+  }
+  return pendingRequest;
+}
+
 export const useTodosStore = create<TodosState>()(
   persist(
     (set, get) => ({
@@ -58,51 +74,55 @@ export const useTodosStore = create<TodosState>()(
       isLoading: false,
       hasLoaded: false,
 
-      loadTodos: async () => {
-        if (get().hasLoaded) return;
-        set({ isLoading: true });
-        try {
-          const data = await apiRequest<Todo[]>('/api/todos', {
-            noRetry: true,
-          });
-          const validData = data.map(normalizeTodo).filter((t) => {
-            if (!isValidUUID(t.id)) {
-              console.warn(`Filtered out invalid todo ID from API: ${t.id}`);
-              return false;
+      loadTodos: () => {
+        if (get().hasLoaded) return Promise.resolve();
+        return shareRequest(async () => {
+          set({ isLoading: true });
+          try {
+            const data = await apiRequest<Todo[]>('/api/todos', {
+              noRetry: true,
+            });
+            const validData = data.map(normalizeTodo).filter((t) => {
+              if (!isValidUUID(t.id)) {
+                console.warn(`Filtered out invalid todo ID from API: ${t.id}`);
+                return false;
+              }
+              return true;
+            });
+
+            set({ todos: validData, hasLoaded: true });
+          } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            const isAuthError =
+              errorMessage.includes('401') ||
+              errorMessage.includes('authentication') ||
+              errorMessage.includes('Unauthorized');
+
+            const isTableMissing =
+              errorMessage.includes('schema cache') ||
+              errorMessage.includes('todos table') ||
+              errorMessage.includes('42P01');
+
+            if (isAuthError) {
+              // Auth failure: clear persisted data to prevent showing stale user data
+              set({ todos: [], hasLoaded: true });
+            } else if (isTableMissing) {
+              // Table missing: log helpful message but continue with local data
+              console.warn(
+                'Todos table not found in database. To enable cloud sync, run: npx supabase db push',
+              );
+              set({ hasLoaded: true });
+            } else {
+              console.warn('Failed to load todos from API:', error);
+              set({ hasLoaded: true });
             }
-            return true;
-          });
-
-          set({ todos: validData, hasLoaded: true });
-        } catch (error) {
-          const errorMessage = error instanceof Error ? error.message : String(error);
-          const isAuthError =
-            errorMessage.includes('401') ||
-            errorMessage.includes('authentication') ||
-            errorMessage.includes('Unauthorized');
-
-          const isTableMissing =
-            errorMessage.includes('schema cache') ||
-            errorMessage.includes('todos table') ||
-            errorMessage.includes('42P01');
-
-          if (isAuthError) {
-            // Auth failure: clear persisted data to prevent showing stale user data
-            set({ todos: [], hasLoaded: true });
-          } else if (isTableMissing) {
-            // Table missing: log helpful message but continue with local data
-            console.warn(
-              'Todos table not found in database. To enable cloud sync, run: npx supabase db push',
-            );
-            set({ hasLoaded: true });
-          } else {
-            console.warn('Failed to load todos from API:', error);
-            set({ hasLoaded: true });
+          } finally {
+            set({ isLoading: false });
           }
-        } finally {
-          set({ isLoading: false });
-        }
+        });
       },
+
+      revalidate: () => shareRequest(() => get().forceRefresh()),
 
       // Force refresh from database - clears hasLoaded and reloads
       forceRefresh: async () => {

@@ -8,20 +8,20 @@ import { createBrowserClient, isSupabaseConfigured } from '@/lib/supabase/client
 
 export function useCalendarData() {
   const deadlines = useDeadlinesStore((state) => state.deadlines);
-  const forceRefreshDeadlines = useDeadlinesStore((state) => state.forceRefresh);
+  const revalidateDeadlines = useDeadlinesStore((state) => state.revalidate);
   const removeDeadline = useDeadlinesStore((state) => state.removeDeadline);
   const removeDeadlinesByUnit = useDeadlinesStore((state) => state.removeDeadlinesByUnit);
 
   const userEvents = useEventsStore((state) => state.events);
-  const forceRefreshEvents = useEventsStore((state) => state.forceRefresh);
+  const revalidateEvents = useEventsStore((state) => state.revalidate);
   const removeEvent = useEventsStore((state) => state.removeEvent);
 
   const units = useUnitsStore((state) => state.units);
-  const forceRefreshUnits = useUnitsStore((state) => state.forceRefresh);
+  const revalidateUnits = useUnitsStore((state) => state.revalidate);
   const removeUnit = useUnitsStore((state) => state.removeUnit);
 
   const todos = useTodosStore((state) => state.todos);
-  const forceRefreshTodos = useTodosStore((state) => state.forceRefresh);
+  const revalidateTodos = useTodosStore((state) => state.revalidate);
   const addTodo = useTodosStore((state) => state.addTodo);
   const removeTodo = useTodosStore((state) => state.removeTodo);
   const updateTodo = useTodosStore((state) => state.updateTodo);
@@ -29,22 +29,16 @@ export function useCalendarData() {
   const hasHydrated = useHydration();
   const initialLoadDone = useRef(false);
 
-  // Load all data from database on mount - use forceRefresh for fresh data
+  // Refresh all data from the database on mount (concurrent requests are shared)
   useEffect(() => {
     if (hasHydrated && !initialLoadDone.current) {
       initialLoadDone.current = true;
-      forceRefreshUnits();
-      forceRefreshDeadlines();
-      forceRefreshEvents();
-      forceRefreshTodos();
+      revalidateUnits();
+      revalidateDeadlines();
+      revalidateEvents();
+      revalidateTodos();
     }
-  }, [
-    hasHydrated,
-    forceRefreshUnits,
-    forceRefreshDeadlines,
-    forceRefreshEvents,
-    forceRefreshTodos,
-  ]);
+  }, [hasHydrated, revalidateUnits, revalidateDeadlines, revalidateEvents, revalidateTodos]);
 
   // Listen for auth state changes and refresh data on sign-in
   useEffect(() => {
@@ -55,16 +49,16 @@ export function useCalendarData() {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event: string) => {
       if (event === 'SIGNED_IN') {
-        // Force refresh all data after sign-in
-        forceRefreshUnits();
-        forceRefreshDeadlines();
-        forceRefreshEvents();
-        forceRefreshTodos();
+        // Refresh all data after sign-in (shares any request already in flight)
+        revalidateUnits();
+        revalidateDeadlines();
+        revalidateEvents();
+        revalidateTodos();
       }
     });
 
     return () => subscription.unsubscribe();
-  }, [forceRefreshUnits, forceRefreshDeadlines, forceRefreshEvents, forceRefreshTodos]);
+  }, [revalidateUnits, revalidateDeadlines, revalidateEvents, revalidateTodos]);
 
   // Listen for unit-deleted events to cascade delete deadlines
   const handleUnitDeleted = useCallback(

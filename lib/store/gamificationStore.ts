@@ -95,6 +95,11 @@ const DEFAULT_PROFILE: GamificationProfile = {
 // STORE
 // ============================================================================
 
+// Several widgets (sidebar badge, XP bar, streak, stats) call loadProfile() in
+// the same render pass. Share the in-flight request per includeEvents value so
+// they make one GET instead of one each.
+const pendingProfileLoads = new Map<boolean, Promise<void>>();
+
 export const useGamificationStore = create<GamificationState>()(
   persist(
     (set, get) => ({
@@ -106,44 +111,51 @@ export const useGamificationStore = create<GamificationState>()(
       error: null,
       settings: DEFAULT_GAMIFICATION_SETTINGS,
 
-      loadProfile: async (includeEvents = true) => {
+      loadProfile: (includeEvents = true) => {
         // Don't reload if already loaded (unless forced via refreshProfile)
-        if (get().hasLoaded && get().profile) return;
+        if (get().hasLoaded && get().profile) return Promise.resolve();
+        const pending = pendingProfileLoads.get(includeEvents);
+        if (pending) return pending;
+        const request = (async () => {
+          set({ isLoading: true, error: null });
 
-        set({ isLoading: true, error: null });
+          try {
+            const params = new URLSearchParams();
+            if (includeEvents) {
+              params.set('events', 'true');
+              params.set('limit', '10');
+            }
 
-        try {
-          const params = new URLSearchParams();
-          if (includeEvents) {
-            params.set('events', 'true');
-            params.set('limit', '10');
+            const response = await apiRequest<{
+              profile: GamificationProfile;
+              events?: XPEvent[];
+              isDemo: boolean;
+            }>(`/api/gamification?${params.toString()}`);
+
+            set({
+              profile: response.profile,
+              recentEvents: response.events ?? [],
+              isDemo: response.isDemo,
+              hasLoaded: true,
+              isLoading: false,
+            });
+          } catch (error) {
+            console.warn('Failed to load gamification profile:', error);
+            // Fall back to default profile
+            set({
+              profile: DEFAULT_PROFILE,
+              recentEvents: [],
+              isDemo: true,
+              hasLoaded: true,
+              isLoading: false,
+              error: error instanceof Error ? error.message : 'Failed to load profile',
+            });
           }
-
-          const response = await apiRequest<{
-            profile: GamificationProfile;
-            events?: XPEvent[];
-            isDemo: boolean;
-          }>(`/api/gamification?${params.toString()}`);
-
-          set({
-            profile: response.profile,
-            recentEvents: response.events ?? [],
-            isDemo: response.isDemo,
-            hasLoaded: true,
-            isLoading: false,
-          });
-        } catch (error) {
-          console.warn('Failed to load gamification profile:', error);
-          // Fall back to default profile
-          set({
-            profile: DEFAULT_PROFILE,
-            recentEvents: [],
-            isDemo: true,
-            hasLoaded: true,
-            isLoading: false,
-            error: error instanceof Error ? error.message : 'Failed to load profile',
-          });
-        }
+        })().finally(() => {
+          pendingProfileLoads.delete(includeEvents);
+        });
+        pendingProfileLoads.set(includeEvents, request);
+        return request;
       },
 
       recordActivity: async () => {

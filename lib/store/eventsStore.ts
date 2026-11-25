@@ -18,6 +18,8 @@ interface EventsState {
   hasLoaded: boolean;
   loadEvents: () => Promise<void>;
   forceRefresh: () => Promise<void>;
+  /** Refetch for a page mount/sign-in, sharing any request already in flight. */
+  revalidate: () => Promise<void>;
   addEvent: (event: Omit<Event, 'id' | 'date' | 'time'> & { id?: string }) => Promise<Event | null>;
   updateEvent: (id: string, updates: Partial<Event>) => Promise<Event | null>;
   removeEvent: (id: string) => Promise<void>;
@@ -47,6 +49,20 @@ const normalizeEvent = (event: Event): Event => ({
       }),
 });
 
+// One shared in-flight GET. Home/Calendar mount several components that each
+// ask for this data in the same render pass; without this they each fired an
+// identical request. Mutation recovery still calls forceRefresh() directly,
+// which always fetches, so it never receives a pre-mutation response.
+let pendingRequest: Promise<void> | null = null;
+function shareRequest(run: () => Promise<void>): Promise<void> {
+  if (!pendingRequest) {
+    pendingRequest = run().finally(() => {
+      pendingRequest = null;
+    });
+  }
+  return pendingRequest;
+}
+
 export const useEventsStore = create<EventsState>()(
   persist(
     (set, get) => ({
@@ -54,48 +70,52 @@ export const useEventsStore = create<EventsState>()(
       isLoading: false,
       hasLoaded: false,
 
-      loadEvents: async () => {
-        if (get().hasLoaded) return;
-        set({ isLoading: true });
-        try {
-          const data = await apiRequest<Event[]>('/api/events', {
-            noRetry: true,
-          });
-          const normalizedApi = data.map(normalizeEvent);
-          // Use database data directly - no sample data fallback for authenticated users
-          // This ensures proper user isolation and data ownership
-          set({
-            events: normalizedApi,
-            hasLoaded: true,
-          });
-        } catch (error) {
-          // Check if this is an auth error
-          const isAuthError =
-            error instanceof Error &&
-            (error.message.includes('401') ||
-              error.message.includes('authentication') ||
-              error.message.includes('Unauthorized'));
+      loadEvents: () => {
+        if (get().hasLoaded) return Promise.resolve();
+        return shareRequest(async () => {
+          set({ isLoading: true });
+          try {
+            const data = await apiRequest<Event[]>('/api/events', {
+              noRetry: true,
+            });
+            const normalizedApi = data.map(normalizeEvent);
+            // Use database data directly - no sample data fallback for authenticated users
+            // This ensures proper user isolation and data ownership
+            set({
+              events: normalizedApi,
+              hasLoaded: true,
+            });
+          } catch (error) {
+            // Check if this is an auth error
+            const isAuthError =
+              error instanceof Error &&
+              (error.message.includes('401') ||
+                error.message.includes('authentication') ||
+                error.message.includes('Unauthorized'));
 
-          if (isAuthError) {
-            // Auth failure: clear persisted data to prevent showing stale user data
-            // Do NOT fall back to sample data - this causes "ghost" events
-            set({ events: [], hasLoaded: true });
-          } else {
-            // Non-auth error: keep persisted data but mark as loaded
-            // Do NOT fall back to sample data - this causes "ghost" events
-            const isNetworkError = isLikelyNetworkError(error) || isBrowserOffline();
-            if (!isNetworkError) {
-              console.warn('Failed to load events from API, using persisted data:', error);
-            } else if (!hasLoggedNetworkFallback) {
-              hasLoggedNetworkFallback = true;
-              console.warn('Events API unavailable; using persisted data fallback.');
+            if (isAuthError) {
+              // Auth failure: clear persisted data to prevent showing stale user data
+              // Do NOT fall back to sample data - this causes "ghost" events
+              set({ events: [], hasLoaded: true });
+            } else {
+              // Non-auth error: keep persisted data but mark as loaded
+              // Do NOT fall back to sample data - this causes "ghost" events
+              const isNetworkError = isLikelyNetworkError(error) || isBrowserOffline();
+              if (!isNetworkError) {
+                console.warn('Failed to load events from API, using persisted data:', error);
+              } else if (!hasLoggedNetworkFallback) {
+                hasLoggedNetworkFallback = true;
+                console.warn('Events API unavailable; using persisted data fallback.');
+              }
+              set({ hasLoaded: true });
             }
-            set({ hasLoaded: true });
+          } finally {
+            set({ isLoading: false });
           }
-        } finally {
-          set({ isLoading: false });
-        }
+        });
       },
+
+      revalidate: () => shareRequest(() => get().forceRefresh()),
 
       // Force refresh from database - clears hasLoaded and reloads
       forceRefresh: async () => {

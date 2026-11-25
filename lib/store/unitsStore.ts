@@ -17,6 +17,8 @@ interface UnitsState {
   hasLoaded: boolean;
   loadUnits: () => Promise<void>;
   forceRefresh: () => Promise<void>;
+  /** Refetch for a page mount/sign-in, sharing any request already in flight. */
+  revalidate: () => Promise<void>;
   addUnit: (unit: Unit) => Promise<Unit | null>;
   removeUnit: (id: string) => Promise<void>;
   updateUnit: (id: string, unit: Partial<Unit>) => Promise<Unit | null>;
@@ -33,6 +35,20 @@ const normalizeUnit = (unit: Unit): Unit => ({
   schedule: unit.schedule ?? [],
 });
 
+// One shared in-flight GET. Home/Calendar mount several components that each
+// ask for this data in the same render pass; without this they each fired an
+// identical request. Mutation recovery still calls forceRefresh() directly,
+// which always fetches, so it never receives a pre-mutation response.
+let pendingRequest: Promise<void> | null = null;
+function shareRequest(run: () => Promise<void>): Promise<void> {
+  if (!pendingRequest) {
+    pendingRequest = run().finally(() => {
+      pendingRequest = null;
+    });
+  }
+  return pendingRequest;
+}
+
 export const useUnitsStore = create<UnitsState>()(
   persist(
     (set, get) => ({
@@ -40,38 +56,42 @@ export const useUnitsStore = create<UnitsState>()(
       isLoading: false,
       hasLoaded: false,
 
-      loadUnits: async () => {
-        if (get().hasLoaded) return;
-        set({ isLoading: true });
-        try {
-          const data = await apiRequest<Unit[]>('/api/units', {
-            noRetry: true,
-          });
-          // IMPORTANT: Always use database data as source of truth
-          // This ensures IDs are correct and in sync with the server
-          // Persisted localStorage data is only for offline caching, not the source of truth
-          set({ units: data.map(normalizeUnit), hasLoaded: true });
-        } catch (error) {
-          // Check if this is an auth error
-          const isAuthError =
-            error instanceof Error &&
-            (error.message.includes('401') ||
-              error.message.includes('authentication') ||
-              error.message.includes('Unauthorized'));
+      loadUnits: () => {
+        if (get().hasLoaded) return Promise.resolve();
+        return shareRequest(async () => {
+          set({ isLoading: true });
+          try {
+            const data = await apiRequest<Unit[]>('/api/units', {
+              noRetry: true,
+            });
+            // IMPORTANT: Always use database data as source of truth
+            // This ensures IDs are correct and in sync with the server
+            // Persisted localStorage data is only for offline caching, not the source of truth
+            set({ units: data.map(normalizeUnit), hasLoaded: true });
+          } catch (error) {
+            // Check if this is an auth error
+            const isAuthError =
+              error instanceof Error &&
+              (error.message.includes('401') ||
+                error.message.includes('authentication') ||
+                error.message.includes('Unauthorized'));
 
-          if (isAuthError) {
-            // Auth failure: clear persisted data to prevent showing stale user data
-            set({ units: [], hasLoaded: true });
-          } else {
-            // Non-auth error: keep persisted data but mark as loaded
-            // NOTE: This can cause ID mismatches - users should retry or refresh
-            console.warn('Failed to load units from API, using persisted data:', error);
-            set({ hasLoaded: true });
+            if (isAuthError) {
+              // Auth failure: clear persisted data to prevent showing stale user data
+              set({ units: [], hasLoaded: true });
+            } else {
+              // Non-auth error: keep persisted data but mark as loaded
+              // NOTE: This can cause ID mismatches - users should retry or refresh
+              console.warn('Failed to load units from API, using persisted data:', error);
+              set({ hasLoaded: true });
+            }
+          } finally {
+            set({ isLoading: false });
           }
-        } finally {
-          set({ isLoading: false });
-        }
+        });
       },
+
+      revalidate: () => shareRequest(() => get().forceRefresh()),
 
       // Force refresh from database - clears local state and reloads
       forceRefresh: async () => {

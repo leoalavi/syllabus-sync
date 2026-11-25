@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useSyncExternalStore } from 'react';
 import { createPortal } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import TodaySchedule from '@/features/home/components/TodaySchedule';
@@ -48,6 +48,9 @@ interface HomeClientProps {
   initialUser?: AuthUser | null;
 }
 
+// document.body never changes, so there is nothing to subscribe to.
+const subscribeToNothing = () => () => {};
+
 export default function HomeClient({ initialUser = null }: HomeClientProps) {
   const { t } = useTypedTranslation();
   const router = useRouter();
@@ -66,7 +69,15 @@ export default function HomeClient({ initialUser = null }: HomeClientProps) {
   // algorithm does not compare portal content at the component's mount point
   // (portals are teleported outside the tree), so the server/client difference
   // here is safe — no hydration mismatch is produced.
-  const portalTarget = typeof document === 'undefined' ? null : document.body;
+  // Hydration-safe: the server snapshot (null) is used while hydrating, so the
+  // first client render matches the server HTML; React then switches to
+  // document.body. A render-time `typeof document` check made the client
+  // render a portal the server never had, causing a hydration error.
+  const portalTarget = useSyncExternalStore(
+    subscribeToNothing,
+    () => document.body,
+    () => null,
+  );
 
   // Close FAB menu on Escape key
   useEffect(() => {

@@ -31,10 +31,20 @@
   // Mirrors the plain-text vars already set on the live Worker. Secrets
   // (CRON_SECRET, SUPABASE_SERVICE_ROLE_KEY, WEBAUTHN_*, RESEND_API_KEY, …)
   // are stored separately and are NOT affected by deploys.
+  //
+  // NEXT_PUBLIC_* values here are also passed into the build by
+  // tools/cloudflare/build.mjs (an explicit environment value still wins),
+  // because Next.js compiles them into the browser bundle at build time.
+  // The last three share the Supabase login with Sylla
+  // (https://sylla.syllabus-sync.app): a parent-domain auth cookie, the
+  // origins allowed to receive the post-login redirect, and the sidebar link.
   "vars": {
     "DEPLOYMENT_ENV": "production",
     "DEPLOYMENT_PLATFORM": "cloudflare",
     "NEXT_PUBLIC_APP_URL": "https://www.syllabus-sync.app",
+    "NEXT_PUBLIC_AUTH_COOKIE_DOMAIN": ".syllabus-sync.app",
+    "NEXT_PUBLIC_TRUSTED_ORIGINS": "https://sylla.syllabus-sync.app,https://syllabus-sync.app,https://www.syllabus-sync.app",
+    "NEXT_PUBLIC_SYLLA_URL": "https://sylla.syllabus-sync.app",
   },
 
   "observability": {

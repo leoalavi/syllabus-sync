@@ -6,6 +6,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { reloadOnceForChunkError } from '@/lib/utils/chunkErrorRecovery';
 import { useTypedTranslation } from '@/lib/hooks/useTypedTranslation';
 
 export default function GlobalError({
@@ -18,6 +19,8 @@ export default function GlobalError({
   const { t } = useTypedTranslation();
 
   useEffect(() => {
+    // A stale chunk after a deploy only recovers with a full reload.
+    if (reloadOnceForChunkError(error)) return;
     // No-op: Sentry capture removed to avoid dev HMR module factory errors.
   }, [error]);
 

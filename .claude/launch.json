@@ -12,6 +12,12 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": ["--prefix", "syllabus-sync-info-site", "run", "dev"],
       "port": 3001
+    },
+    {
+      "name": "sylla",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "../Sylla", "run", "dev", "--", "-p", "3002"],
+      "port": 3002
     }
   ]
 }

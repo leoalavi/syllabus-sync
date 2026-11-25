@@ -5,6 +5,7 @@ import { setCSRFCookie, shouldSkipCSRF, validateCSRF } from '@/lib/security/csrf
 import { logger } from '@/lib/logger';
 import { fetchWithTimeout } from '@/lib/supabase/fetch';
 import { getSharedCookieOptions, withSharedCookieDomain } from '@/lib/supabase/cookie-options';
+import { isValidRedirect } from '@/lib/utils/redirect';
 
 let lastTransientProxyAuthLogAt = 0;
 const TRANSIENT_PROXY_LOG_INTERVAL_MS = 60_000;
@@ -374,7 +375,15 @@ export async function proxy(request: NextRequest) {
         return NextResponse.redirect(redirectUrl);
       }
     } else {
-      return NextResponse.redirect(new URL('/home', request.url));
+      // Already signed in: honour a validated redirectTo so a sibling app's
+      // "Sign in" button (e.g. Sylla) hands the user straight back, instead of
+      // dropping them on /home. isValidRedirect only accepts allowlisted
+      // internal paths and NEXT_PUBLIC_TRUSTED_ORIGINS origins.
+      const requested = path.startsWith('/login')
+        ? request.nextUrl.searchParams.get('redirectTo')
+        : null;
+      const target = isValidRedirect(requested) ? requested! : '/home';
+      return NextResponse.redirect(new URL(target, request.url));
     }
   }
 

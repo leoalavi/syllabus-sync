@@ -20,6 +20,8 @@ interface DeadlinesState {
   hasLoaded: boolean;
   loadDeadlines: () => Promise<void>;
   forceRefresh: () => Promise<void>;
+  /** Refetch for a page mount/sign-in, sharing any request already in flight. */
+  revalidate: () => Promise<void>;
   addDeadline: (deadline: Deadline) => Promise<Deadline | null>;
   removeDeadline: (id: string) => Promise<void>;
   removeDeadlinesByUnit: (unitId: string, unitCode: string) => void;
@@ -48,6 +50,20 @@ const shouldSyncDeadlines = async (): Promise<boolean> => {
   }
 };
 
+// One shared in-flight GET. Home/Calendar mount several components that each
+// ask for this data in the same render pass; without this they each fired an
+// identical request. Mutation recovery still calls forceRefresh() directly,
+// which always fetches, so it never receives a pre-mutation response.
+let pendingRequest: Promise<void> | null = null;
+function shareRequest(run: () => Promise<void>): Promise<void> {
+  if (!pendingRequest) {
+    pendingRequest = run().finally(() => {
+      pendingRequest = null;
+    });
+  }
+  return pendingRequest;
+}
+
 export const useDeadlinesStore = create<DeadlinesState>()(
   persist(
     (set, get) => ({
@@ -55,51 +71,55 @@ export const useDeadlinesStore = create<DeadlinesState>()(
       isLoading: false,
       hasLoaded: false,
 
-      loadDeadlines: async () => {
-        if (get().hasLoaded) return;
-        set({ isLoading: true });
-        try {
-          const data = await apiRequest<Deadline[]>('/api/deadlines', {
-            noRetry: true,
-          });
-          // Ensure loaded data has valid UUIDs (filter out bad ones from API if any)
-          const validData = data.map(normalizeDeadline).filter((d) => {
-            if (!isValidUUID(d.id)) {
-              console.warn(`Filtered out invalid deadline ID from API: ${d.id}`);
-              return false;
-            }
-            return true;
-          });
+      loadDeadlines: () => {
+        if (get().hasLoaded) return Promise.resolve();
+        return shareRequest(async () => {
+          set({ isLoading: true });
+          try {
+            const data = await apiRequest<Deadline[]>('/api/deadlines', {
+              noRetry: true,
+            });
+            // Ensure loaded data has valid UUIDs (filter out bad ones from API if any)
+            const validData = data.map(normalizeDeadline).filter((d) => {
+              if (!isValidUUID(d.id)) {
+                console.warn(`Filtered out invalid deadline ID from API: ${d.id}`);
+                return false;
+              }
+              return true;
+            });
 
-          // Use database data directly - no sample data fallback for authenticated users
-          // This ensures proper user isolation and data ownership
-          set({ deadlines: validData, hasLoaded: true });
-        } catch (error) {
-          // Silently fail for auth errors - expected when not logged in
-          const isAuthError =
-            error instanceof Error &&
-            (error.message.includes('401') ||
-              error.message.includes('authentication') ||
-              error.message.includes('Unauthorized'));
+            // Use database data directly - no sample data fallback for authenticated users
+            // This ensures proper user isolation and data ownership
+            set({ deadlines: validData, hasLoaded: true });
+          } catch (error) {
+            // Silently fail for auth errors - expected when not logged in
+            const isAuthError =
+              error instanceof Error &&
+              (error.message.includes('401') ||
+                error.message.includes('authentication') ||
+                error.message.includes('Unauthorized'));
 
-          if (isAuthError) {
-            // Auth failure: clear persisted data to prevent showing stale user data
-            set({ deadlines: [], hasLoaded: true });
-          } else {
-            const isNetworkError = isLikelyNetworkError(error) || isBrowserOffline();
-            if (!isNetworkError) {
-              console.warn('Failed to load deadlines from API:', error);
-            } else if (!hasLoggedNetworkFallback) {
-              hasLoggedNetworkFallback = true;
-              console.warn('Deadlines API unavailable; using persisted data fallback.');
+            if (isAuthError) {
+              // Auth failure: clear persisted data to prevent showing stale user data
+              set({ deadlines: [], hasLoaded: true });
+            } else {
+              const isNetworkError = isLikelyNetworkError(error) || isBrowserOffline();
+              if (!isNetworkError) {
+                console.warn('Failed to load deadlines from API:', error);
+              } else if (!hasLoggedNetworkFallback) {
+                hasLoggedNetworkFallback = true;
+                console.warn('Deadlines API unavailable; using persisted data fallback.');
+              }
+              // Non-auth error: keep persisted data but mark as loaded
+              set({ hasLoaded: true });
             }
-            // Non-auth error: keep persisted data but mark as loaded
-            set({ hasLoaded: true });
+          } finally {
+            set({ isLoading: false });
           }
-        } finally {
-          set({ isLoading: false });
-        }
+        });
       },
+
+      revalidate: () => shareRequest(() => get().forceRefresh()),
 
       // Force refresh from database - clears hasLoaded and reloads
       forceRefresh: async () => {
