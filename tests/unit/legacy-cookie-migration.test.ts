@@ -10,7 +10,11 @@ const DOMAIN = '.syllabus-sync.app';
 function req(path: string, cookies: Record<string, string>, method = 'GET') {
   return new NextRequest(`https://www.syllabus-sync.app${path}`, {
     method,
-    headers: { cookie: Object.entries(cookies).map(([k, v]) => `${k}=${v}`).join('; ') },
+    headers: {
+      cookie: Object.entries(cookies)
+        .map(([k, v]) => `${k}=${v}`)
+        .join('; '),
+    },
   });
 }
 
@@ -26,14 +30,23 @@ describe('legacy host-only auth cookie cleanup', () => {
     expect(setCookies).toContain('sb-abc-auth-token=; Path=/; Max-Age=0; Secure; SameSite=Lax');
     expect(setCookies).toContain('sb-abc-auth-token.0=; Path=/; Max-Age=0; Secure; SameSite=Lax');
     // Deletes carry no Domain, so the shared .syllabus-sync.app cookie is untouched.
-    expect(setCookies.filter((c) => c.startsWith('sb-')).every((c) => !/Domain=/i.test(c))).toBe(true);
-    expect(setCookies.some((c) => c.startsWith(`${AUTH_COOKIE_MIGRATION_MARKER}=1; Domain=${DOMAIN}`))).toBe(true);
+    expect(setCookies.filter((c) => c.startsWith('sb-')).every((c) => !/Domain=/i.test(c))).toBe(
+      true,
+    );
+    expect(
+      setCookies.some((c) => c.startsWith(`${AUTH_COOKIE_MIGRATION_MARKER}=1; Domain=${DOMAIN}`)),
+    ).toBe(true);
     expect(setCookies.some((c) => c.startsWith('other='))).toBe(false);
   });
 
   it('runs only once, only for page loads, and only with a shared domain', () => {
     const cookies = { 'sb-abc-auth-token': 'x' };
-    expect(migrateLegacyAuthCookies(req('/home', { ...cookies, [AUTH_COOKIE_MIGRATION_MARKER]: '1' }), DOMAIN)).toBeNull();
+    expect(
+      migrateLegacyAuthCookies(
+        req('/home', { ...cookies, [AUTH_COOKIE_MIGRATION_MARKER]: '1' }),
+        DOMAIN,
+      ),
+    ).toBeNull();
     expect(migrateLegacyAuthCookies(req('/api/auth/user', cookies), DOMAIN)).toBeNull();
     expect(migrateLegacyAuthCookies(req('/login', cookies, 'POST'), DOMAIN)).toBeNull();
     expect(migrateLegacyAuthCookies(req('/home', cookies), undefined)).toBeNull();

@@ -14,7 +14,8 @@ const ORS_API_KEY = process.env.ORS_API_KEY;
 const ORS_BASE_URL =
   // api.openrouteservice.org was retired on 2026-11-24 (410 Gone); HeiGIT now
   // serves openrouteservice from api.heigit.org with the same API keys.
-  process.env.ORS_BASE_URL || 'https://api.heigit.org/openrouteservice/v2/directions/foot-walking/geojson';
+  process.env.ORS_BASE_URL ||
+  'https://api.heigit.org/openrouteservice/v2/directions/foot-walking/geojson';
 
 // ============================================================================
 // CAMPUS GEOFENCE - Macquarie University bounds

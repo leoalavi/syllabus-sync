@@ -15,7 +15,9 @@ describe('buildCampusNavWebUrl', () => {
   });
 
   it('encodes ids and falls back to the map without one', () => {
-    expect(buildCampusNavWebUrl('a b&c', 'location', base)).toBe(`${base}/#/open?destination=A%20B%26C`);
+    expect(buildCampusNavWebUrl('a b&c', 'location', base)).toBe(
+      `${base}/#/open?destination=A%20B%26C`,
+    );
     expect(buildCampusNavWebUrl('  ', 'directions', base)).toBe(`${base}/#/map`);
   });
 

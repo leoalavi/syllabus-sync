@@ -21,7 +21,9 @@ function httpUrl(value: string | undefined): string | null {
   if (!trimmed) return null;
   try {
     const url = new URL(trimmed);
-    return url.protocol === 'https:' || url.protocol === 'http:' ? trimmed.replace(/\/+$/, '') : null;
+    return url.protocol === 'https:' || url.protocol === 'http:'
+      ? trimmed.replace(/\/+$/, '')
+      : null;
   } catch {
     return null;
   }

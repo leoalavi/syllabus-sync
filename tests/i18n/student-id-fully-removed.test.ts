@@ -89,7 +89,7 @@ describe('BA-0050: nothing should still reference a student ID', () => {
       'campusNavHandoffTitle',
       'campusNavHandoffDesc',
       'campusNavAppComingSoon',
-            'campusNavOrUseHere',
+      'campusNavOrUseHere',
       'syllaAsk',
       'syllaNewChat',
       'syllaClose',

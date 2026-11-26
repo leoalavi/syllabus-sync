@@ -114,10 +114,7 @@ export default function HomeClient({ initialUser = null }: HomeClientProps) {
       >
         {/* Header */}
         <ScrollReveal>
-          <header
-            className="mb-6 flex flex-wrap items-start justify-between gap-3"
-            role="banner"
-          >
+          <header className="mb-6 flex flex-wrap items-start justify-between gap-3" role="banner">
             <div className="min-w-0 flex-1">
               <WelcomeHeader name={displayName} fallbackName={DEMO_USER.name} />
             </div>
@@ -317,7 +314,6 @@ export default function HomeClient({ initialUser = null }: HomeClientProps) {
             <TodosWidget />
           </ScrollReveal>
         </section>
-
       </section>
     </LazyMotion>
   );

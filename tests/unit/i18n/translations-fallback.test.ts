@@ -26,7 +26,7 @@ const MISSING_COMPANION_KEYS = [
   'campusNavHandoffTitle',
   'campusNavHandoffDesc',
   'campusNavAppComingSoon',
-    'campusNavOrUseHere',
+  'campusNavOrUseHere',
   'syllaAsk',
   'syllaNewChat',
   'syllaClose',
