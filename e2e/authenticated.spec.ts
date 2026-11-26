@@ -9,8 +9,16 @@ const password = process.env.E2E_PASSWORD;
 // without MFA. Sign-out runs last because it ends the shared session.
 test.describe.configure({ mode: 'serial' });
 
+// Wait until the login form is hydrated before typing. Submitting while React
+// is still hydrating makes it re-render the form from scratch, which drops the
+// result (only reachable by automation; most visible against `next dev`).
+async function openLogin(page: Page, path: string) {
+  await page.goto(path);
+  await page.waitForLoadState('networkidle');
+}
+
 async function signIn(page: Page, redirectTo = '/home') {
-  await page.goto(`/login?redirectTo=${encodeURIComponent(redirectTo)}`);
+  await openLogin(page, `/login?redirectTo=${encodeURIComponent(redirectTo)}`);
   await page.getByLabel(/email/i).fill(email!);
   await page
     .getByLabel(/password/i)
@@ -46,7 +54,7 @@ test.describe('authenticated journeys (need E2E_EMAIL and E2E_PASSWORD for a dis
   test('wrong password is rejected with a generic error and no session', async ({ browser }) => {
     const ctx = await browser.newContext();
     const p = await ctx.newPage();
-    await p.goto('/login');
+    await openLogin(p, '/login');
     await p.getByLabel(/email/i).fill(email!);
     await p
       .getByLabel(/password/i)

@@ -123,6 +123,7 @@ export function buildCSP(options: CSPOptions = {}): string {
     "'self'",
     'https://*.supabase.co',
     'https://*.openrouteservice.org',
+    'https://api.heigit.org',
     'https://weather.googleapis.com',
     'wss://*.supabase.co',
     ...additionalConnectSrc,
@@ -202,7 +203,7 @@ export function buildDevCSP(): string {
     // Fonts
     "font-src 'self' data:",
     // Connect: API endpoints, Supabase, HMR websockets
-    "connect-src 'self' https://*.supabase.co https://*.openrouteservice.org https://weather.googleapis.com wss://*.supabase.co ws://localhost:* ws://127.0.0.1:*",
+    "connect-src 'self' https://*.supabase.co https://*.openrouteservice.org https://api.heigit.org https://weather.googleapis.com wss://*.supabase.co ws://localhost:* ws://127.0.0.1:*",
     // Frame ancestors
     "frame-ancestors 'self'",
     // Base URI

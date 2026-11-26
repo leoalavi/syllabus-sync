@@ -10,7 +10,7 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/mq/button';
-import { ExternalLink, Globe, Map, Navigation, Smartphone } from 'lucide-react';
+import { ExternalLink, MapPin, Map, Navigation, Route, Smartphone } from 'lucide-react';
 import {
   CAMPUS_NAV_ANDROID_STORE_URL,
   CAMPUS_NAV_IOS_STORE_URL,
@@ -58,7 +58,8 @@ export function NavigationPreferenceDialog({
 
   // Campus Navigation companion: the mobile app is the recommended way to
   // navigate; until it is in the stores, its web app is offered instead.
-  const campusNavWebUrl = buildCampusNavWebUrl(buildingId);
+  const campusNavLocationUrl = buildCampusNavWebUrl(buildingId, 'location');
+  const campusNavDirectionsUrl = buildCampusNavWebUrl(buildingId, 'directions');
   const storeLinks = [
     { label: 'App Store', href: CAMPUS_NAV_IOS_STORE_URL },
     { label: 'Google Play', href: CAMPUS_NAV_ANDROID_STORE_URL },
@@ -117,19 +118,34 @@ export function NavigationPreferenceDialog({
               )}
             </div>
 
-            {campusNavWebUrl && (
-              <a
-                href={campusNavWebUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => onOpenChange(false)}
-                data-testid="campus-nav-web-link"
-                className="mt-3 flex w-full items-center justify-center gap-2 rounded-mq bg-mq-primary px-3 py-2 text-sm font-semibold text-white hover:bg-mq-primary/90"
-              >
-                <Globe className="h-4 w-4" aria-hidden="true" />
-                {t('campusNavOpenWeb')}
-                <ExternalLink className="h-3 w-3" aria-hidden="true" />
-              </a>
+            {campusNavLocationUrl && campusNavDirectionsUrl && (
+              <div className="mt-3 grid grid-cols-2 gap-2" data-testid="campus-nav-web-actions">
+                <a
+                  href={campusNavLocationUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => onOpenChange(false)}
+                  data-testid="campus-nav-web-location"
+                  className="flex items-center justify-center gap-1.5 rounded-mq border border-mq-primary px-3 py-2 text-sm font-semibold text-mq-primary hover:bg-mq-primary/10"
+                >
+                  <MapPin className="h-4 w-4" aria-hidden="true" />
+                  {t('campusNavShowLocation')}
+                </a>
+                <a
+                  href={campusNavDirectionsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => onOpenChange(false)}
+                  data-testid="campus-nav-web-directions"
+                  className="flex items-center justify-center gap-1.5 rounded-mq bg-mq-primary px-3 py-2 text-sm font-semibold text-white hover:bg-mq-primary/90"
+                >
+                  <Route className="h-4 w-4" aria-hidden="true" />
+                  {t('campusNavGetDirections')}
+                </a>
+                <p className="col-span-2 text-center text-xs text-mq-content-secondary">
+                  {t('campusNavWebNote')}
+                </p>
+              </div>
             )}
           </section>
 

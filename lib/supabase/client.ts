@@ -1,5 +1,6 @@
 import { createBrowserClient as createSupabaseBrowserClient } from "@supabase/ssr";
 import { getSharedCookieOptions } from "./cookie-options";
+import { isValidSupabaseUrl } from './url';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
@@ -13,11 +14,7 @@ let browserClient: ReturnType<typeof createSupabaseBrowserClient> | null = null;
 // Check if Supabase is properly configured (not placeholder values)
 export function isSupabaseConfigured(): boolean {
   // Check URL is valid
-  const hasValidUrl = !!(
-    supabaseUrl &&
-    supabaseUrl.includes("supabase.co") &&
-    !supabaseUrl.includes("your-project-id")
-  );
+  const hasValidUrl = isValidSupabaseUrl(supabaseUrl);
 
   // Check key is valid - Supabase anon keys are JWT tokens starting with "eyJ" or publishable keys starting with "sb_"
   const hasValidKey = !!(

@@ -2442,11 +2442,13 @@
   "syllaOpen": "Open Sylla",
   "syllaOpenAria": "Open Sylla AI Study Assistant in a new tab",
   "campusNavHandoffTitle": "Navigate with Campus Navigation",
-  "campusNavHandoffDesc": "Our campus wayfinding app gives step-by-step walking directions. The mobile app is coming soon; you can use the web version now.",
+  "campusNavHandoffDesc": "Our campus wayfinding app gives step-by-step walking directions. Download the app when it launches, or use Campus Navigation on the web now.",
   "campusNavAppComingSoon": "iOS and Android app coming soon",
-  "campusNavOpenWeb": "Open Campus Navigation on the web",
   "campusNavOrUseHere": "Or stay in Syllabus Sync:",
   "syllaAsk": "Ask Sylla",
   "syllaNewChat": "New chat",
-  "syllaClose": "Close Sylla"
+  "syllaClose": "Close Sylla",
+  "campusNavShowLocation": "Show location",
+  "campusNavGetDirections": "Get directions",
+  "campusNavWebNote": "Opens Campus Navigation on the web in a new tab."
 }

@@ -4,8 +4,17 @@ import { generateNonce, buildNonceCSP } from '@/lib/security/csp';
 import { setCSRFCookie, shouldSkipCSRF, validateCSRF } from '@/lib/security/csrf';
 import { logger } from '@/lib/logger';
 import { fetchWithTimeout } from '@/lib/supabase/fetch';
-import { getSharedCookieOptions, withSharedCookieDomain } from '@/lib/supabase/cookie-options';
+import {
+  getAuthCookieDomain,
+  getSharedCookieOptions,
+  withSharedCookieDomain,
+} from '@/lib/supabase/cookie-options';
+import {
+  markAuthCookiesMigrated,
+  migrateLegacyAuthCookies,
+} from '@/lib/supabase/legacy-cookie-migration';
 import { isValidRedirect } from '@/lib/utils/redirect';
+import { isValidSupabaseUrl } from '@/lib/supabase/url';
 
 let lastTransientProxyAuthLogAt = 0;
 const TRANSIENT_PROXY_LOG_INTERVAL_MS = 60_000;
@@ -77,6 +86,10 @@ export async function proxy(request: NextRequest) {
   if (isStaticFile) {
     return NextResponse.next();
   }
+
+  // Must run before anything reads the session: see legacy-cookie-migration.ts.
+  const legacyCookieRedirect = migrateLegacyAuthCookies(request, getAuthCookieDomain());
+  if (legacyCookieRedirect) return legacyCookieRedirect;
 
   const nonce = generateNonce();
   const requestHeaders = new Headers(request.headers);
@@ -180,8 +193,7 @@ export async function proxy(request: NextRequest) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-  const hasValidUrl =
-    supabaseUrl && supabaseUrl.includes('supabase.co') && !supabaseUrl.includes('your-project-id');
+  const hasValidUrl = isValidSupabaseUrl(supabaseUrl);
   const hasValidKey =
     supabaseAnonKey &&
     (supabaseAnonKey.startsWith('eyJ') || supabaseAnonKey.startsWith('sb_')) &&
@@ -412,5 +424,6 @@ export async function proxy(request: NextRequest) {
   //   - 401  -> requireAuth / requireAuthWithRateLimit / inline getUser()
   //   - 403 MFA_REQUIRED and 503 AUTH_UNAVAILABLE -> enforceMfaAssuranceLevel()
   //     in app/api/_lib/middleware.ts, same thresholds, same fail-closed rule.
+  markAuthCookiesMigrated(request, response, getAuthCookieDomain());
   return response;
 }

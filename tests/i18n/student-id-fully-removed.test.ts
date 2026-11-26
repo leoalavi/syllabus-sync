@@ -89,11 +89,13 @@ describe('BA-0050: nothing should still reference a student ID', () => {
       'campusNavHandoffTitle',
       'campusNavHandoffDesc',
       'campusNavAppComingSoon',
-      'campusNavOpenWeb',
-      'campusNavOrUseHere',
+            'campusNavOrUseHere',
       'syllaAsk',
       'syllaNewChat',
       'syllaClose',
+      'campusNavShowLocation',
+      'campusNavGetDirections',
+      'campusNavWebNote',
     ]);
 
     for (const locale of await localeDirs()) {
@@ -105,7 +107,7 @@ describe('BA-0050: nothing should still reference a student ID', () => {
     }
   });
 
-  it('still holds the known English-only set at exactly 20 keys', async () => {
+  it('still holds the known English-only set at exactly 22 keys', async () => {
     // If this number moves, the allowance above has started hiding new drift
     // rather than documenting a known one.
     const english = new Set(Object.keys(await translations('en')));
@@ -113,10 +115,12 @@ describe('BA-0050: nothing should still reference a student ID', () => {
     expect([...english].filter((k) => !other.has(k)).sort()).toEqual([
       'campus',
       'campusNavAppComingSoon',
+      'campusNavGetDirections',
       'campusNavHandoffDesc',
       'campusNavHandoffTitle',
-      'campusNavOpenWeb',
       'campusNavOrUseHere',
+      'campusNavShowLocation',
+      'campusNavWebNote',
       'campusSupportNotice',
       'campusSupportSubtitle',
       'mqNavCompanionCta',

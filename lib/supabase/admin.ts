@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import { isValidSupabaseUrl } from './url';
 
 // SECURITY/RELIABILITY (BA-0017): these used to be module-scope `const`s
 // read once at import time. That's fragile under OpenNext on Cloudflare
@@ -25,11 +26,7 @@ function isAdminConfigured(): boolean {
   const supabaseServiceRoleKey = getSupabaseServiceRoleKey();
 
   // Check URL is valid
-  const hasValidUrl = !!(
-    supabaseUrl &&
-    supabaseUrl.includes("supabase.co") &&
-    !supabaseUrl.includes("your-project-id")
-  );
+  const hasValidUrl = isValidSupabaseUrl(supabaseUrl);
 
   // Service role keys are JWT tokens starting with "eyJ"
   const hasValidKey = !!(

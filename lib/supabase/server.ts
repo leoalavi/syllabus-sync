@@ -1,6 +1,7 @@
 import { createServerClient as createSupabaseServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { getSharedCookieOptions, withSharedCookieDomain } from './cookie-options';
+import { isValidSupabaseUrl } from './url';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? '';
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? '';
@@ -11,11 +12,7 @@ let serverWarningShown = false;
 // Check if Supabase is properly configured (not placeholder values)
 function isSupabaseConfigured(): boolean {
   // Check URL is valid
-  const hasValidUrl = !!(
-    supabaseUrl &&
-    supabaseUrl.includes('supabase.co') &&
-    !supabaseUrl.includes('your-project-id')
-  );
+  const hasValidUrl = isValidSupabaseUrl(supabaseUrl);
 
   // Check key is valid - Supabase anon keys are JWT tokens starting with "eyJ" or publishable keys starting with "sb_"
   const hasValidKey = !!(
@@ -39,10 +36,23 @@ export async function createServerClient() {
     }
     // Return a mock client for demo mode
     return {
-      auth: {
-        getSession: async () => ({ data: { session: null }, error: null }),
-        getUser: async () => ({ data: { user: null }, error: null }),
-      },
+      // Any other auth call (sign-in, sign-up, sign-out, …) resolves to a clear
+      // "not configured" error instead of crashing with "is not a function".
+      auth: new Proxy(
+        {
+          getSession: async () => ({ data: { session: null }, error: null }),
+          getUser: async () => ({ data: { user: null }, error: null }),
+        } as Record<string, unknown>,
+        {
+          get: (target, prop) =>
+            prop in target
+              ? target[prop as string]
+              : async () => ({
+                  data: { user: null, session: null },
+                  error: { message: 'Supabase not configured.', code: 'MOCK_CLIENT', status: 503 },
+                }),
+        },
+      ),
       from: () => {
         const mockError = { message: 'Supabase not configured.', code: 'MOCK_CLIENT' };
         // Create a chainable query builder mock that propagates errors through the chain

@@ -37,6 +37,23 @@ export function syllaFrameSource(): string {
   }
 }
 
+/**
+ * A local Supabase stack (`supabase start`, http://127.0.0.1:54321) used for
+ * isolated testing. Added to connect-src in development only; hosted projects
+ * are already covered by https://*.supabase.co.
+ */
+function localSupabaseSource(): string {
+  const raw = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
+  if (!raw) return '';
+  try {
+    const url = new URL(raw);
+    if (url.hostname !== '127.0.0.1' && url.hostname !== 'localhost') return '';
+    return ` ${url.origin} ${url.origin.replace(/^http/, 'ws')}`;
+  } catch {
+    return '';
+  }
+}
+
 export function generateNonce(): string {
   return randomBase64(16);
 }
@@ -75,7 +92,7 @@ export function buildNonceCSP(nonce: string): string {
     "img-src 'self' data: blob: https://*.googleapis.com https://*.gstatic.com https://*.google.com https:",
 
     // Connect: Supabase, Google Maps JS/Routes, weather, Sentry, HMR in dev
-    `connect-src 'self' https://*.supabase.co wss://*.supabase.co https://weather.googleapis.com https://maps.googleapis.com https://routes.googleapis.com https://places.googleapis.com https://maps.gstatic.com https://*.sentry.io${isDev ? ' ws://localhost:* ws://127.0.0.1:*' : ''}`,
+    `connect-src 'self' https://*.supabase.co wss://*.supabase.co https://weather.googleapis.com https://maps.googleapis.com https://routes.googleapis.com https://places.googleapis.com https://maps.gstatic.com https://*.sentry.io${isDev ? ` ws://localhost:* ws://127.0.0.1:*${localSupabaseSource()}` : ''}`,
 
     // Frame sources retained for conservative compatibility with external content.
     `frame-src 'self' https://www.google.com https://maps.google.com${syllaFrameSource()}`,

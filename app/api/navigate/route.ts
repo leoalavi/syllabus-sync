@@ -12,7 +12,9 @@ import { GPS_CAMPUS_BOUNDS } from '@/features/map/lib/constants';
 // The API key should only be set via ORS_API_KEY on the server
 const ORS_API_KEY = process.env.ORS_API_KEY;
 const ORS_BASE_URL =
-  process.env.ORS_BASE_URL || 'https://api.openrouteservice.org/v2/directions/foot-walking/geojson';
+  // api.openrouteservice.org was retired on 2026-11-24 (410 Gone); HeiGIT now
+  // serves openrouteservice from api.heigit.org with the same API keys.
+  process.env.ORS_BASE_URL || 'https://api.heigit.org/openrouteservice/v2/directions/foot-walking/geojson';
 
 // ============================================================================
 // CAMPUS GEOFENCE - Macquarie University bounds

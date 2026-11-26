@@ -34,17 +34,23 @@ export const CAMPUS_NAV_ANDROID_STORE_URL = httpUrl(
   process.env.NEXT_PUBLIC_CAMPUS_NAV_ANDROID_STORE_URL,
 );
 
+export type CampusNavWebAction = 'location' | 'directions';
+
 /**
- * Link that opens the Campus Navigation web app focused on a building.
- * Building ids are matched case-insensitively by the app (BuildingIdResolver),
- * so they are sent upper-case, the form its data uses.
+ * Link that opens the Campus Navigation web app on a building: its location
+ * on the map, or (`directions`) a walking-route preview from the student's
+ * current position (`&action=directions` in the /open contract).
+ * Building ids are matched case-insensitively and through the app's alias
+ * table, so they are sent upper-case, the form its data uses.
  */
 export function buildCampusNavWebUrl(
   buildingId: string | undefined,
+  action: CampusNavWebAction = 'location',
   baseUrl: string | null = CAMPUS_NAV_WEB_URL,
 ): string | null {
   if (!baseUrl) return null;
   const id = buildingId?.trim();
   if (!id) return `${baseUrl}/#/map`;
-  return `${baseUrl}/#/open?destination=${encodeURIComponent(id.toUpperCase())}`;
+  const directions = action === 'directions' ? '&action=directions' : '';
+  return `${baseUrl}/#/open?destination=${encodeURIComponent(id.toUpperCase())}${directions}`;
 }

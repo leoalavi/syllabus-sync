@@ -103,6 +103,9 @@ export default function LoginClient() {
   // UI States (Preserving original UI richness)
   const [showPassword, setShowPassword] = useState(false);
   const [generalError, setGeneralError] = useState<string | null>(null);
+  // Drives the Sign In button's brief error shake only. The message itself
+  // stays visible until the next attempt.
+  const [buttonErrorPulse, setButtonErrorPulse] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [showResendVerification, setShowResendVerification] = useState(false);
   const [isResendingVerification, setIsResendingVerification] = useState(false);
@@ -145,10 +148,11 @@ export default function LoginClient() {
 
   // Computed
   const isGlobalLoading = isSubmitting || isPasskeyLoading || isSuccess || oauthLoading;
-  const isError = !!generalError || Object.keys(errors).length > 0;
+  const isError = buttonErrorPulse || Object.keys(errors).length > 0;
 
   const onSubmit = async (data: LoginFormData) => {
     setGeneralError(null);
+    setButtonErrorPulse(false);
     setIsSuccess(false);
     setShowResendVerification(false);
 
@@ -156,23 +160,19 @@ export default function LoginClient() {
       const result = await loginAction(data);
 
       if (result.error) {
-        // Map server codes to translation keys or use default
-        const errorKey = `auth.errors.${result.error}`;
-        // @ts-expect-error Dynamic error key resolution
-        const msg = t(errorKey) || t('auth.errors.default') || result.error;
-        toastUtils.error(t('loginErrorFailed'), msg);
-
-        // Fallback for specific known errors to maintain current UI behavior
+        // A readable message for each server code. (These codes used to be
+        // looked up as `auth.errors.<code>` keys, which do not exist, so a
+        // toast showed the raw key.)
+        let message: string;
         if (result.error === 'invalid_credentials') {
-          setGeneralError(t('loginErrorInvalidCredentials'));
+          message = t('loginErrorInvalidCredentials');
         } else if (result.error === 'provider_mismatch') {
-          setGeneralError(
+          message =
             result.signupProvider === 'google'
               ? t('loginErrorProviderMismatchGoogle')
-              : t('loginErrorProviderMismatchEmail'),
-          );
+              : t('loginErrorProviderMismatchEmail');
         } else if (result.error === 'email_not_confirmed') {
-          setGeneralError(t('loginErrorEmailNotConfirmed'));
+          message = t('loginErrorEmailNotConfirmed');
           setShowResendVerification(true);
         } else if (result.error === 'rate_limit_exceeded') {
           const base = t('loginErrorTooManyRequests');
@@ -180,10 +180,14 @@ export default function LoginClient() {
             typeof result.retryAfter === 'number'
               ? Math.max(1, Math.ceil(result.retryAfter / 60))
               : null;
-          setGeneralError(minutes ? `${base} (${minutes} min)` : base);
+          message = minutes ? `${base} (${minutes} min)` : base;
         } else {
-          setGeneralError(msg);
+          message = t('authenticationFailed');
         }
+        // Shown once, in the inline alert (role="alert", announced by screen
+        // readers) next to the form; a toast repeating it added nothing.
+        setGeneralError(message);
+        setButtonErrorPulse(true);
         return;
       }
 
@@ -676,7 +680,7 @@ export default function LoginClient() {
                   isLoading={isSubmitting}
                   isSuccess={isSuccess}
                   isError={isError}
-                  onAnimationComplete={() => isError && setGeneralError(null)}
+                  onAnimationComplete={() => setButtonErrorPulse(false)}
                   className="w-full sm:max-w-[260px] font-bold"
                 />
               </div>
